@@ -1,0 +1,44 @@
+<view class="container">
+  <view class="card">
+    <!-- 班级 -->
+    <view class="form-item">
+      <text class="form-label">班级</text>
+      <picker wx:if="{{classes.length > 0}}" range="{{classes}}" range-key="name" value="{{classIndex}}" bindchange="onClassChange">
+        <view class="form-picker">{{classes[classIndex].name}} ›</view>
+      </picker>
+      <view wx:else class="form-empty">请先创建班级</view>
+    </view>
+
+    <!-- 类型 -->
+    <view class="form-item">
+      <text class="form-label">类型</text>
+      <picker range="{{typeOptions}}" range-key="label" value="{{typeIndex}}" bindchange="onTypeChange">
+        <view class="form-picker">{{typeOptions[typeIndex].label}} ›</view>
+      </picker>
+    </view>
+
+    <!-- 内容 -->
+    <view class="form-item">
+      <text class="form-label">作业内容</text>
+      <textarea class="form-textarea" placeholder="输入作业内容..." value="{{content}}" bindinput="onContentInput" maxlength="500" auto-height />
+    </view>
+
+    <!-- 截止日期 -->
+    <view class="form-item">
+      <text class="form-label">截止日期(可选)</text>
+      <picker mode="date" value="{{dueDate}}" bindchange="onDueDateChange">
+        <view class="form-picker">{{dueDate || '选择日期'}} ›</view>
+      </picker>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-item">
+      <text class="form-label">备注(可选)</text>
+      <input class="form-input" placeholder="如:要求签字" value="{{note}}" bindinput="onNoteInput" />
+    </view>
+  </view>
+
+  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
+    {{saving ? '保存中...' : '布置作业'}}
+  </view>
+</view>

@@ -66,6 +66,73 @@
   border-radius: 8rpx;
 }
 
+.homework-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.homework-item:last-child {
+  border-bottom: none;
+}
+
+.homework-type {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  color: #fff;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.homework-type.type-daily {
+  background: #3282F0;
+}
+
+.homework-type.type-experiment_report {
+  background: #52C41A;
+}
+
+.homework-type.type-review {
+  background: #722ED1;
+}
+
+.homework-type.type-exam {
+  background: #FF4D4F;
+}
+
+.homework-content {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.homework-status {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+}
+
+.homework-status.status-active {
+  background: #E6F7FF;
+  color: #3282F0;
+}
+
+.homework-status.status-collected {
+  background: #FFF7E6;
+  color: #FAAD14;
+}
+
+.homework-status.status-graded {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
 .overview-item {
   display: flex;
   flex-direction: column;

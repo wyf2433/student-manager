@@ -39,6 +39,20 @@
     </view>
   </view>
 
+  <!-- 今日作业 -->
+  <view class="card" bindtap="goHomework">
+    <view class="card-title-row">
+      <text class="card-title">今日作业</text>
+      <text class="card-more">全部 ›</text>
+    </view>
+    <view wx:if="{{todayHomework.length === 0}}" class="empty">今日未布置作业</view>
+    <view wx:for="{{todayHomework}}" wx:key="id" class="homework-item">
+      <text class="homework-type type-{{item.type}}">{{item.type === 'daily' ? '日常' : item.type === 'experiment_report' ? '实验' : item.type === 'review' ? '复习' : '试卷'}}</text>
+      <text class="homework-content">{{item.content}}</text>
+      <text class="homework-status status-{{item.status}}">{{item.status === 'active' ? '进行中' : item.status === 'collected' ? '已收' : '已改'}}</text>
+    </view>
+  </view>
+
   <!-- 快速速记 -->
   <view class="card">
     <view class="card-title">一句话速记</view>

@@ -8,7 +8,9 @@
     "pages/add-record/add-record",
     "pages/schedule/schedule",
     "pages/schedule-edit/schedule-edit",
-    "pages/override/override"
+    "pages/override/override",
+    "pages/homework/homework",
+    "pages/homework-add/homework-add"
   ],
   "window": {
     "backgroundTextStyle": "light",

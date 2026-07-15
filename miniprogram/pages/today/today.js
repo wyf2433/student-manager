@@ -12,6 +12,7 @@ Page({
     overview: null,
     recent: [],
     todaySchedule: [],
+    todayHomework: [],
     loading: true,
     quickNote: '',
   },
@@ -23,10 +24,11 @@ Page({
   async loadData() {
     this.setData({ loading: true })
     try {
-      const [overviewRes, recentRes, scheduleRes] = await Promise.all([
+      const [overviewRes, recentRes, scheduleRes, homeworkRes] = await Promise.all([
         api.get('/dashboard/today'),
         api.get('/dashboard/recent'),
         api.get('/schedule/today'),
+        api.get('/homework/today'),
       ])
       const recentData = recentRes.data || {}
       const items = (recentData.items || []).map(item => {
@@ -40,10 +42,12 @@ Page({
         }
       })
       const scheduleData = scheduleRes.data || {}
+      const homeworkData = homeworkRes.data || {}
       this.setData({
         overview: overviewRes.data,
         recent: items,
         todaySchedule: scheduleData.items || [],
+        todayHomework: homeworkData.items || [],
         loading: false,
       })
     } catch (err) {
@@ -75,6 +79,10 @@ Page({
 
   goSchedule() {
     wx.navigateTo({ url: '/pages/schedule/schedule' })
+  },
+
+  goHomework() {
+    wx.navigateTo({ url: '/pages/homework/homework' })
   },
 
   onPullDownRefresh() {
