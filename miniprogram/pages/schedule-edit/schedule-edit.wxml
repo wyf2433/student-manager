@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="card">
+    <!-- 星期 -->
+    <view class="form-item">
+      <text class="form-label">星期</text>
+      <picker range="{{['周一','周二','周三','周四','周五','周六','周日']}}" value="{{weekday - 1}}" bindchange="onWeekdayChange">
+        <view class="form-picker">{{['周一','周二','周三','周四','周五','周六','周日'][weekday - 1]}} ›</view>
+      </picker>
+    </view>
+
+    <!-- 节次 -->
+    <view class="form-item">
+      <text class="form-label">节次</text>
+      <picker range="{{['第1节','第2节','第3节','第4节','第5节','第6节','第7节','第8节','第9节','第10节','第11节','第12节']}}" value="{{period - 1}}" bindchange="onPeriodChange">
+        <view class="form-picker">第{{period}}节 ›</view>
+      </picker>
+    </view>
+
+    <!-- 科目 -->
+    <view class="form-item">
+      <text class="form-label">科目</text>
+      <input class="form-input" placeholder="如:物理" value="{{subject}}" bindinput="onSubjectInput" />
+    </view>
+
+    <!-- 班级 -->
+    <view class="form-item">
+      <text class="form-label">班级(可选)</text>
+      <input class="form-input" placeholder="如:初二1班" value="{{className}}" bindinput="onClassInput" />
+    </view>
+  </view>
+
+  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
+    {{saving ? '保存中...' : '保存'}}
+  </view>
+</view>

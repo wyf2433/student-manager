@@ -22,6 +22,23 @@
     </view>
   </view>
 
+  <!-- 今日课程 -->
+  <view class="card" bindtap="goSchedule">
+    <view class="card-title-row">
+      <text class="card-title">今日课程</text>
+      <text class="card-more">课表 ›</text>
+    </view>
+    <view wx:if="{{todaySchedule.length === 0}}" class="empty">今日无课</view>
+    <view wx:for="{{todaySchedule}}" wx:key="period" class="schedule-item {{item.is_overridden ? 'overridden' : ''}}">
+      <text class="schedule-period">第{{item.period}}节</text>
+      <view class="schedule-info">
+        <text class="schedule-subject">{{item.subject}}</text>
+        <text class="schedule-class" wx:if="{{item.class_name}}">{{item.class_name}}</text>
+      </view>
+      <text class="schedule-tag" wx:if="{{item.is_overridden}}">调</text>
+    </view>
+  </view>
+
   <!-- 快速速记 -->
   <view class="card">
     <view class="card-title">一句话速记</view>

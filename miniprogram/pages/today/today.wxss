@@ -3,6 +3,69 @@
   justify-content: space-around;
 }
 
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.card-more {
+  font-size: 24rpx;
+  color: #3282F0;
+}
+
+.schedule-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.schedule-item:last-child {
+  border-bottom: none;
+}
+
+.schedule-item.overridden {
+  background: #FFF7E6;
+  margin: 0 -12rpx;
+  padding: 16rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.schedule-period {
+  font-size: 24rpx;
+  color: #999;
+  width: 100rpx;
+  flex-shrink: 0;
+}
+
+.schedule-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-subject {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.schedule-class {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.schedule-tag {
+  font-size: 20rpx;
+  color: #fff;
+  background: #FAAD14;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+}
+
 .overview-item {
   display: flex;
   flex-direction: column;

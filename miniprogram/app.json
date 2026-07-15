@@ -5,7 +5,10 @@
     "pages/records/records",
     "pages/notes/notes",
     "pages/student-detail/student-detail",
-    "pages/add-record/add-record"
+    "pages/add-record/add-record",
+    "pages/schedule/schedule",
+    "pages/schedule-edit/schedule-edit",
+    "pages/override/override"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,0 +1,69 @@
+<view class="container">
+  <!-- 调课表单 -->
+  <view class="card" wx:if="{{showForm}}">
+    <view class="card-title">新增调课</view>
+
+    <view class="form-item">
+      <text class="form-label">日期</text>
+      <picker mode="date" value="{{date}}" bindchange="onDateChange">
+        <view class="form-picker">{{date}} ›</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">节次</text>
+      <picker range="{{['第1节','第2节','第3节','第4节','第5节','第6节','第7节','第8节','第9节','第10节','第11节','第12节']}}" value="{{period - 1}}" bindchange="onPeriodChange">
+        <view class="form-picker">第{{period}}节 ›</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">类型</text>
+      <picker range="{{actionOptions}}" range-key="label" value="{{actionIndex}}" bindchange="onActionChange">
+        <view class="form-picker">{{actionOptions[actionIndex].label}} ›</view>
+      </picker>
+    </view>
+
+    <view class="form-item" wx:if="{{action !== 'cancel'}}">
+      <text class="form-label">新科目</text>
+      <input class="form-input" placeholder="如:自习" value="{{newSubject}}" bindinput="onSubjectInput" />
+    </view>
+
+    <view class="form-item" wx:if="{{action !== 'cancel'}}">
+      <text class="form-label">新班级(可选)</text>
+      <input class="form-input" placeholder="如:初二1班" value="{{newClassName}}" bindinput="onClassInput" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">备注</text>
+      <input class="form-input" placeholder="如:教研会" value="{{note}}" bindinput="onNoteInput" />
+    </view>
+
+    <view class="form-actions">
+      <view class="btn-cancel" bindtap="toggleForm">取消</view>
+      <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">{{saving ? '保存中...' : '保存'}}</view>
+    </view>
+  </view>
+
+  <!-- 调课列表 -->
+  <view class="card">
+    <view class="card-title">调课记录</view>
+    <view wx:if="{{overrides.length === 0 && !loading}}" class="empty">暂无调课</view>
+    <view wx:for="{{overrides}}" wx:key="id" class="override-item">
+      <view class="override-main">
+        <view class="override-header">
+          <text class="override-date">{{item.date}}</text>
+          <text class="override-action action-{{item.action}}">
+            {{item.action === 'cancel' ? '停课' : item.action === 'change' ? '改科目' : item.action === 'add' ? '加课' : '代课'}}
+          </text>
+        </view>
+        <text class="override-period">第{{item.period}}节</text>
+        <text class="override-detail" wx:if="{{item.new_subject}}">→ {{item.new_subject}}</text>
+        <text class="override-note" wx:if="{{item.note}}">{{item.note}}</text>
+      </view>
+      <text class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</text>
+    </view>
+  </view>
+</view>
+
+<view class="fab" bindtap="toggleForm" wx:if="{{!showForm}}">+</view>

@@ -1,0 +1,105 @@
+.weekday-tabs {
+  display: flex;
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+
+.weekday-tab {
+  display: inline-block;
+  padding: 12rpx 32rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 16rpx;
+}
+
+.weekday-tab.active {
+  background: #3282F0;
+  color: #fff;
+}
+
+.schedule-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.schedule-card-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.schedule-period-tag {
+  font-size: 24rpx;
+  color: #3282F0;
+  background: #EBF3FF;
+  padding: 8rpx 20rpx;
+  border-radius: 8rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.schedule-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-subject {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.schedule-class {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.delete-btn {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  padding: 8rpx 20rpx;
+}
+
+.bottom-bar {
+  position: fixed;
+  right: 40rpx;
+  bottom: 120rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20rpx;
+}
+
+.btn-override {
+  background: #FFF7E6;
+  color: #FAAD14;
+  border: 2rpx solid #FAAD14;
+  padding: 16rpx 32rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+}
+
+.fab {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #3282F0;
+  color: #fff;
+  font-size: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(50, 130, 240, 0.4);
+}
+
+.fab:active {
+  background: #2870D0;
+}
