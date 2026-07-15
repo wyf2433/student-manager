@@ -166,8 +166,4 @@ Page({
       wx.stopPullDownRefresh()
     )
   },
-
-  onHide() {
-    this._scrollTop = 0
-  },
 })

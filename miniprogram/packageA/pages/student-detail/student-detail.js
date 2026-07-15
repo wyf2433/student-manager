@@ -27,6 +27,9 @@ let chartInstance = null
 let chartReady = false
 
 function initChart(canvas, width, height, dpr) {
+  if (chartInstance) {
+    chartInstance.dispose && chartInstance.dispose()
+  }
   chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
   canvas.setChart(chartInstance)
   chartReady = true
@@ -152,6 +155,8 @@ Page({
       }
       return
     }
+
+    chartInstance.clear()
 
     const xData = exams.map(e => e.exam_name)
     const studentScores = exams.map(e => e.score)
