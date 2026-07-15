@@ -1,8 +1,4 @@
 {
   "navigationBarTitleText": "添加学生",
-  "usingComponents": {
-    "t-cell": "tdesign-miniprogram/cell/cell",
-    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
-    "t-button": "tdesign-miniprogram/button/button"
-  }
+  "usingComponents": {}
 }

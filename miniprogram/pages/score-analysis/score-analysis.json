@@ -2,7 +2,6 @@
   "navigationBarTitleText": "成绩分析",
   "enablePullDownRefresh": true,
   "usingComponents": {
-    "t-loading": "tdesign-miniprogram/loading/loading",
-    "t-empty": "tdesign-miniprogram/empty/empty"
+    "t-loading": "tdesign-miniprogram/loading/loading"
   }
 }

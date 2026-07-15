@@ -3,12 +3,8 @@
   "enablePullDownRefresh": true,
   "usingComponents": {
     "t-search": "tdesign-miniprogram/search/search",
-    "t-cell": "tdesign-miniprogram/cell/cell",
-    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
     "t-button": "tdesign-miniprogram/button/button",
     "t-swipe-cell": "tdesign-miniprogram/swipe-cell/swipe-cell",
-    "t-fab": "tdesign-miniprogram/fab/fab",
-    "t-empty": "tdesign-miniprogram/empty/empty",
     "t-loading": "tdesign-miniprogram/loading/loading"
   }
 }
