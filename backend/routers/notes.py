@@ -13,8 +13,10 @@ router = APIRouter(prefix="/api/notes", tags=["速记"])
 async def list_notes(
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
+    keyword: str = Query(None),
+    date: str = Query(None),
 ):
-    result = note_model.list_notes(page, page_size)
+    result = note_model.list_notes(page, page_size, keyword, date)
     return success(result)
 
 

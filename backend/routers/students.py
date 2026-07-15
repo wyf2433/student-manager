@@ -1,9 +1,10 @@
 """学生路由"""
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, UploadFile, File
 
 from models import student_model
 from schemas.student_schema import StudentCreate, StudentBatchCreate, StudentUpdate
+from services.excel_parser import parse_student_excel, validate_excel_size
 from schemas.common import success
 
 router = APIRouter(prefix="/api/students", tags=["学生"])
@@ -37,6 +38,31 @@ async def create_student(body: StudentCreate):
 @router.post("/batch", status_code=201)
 async def batch_create_students(body: StudentBatchCreate):
     count = student_model.batch_create_students([s.model_dump() for s in body.students])
+    return success({"imported_count": count})
+
+
+@router.post("/import/preview")
+async def import_preview(file: UploadFile = File(...)):
+    content = await file.read()
+    validate_excel_size(len(content))
+    try:
+        students = parse_student_excel(content)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return success({"students": students, "total": len(students)})
+
+
+@router.post("/import/confirm")
+async def import_confirm(body: dict):
+    class_id = body.get("class_id")
+    students = body.get("students", [])
+    if not class_id:
+        raise HTTPException(status_code=400, detail="缺少 class_id")
+    if not students:
+        raise HTTPException(status_code=400, detail="无有效数据")
+    for s in students:
+        s["class_id"] = class_id
+    count = student_model.batch_create_students(students)
     return success({"imported_count": count})
 
 
