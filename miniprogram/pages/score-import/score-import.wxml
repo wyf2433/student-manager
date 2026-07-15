@@ -1,0 +1,80 @@
+<view class="container">
+  <!-- 步骤1: 选文件 -->
+  <view wx:if="{{step === 1}}">
+    <view class="card">
+      <view class="form-item">
+        <text class="form-label">选择成绩Excel</text>
+        <view class="upload-area" bindtap="chooseFile">
+          <view wx:if="{{uploading}}" class="uploading">
+            <text>解析中...</text>
+          </view>
+          <view wx:elif="{{fileName}}" class="file-info">
+            <text class="file-name">{{fileName}}</text>
+            <text class="file-change">点击重新选择</text>
+          </view>
+          <view wx:else class="upload-placeholder">
+            <text class="upload-icon">+</text>
+            <text>从聊天记录中选择Excel</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">格式要求</view>
+      <view class="format-desc">
+        Excel 第一行需包含:
+      </view>
+      <view class="format-list">
+        <text class="format-item">姓名(必填)</text>
+        <text class="format-item">科目列(如:物理/语文/数学)</text>
+        <text class="format-item">考试名称(可选列)</text>
+      </view>
+      <view class="format-desc" style="margin-top: 16rpx;">
+        示例: 姓名 | 物理 | 语文 | 数学
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤2: 预览确认 -->
+  <view wx:if="{{step === 2 && previewData}}">
+    <view class="card">
+      <view class="card-title">导入设置</view>
+
+      <view class="form-item">
+        <text class="form-label">考试名称</text>
+        <input class="form-input" placeholder="如:期中考试" value="{{examName}}" bindinput="onExamInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">导入科目</text>
+        <picker range="{{previewData.subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
+          <view class="form-picker">{{selectedSubject}} ›</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">预览 ({{previewData.total_students}}人)</view>
+      <view class="preview-header">
+        <text class="preview-cell">姓名</text>
+        <text class="preview-cell">{{selectedSubject}}</text>
+      </view>
+      <view wx:for="{{previewData.students}}" wx:key="index" class="preview-row">
+        <text class="preview-cell">{{item.name}}</text>
+        <text class="preview-cell">{{item.scores[selectedSubject] !== null ? item.scores[selectedSubject] : '-'}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="tip-text">
+        导入时按姓名匹配系统中的学生,未匹配的将跳过。请确保学生已先录入系统。
+      </view>
+    </view>
+
+    <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
+      {{importing ? '导入中...' : '确认导入'}}
+    </view>
+    <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
+  </view>
+</view>

@@ -41,6 +41,41 @@
   margin-top: 4rpx;
 }
 
+.score-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.score-item:last-child {
+  border-bottom: none;
+}
+
+.score-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.score-exam {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.score-subject {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.score-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #3282F0;
+}
+
 .timeline-item {
   display: flex;
   padding: 16rpx 0;

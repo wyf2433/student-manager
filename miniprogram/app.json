@@ -10,7 +10,10 @@
     "pages/schedule-edit/schedule-edit",
     "pages/override/override",
     "pages/homework/homework",
-    "pages/homework-add/homework-add"
+    "pages/homework-add/homework-add",
+    "pages/student-add/student-add",
+    "pages/student-import/student-import",
+    "pages/score-import/score-import"
   ],
   "window": {
     "backgroundTextStyle": "light",

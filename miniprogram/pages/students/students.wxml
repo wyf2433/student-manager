@@ -37,3 +37,10 @@
     <text class="arrow">›</text>
   </view>
 </view>
+
+<!-- 底部操作按钮 -->
+<view class="bottom-bar">
+  <view class="btn-score" bindtap="goScoreImport">导入成绩</view>
+  <view class="btn-import" bindtap="goImport">导入学生</view>
+  <view class="fab" bindtap="goAdd">+</view>
+</view>

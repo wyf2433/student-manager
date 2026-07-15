@@ -12,6 +12,18 @@
     </view>
   </view>
 
+  <!-- 成绩记录 -->
+  <view class="card" wx:if="{{scores.length > 0}}">
+    <view class="card-title">成绩记录</view>
+    <view wx:for="{{scores}}" wx:key="id" class="score-item">
+      <view class="score-info">
+        <text class="score-exam">{{item.exam_name}}</text>
+        <text class="score-subject">{{item.subject}}</text>
+      </view>
+      <text class="score-value">{{item.score}}</text>
+    </view>
+  </view>
+
   <!-- 时间线 -->
   <view class="card">
     <view class="card-title">记录时间线</view>

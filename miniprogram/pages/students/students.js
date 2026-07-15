@@ -70,6 +70,18 @@ Page({
     wx.navigateTo({ url: `/pages/student-detail/student-detail?id=${id}` })
   },
 
+  goAdd() {
+    wx.navigateTo({ url: '/pages/student-add/student-add' })
+  },
+
+  goImport() {
+    wx.navigateTo({ url: '/pages/student-import/student-import' })
+  },
+
+  goScoreImport() {
+    wx.navigateTo({ url: '/pages/score-import/score-import' })
+  },
+
   onPullDownRefresh() {
     Promise.all([this.loadClasses(), this.loadStudents()]).then(() =>
       wx.stopPullDownRefresh()

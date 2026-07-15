@@ -1,4 +1,20 @@
 <view class="container">
+  <!-- 搜索+日期筛选 -->
+  <view class="filter-bar">
+    <input
+      class="search-input"
+      placeholder="搜索速记内容"
+      value="{{keyword}}"
+      bindinput="onSearch"
+    />
+    <picker mode="date" value="{{filterDate}}" bindchange="onDateChange">
+      <view class="date-picker {{filterDate ? 'active' : ''}}">
+        {{filterDate || '日期'}}
+      </view>
+    </picker>
+    <text wx:if="{{filterDate}}" class="clear-date" bindtap="clearDate">✕</text>
+  </view>
+
   <!-- 速记输入区 -->
   <view class="input-area" wx:if="{{showInput}}">
     <textarea

@@ -6,6 +6,8 @@ Page({
     loading: true,
     showInput: false,
     noteContent: '',
+    keyword: '',
+    filterDate: '',
   },
 
   onShow() {
@@ -15,7 +17,10 @@ Page({
   async loadNotes() {
     this.setData({ loading: true })
     try {
-      const res = await api.get('/notes')
+      const params = {}
+      if (this.data.keyword) params.keyword = this.data.keyword
+      if (this.data.filterDate) params.date = this.data.filterDate
+      const res = await api.get('/notes', params)
       const data = res.data || {}
       this.setData({
         notes: data.items || [],
@@ -25,6 +30,24 @@ Page({
       console.error('加载速记失败', err)
       this.setData({ loading: false })
     }
+  },
+
+  onSearch(e) {
+    this.setData({ keyword: e.detail.value }, () => {
+      this.loadNotes()
+    })
+  },
+
+  onDateChange(e) {
+    this.setData({ filterDate: e.detail.value }, () => {
+      this.loadNotes()
+    })
+  },
+
+  clearDate() {
+    this.setData({ filterDate: '' }, () => {
+      this.loadNotes()
+    })
   },
 
   toggleInput() {

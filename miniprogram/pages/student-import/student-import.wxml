@@ -1,0 +1,65 @@
+<view class="container">
+  <!-- 步骤1: 选班级+选文件 -->
+  <view wx:if="{{step === 1}}">
+    <view class="card">
+      <view class="form-item">
+        <text class="form-label">导入到班级</text>
+        <picker wx:if="{{classes.length > 0}}" range="{{classes}}" range-key="name" value="{{classIndex}}" bindchange="onClassChange">
+          <view class="form-picker">{{classes[classIndex].name}} ›</view>
+        </picker>
+        <view wx:else class="form-empty">请先创建班级</view>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">选择Excel文件</text>
+        <view class="upload-area" bindtap="chooseFile">
+          <view wx:if="{{uploading}}" class="uploading">
+            <text>解析中...</text>
+          </view>
+          <view wx:elif="{{fileName}}" class="file-info">
+            <text class="file-name">{{fileName}}</text>
+            <text class="file-change">点击重新选择</text>
+          </view>
+          <view wx:else class="upload-placeholder">
+            <text class="upload-icon">+</text>
+            <text>从聊天记录中选择Excel</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">格式要求</view>
+      <view class="format-desc">
+        Excel 第一行需包含以下列名(顺序不限):
+      </view>
+      <view class="format-list">
+        <text class="format-item">姓名(必填)</text>
+        <text class="format-item">学号(可选)</text>
+        <text class="format-item">性别(可选,男/女)</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤2: 预览确认 -->
+  <view wx:if="{{step === 2}}">
+    <view class="card">
+      <view class="card-title">预览 ({{previewStudents.length}}人)</view>
+      <view class="preview-header">
+        <text class="preview-cell">姓名</text>
+        <text class="preview-cell">学号</text>
+        <text class="preview-cell">性别</text>
+      </view>
+      <view wx:for="{{previewStudents}}" wx:key="index" class="preview-row">
+        <text class="preview-cell">{{item.name}}</text>
+        <text class="preview-cell">{{item.student_no || '-'}}</text>
+        <text class="preview-cell">{{item.gender || '-'}}</text>
+      </view>
+    </view>
+
+    <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
+      {{importing ? '导入中...' : '确认导入'}}
+    </view>
+    <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
+  </view>
+</view>

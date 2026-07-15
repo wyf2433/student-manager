@@ -38,6 +38,32 @@ function request(options) {
   })
 }
 
+function upload(path, filePath, formData) {
+  let url = `${BASE_URL}/api${path}`
+  return new Promise((resolve, reject) => {
+    wx.uploadFile({
+      url,
+      filePath,
+      name: 'file',
+      formData,
+      header: {
+        'X-API-Key': API_KEY,
+      },
+      success(res) {
+        const data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(data)
+        } else {
+          reject(data || { code: -1, message: '上传失败' })
+        }
+      },
+      fail(err) {
+        reject({ code: -1, message: `网络错误: ${err.errMsg}` })
+      },
+    })
+  })
+}
+
 module.exports = {
   get(path, query) {
     return request({ method: 'GET', path, query })
@@ -54,4 +80,5 @@ module.exports = {
   delete(path) {
     return request({ method: 'DELETE', path })
   },
+  upload,
 }

@@ -4,6 +4,7 @@ Page({
   data: {
     student: null,
     records: [],
+    scores: [],
     studentId: null,
     loading: true,
     typeLabels: {
@@ -21,14 +22,17 @@ Page({
   async loadData() {
     this.setData({ loading: true })
     try {
-      const [studentRes, recordsRes] = await Promise.all([
+      const [studentRes, recordsRes, scoresRes] = await Promise.all([
         api.get('/students/' + this.data.studentId),
         api.get('/records', { student_id: this.data.studentId }),
+        api.get('/scores', { student_id: this.data.studentId }),
       ])
       const recordsData = recordsRes.data || {}
+      const scoresData = scoresRes.data || {}
       this.setData({
         student: studentRes.data,
         records: recordsData.items || [],
+        scores: scoresData.items || [],
         loading: false,
       })
     } catch (err) {
