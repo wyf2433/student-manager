@@ -7,11 +7,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from config import API_KEY
 
 EXEMPT_PATHS = {"/docs", "/openapi.json", "/redoc"}
+EXEMPT_PREFIXES = ("/uploads/",)
 
 
 class APIKeyMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        if request.url.path in EXEMPT_PATHS:
+        path = request.url.path
+        if path in EXEMPT_PATHS or any(path.startswith(p) for p in EXEMPT_PREFIXES):
             return await call_next(request)
 
         api_key = request.headers.get("X-API-Key")

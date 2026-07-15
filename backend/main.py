@@ -5,14 +5,15 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from config import BACKEND_HOST, BACKEND_PORT
+from config import BACKEND_HOST, BACKEND_PORT, UPLOAD_DIR
 from database import init_db
 from middleware.auth import APIKeyMiddleware
 from middleware.rate_limit import limiter
-from routers import classes, students, records, notes, dashboard, schedule, homework, scores
+from routers import classes, students, records, notes, dashboard, schedule, homework, scores, traces
 from schemas.common import success
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -67,6 +68,11 @@ app.include_router(dashboard.router)
 app.include_router(schedule.router)
 app.include_router(homework.router)
 app.include_router(scores.router)
+app.include_router(traces.router)
+
+import os
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 
 if __name__ == "__main__":
