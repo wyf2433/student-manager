@@ -65,14 +65,16 @@
     </view>
 
     <!-- 成绩记录 -->
-    <view class="card" wx:if="{{scores.length > 0}}">
+    <view class="card" wx:if="{{scoreGroups.length > 0}}">
       <view class="card-title">🏆 成绩记录</view>
-      <view wx:for="{{scores}}" wx:key="id" class="score-item">
-        <view class="score-info">
-          <text class="score-exam">{{item.exam_name}}</text>
-          <text class="score-subject">{{item.subject}}</text>
+      <view wx:for="{{scoreGroups}}" wx:key="exam_name" class="score-group">
+        <view class="score-group-header">{{item.exam_name}}</view>
+        <view class="score-subject-grid">
+          <view wx:for="{{item.subjects}}" wx:for-item="sub" wx:key="id" class="score-chip">
+            <text class="score-chip-name">{{sub.subject}}</text>
+            <text class="score-chip-value">{{sub.score}}<text class="score-chip-full">/{{sub.full_score}}</text></text>
+          </view>
         </view>
-        <text class="score-value">{{item.score}}</text>
       </view>
     </view>
 

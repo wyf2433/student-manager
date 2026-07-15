@@ -87,6 +87,7 @@ Page({
         avatarIdx: avatarIndex(student.name),
         records: records,
         scores: ((scoresRes.data || {}).items || []),
+        scoreGroups: this._groupScores(((scoresRes.data || {}).items || [])),
         notes: ((notesRes.data || {}).items || []),
         trend: trend,
         trendExams: trendExams,
@@ -102,8 +103,20 @@ Page({
     }
   },
 
-  _processExams(trend) {
-    if (!trend || !trend.exams || trend.exams.length === 0) return []
+  _groupScores(scores) {
+    const map = {}
+    const order = []
+    for (const s of scores) {
+      if (!map[s.exam_name]) {
+        map[s.exam_name] = { exam_name: s.exam_name, subjects: [] }
+        order.push(s.exam_name)
+      }
+      map[s.exam_name].subjects.push(s)
+    }
+    return order.map(name => map[name])
+  },
+
+  _processExams(trend) {    if (!trend || !trend.exams || trend.exams.length === 0) return []
     return trend.exams.map(e => {
       let changeLabel = ''
       let changeClass = 'tag-gray'

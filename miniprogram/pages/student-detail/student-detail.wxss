@@ -60,34 +60,54 @@
   color: #9CA3AF;
 }
 
-.score-item {
+.score-group {
+  margin-bottom: 20rpx;
+}
+
+.score-group:last-child { margin-bottom: 0; }
+
+.score-group-header {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #4B5563;
+  margin-bottom: 12rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid #6366F1;
+}
+
+.score-subject-grid {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.score-chip {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid #F3F4F6;
+  background: #F9FAFB;
+  border: 1rpx solid #F3F4F6;
+  border-radius: 16rpx;
+  padding: 12rpx 20rpx;
+  min-width: 120rpx;
 }
 
-.score-item:last-child { border-bottom: none; }
-
-.score-info { display: flex; flex-direction: column; }
-
-.score-exam {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #1F2937;
-}
-
-.score-subject {
-  font-size: 24rpx;
+.score-chip-name {
+  font-size: 22rpx;
   color: #9CA3AF;
+}
+
+.score-chip-value {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #6366F1;
   margin-top: 4rpx;
 }
 
-.score-value {
-  font-size: 40rpx;
-  font-weight: 800;
-  color: #6366F1;
+.score-chip-full {
+  font-size: 20rpx;
+  font-weight: 400;
+  color: #D1D5DB;
 }
 
 /* 底部弹窗 */
