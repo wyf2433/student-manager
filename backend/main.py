@@ -12,7 +12,7 @@ from config import BACKEND_HOST, BACKEND_PORT
 from database import init_db
 from middleware.auth import APIKeyMiddleware
 from middleware.rate_limit import limiter
-from routers import classes, students, records, notes, dashboard, schedule
+from routers import classes, students, records, notes, dashboard, schedule, homework
 from schemas.common import success
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -65,6 +65,7 @@ app.include_router(records.router)
 app.include_router(notes.router)
 app.include_router(dashboard.router)
 app.include_router(schedule.router)
+app.include_router(homework.router)
 
 
 if __name__ == "__main__":
