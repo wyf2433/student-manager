@@ -1,7 +1,7 @@
 <view class="container">
   <view class="card">
     <view class="form-item">
-      <text class="form-label">班级</text>
+      <text class="form-label">👥 班级</text>
       <picker wx:if="{{classes.length > 0}}" range="{{classes}}" range-key="name" value="{{classIndex}}" bindchange="onClassChange">
         <view class="form-picker">{{classes[classIndex].name}} ›</view>
       </picker>
@@ -9,7 +9,7 @@
     </view>
 
     <view class="form-item">
-      <text class="form-label">姓名</text>
+      <text class="form-label">🧑‍🎓 姓名</text>
       <input class="form-input" placeholder="学生姓名" value="{{name}}" bindinput="onNameInput" />
     </view>
 
@@ -21,13 +21,13 @@
     <view class="form-item">
       <text class="form-label">性别</text>
       <radio-group bindchange="onGenderChange">
-        <label class="radio-label"><radio value="男" checked="{{gender === '男'}}" />男</label>
-        <label class="radio-label"><radio value="女" checked="{{gender === '女'}}" />女</label>
+        <label class="radio-label"><radio value="男" checked="{{gender === '男'}}" />👦 男</label>
+        <label class="radio-label"><radio value="女" checked="{{gender === '女'}}" />👧 女</label>
       </radio-group>
     </view>
   </view>
 
-  <t-button theme="primary" size="large" bindtap="onSave" loading="{{saving}}" t-class="save-btn">
-    {{saving ? '保存中...' : '保存'}}
-  </t-button>
+  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
+    {{saving ? '保存中...' : '💾 保存'}}
+  </view>
 </view>

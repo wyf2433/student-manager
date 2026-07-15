@@ -10,19 +10,19 @@
 
     <!-- 标题 -->
     <view class="form-item">
-      <text class="form-label">标题</text>
+      <text class="form-label">📌 标题</text>
       <input class="form-input" placeholder="留痕标题" value="{{title}}" bindinput="onTitleInput" />
     </view>
 
     <!-- 备注 -->
     <view class="form-item">
-      <text class="form-label">备注</text>
+      <text class="form-label">📝 备注</text>
       <textarea class="form-textarea" placeholder="详细描述..." value="{{note}}" bindinput="onNoteInput" maxlength="1000" auto-height />
     </view>
 
     <!-- 图片 -->
     <view class="form-item">
-      <text class="form-label">图片(最多9张)</text>
+      <text class="form-label">📸 图片(最多9张)</text>
       <view class="image-grid">
         <view wx:for="{{images}}" wx:key="*this" class="image-item">
           <image
@@ -41,7 +41,7 @@
     </view>
   </view>
 
-  <t-button theme="primary" size="large" bindtap="onSave" loading="{{saving}}" t-class="save-btn">
-    {{saving ? '保存中...' : '保存'}}
-  </t-button>
+  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
+    {{saving ? '保存中...' : '💾 保存'}}
+  </view>
 </view>

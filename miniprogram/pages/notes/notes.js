@@ -1,5 +1,7 @@
 const api = require('../../utils/api.js')
 
+const STICKY_CLASSES = ['sticky-yellow', 'sticky-pink', 'sticky-green', 'sticky-blue', 'sticky-purple']
+
 Page({
   data: {
     notes: [],
@@ -22,8 +24,12 @@ Page({
       if (this.data.filterDate) params.date = this.data.filterDate
       const res = await api.get('/notes', params)
       const data = res.data || {}
+      const notes = (data.items || []).map((n, i) => ({
+        ...n,
+        stickyClass: STICKY_CLASSES[i % STICKY_CLASSES.length],
+      }))
       this.setData({
-        notes: data.items || [],
+        notes: notes,
         loading: false,
       })
     } catch (err) {

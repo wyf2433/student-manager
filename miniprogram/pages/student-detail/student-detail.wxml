@@ -2,37 +2,54 @@
   <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
 
   <block wx:if="{{!loading}}">
-    <!-- 学生信息卡 -->
-    <view class="card">
-      <view class="student-header">
-        <view class="avatar {{student.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
+    <!-- 渐变信息卡 -->
+    <view class="gradient-header-large">
+      <view class="detail-avatar-row">
+        <view class="avatar-grad avatar-grad-{{avatarIdx}}" style="width: 120rpx; height: 120rpx; font-size: 52rpx; border: 4rpx solid rgba(255,255,255,0.3);">
           {{student.name[0]}}
         </view>
-        <view class="student-basic">
-          <text class="student-name">{{student.name}}</text>
-          <text class="student-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
+        <view class="detail-info">
+          <text class="detail-name">{{student.name}}</text>
+          <text class="detail-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
         </view>
       </view>
-      <t-button theme="primary" variant="outline" size="medium" bindtap="showActionSheet" t-class="quick-action-btn">
-        + 记考勤 / 请假 / 加扣分
-      </t-button>
+      <!-- 快速操作 -->
+      <view class="quick-actions">
+        <view class="quick-action-item" bindtap="quickAction" data-type="attendance">
+          <view class="quick-action-circle qa-green">📅</view>
+          <text class="quick-action-text">考勤</text>
+        </view>
+        <view class="quick-action-item" bindtap="quickAction" data-type="leave">
+          <view class="quick-action-circle qa-orange">🚪</view>
+          <text class="quick-action-text">请假</text>
+        </view>
+        <view class="quick-action-item" bindtap="quickAction" data-type="score">
+          <view class="quick-action-circle qa-red">⭐</view>
+          <text class="quick-action-text">加扣分</text>
+        </view>
+      </view>
     </view>
 
     <!-- 个人备注 -->
     <view class="card">
-      <view class="card-title">个人备注</view>
-      <view class="note-input-area">
+      <view class="card-title">💬 个人备注</view>
+      <view class="sticky-note sticky-yellow" style="margin-bottom: 16rpx;">
         <textarea
-          class="note-textarea"
+          class="sticky-note-input"
           placeholder="记录关于这个学生的情况..."
           value="{{noteContent}}"
           bindinput="onNoteInput"
           maxlength="500"
           auto-height
         />
-        <t-button theme="primary" size="small" bindtap="saveNote">记录</t-button>
+        <view class="sticky-actions">
+          <t-button theme="primary" size="small" bindtap="saveNote">记录 ✏️</t-button>
+        </view>
       </view>
-      <t-empty wx:if="{{notes.length === 0}}" description="暂无备注" />
+      <view wx:if="{{notes.length === 0}}" class="empty">
+        <text class="empty-emoji">📭</text>
+        <text>暂无备注</text>
+      </view>
       <t-swipe-cell
         wx:for="{{notes}}"
         wx:key="id"
@@ -42,14 +59,14 @@
       >
         <view class="note-item">
           <text class="note-content">{{item.content}}</text>
-          <text class="note-time">{{item.created_at}}</text>
+          <text class="note-time">🕐 {{item.created_at}}</text>
         </view>
       </t-swipe-cell>
     </view>
 
     <!-- 成绩记录 -->
     <view class="card" wx:if="{{scores.length > 0}}">
-      <view class="card-title">成绩记录</view>
+      <view class="card-title">🏆 成绩记录</view>
       <view wx:for="{{scores}}" wx:key="id" class="score-item">
         <view class="score-info">
           <text class="score-exam">{{item.exam_name}}</text>
@@ -61,26 +78,19 @@
 
     <!-- 记录时间线 -->
     <view class="card">
-      <view class="card-title">记录时间线</view>
-      <t-empty wx:if="{{records.length === 0}}" description="暂无记录" />
-      <t-swipe-cell
-        wx:for="{{records}}"
-        wx:key="id"
-        right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
-        bind:click="deleteRecordSwipe"
-        data-id="{{item.id}}"
-      >
-        <view class="timeline-item">
-          <view class="timeline-dot type-{{item.type}}"></view>
+      <view class="card-title">📋 记录时间线</view>
+      <view wx:if="{{records.length === 0}}" class="empty">
+        <text class="empty-emoji">📭</text>
+        <text>暂无记录</text>
+      </view>
+      <view class="timeline" wx:if="{{records.length > 0}}">
+        <view wx:for="{{records}}" wx:key="id" class="timeline-item">
+          <view class="timeline-dot {{item.dotClass}}"></view>
           <view class="timeline-content">
             <view class="timeline-header">
-              <t-tag
-                theme="{{item.type === 'attendance' ? 'success' : item.type === 'leave' ? 'warning' : 'danger'}}"
-                variant="light"
-                size="small"
-              >
-                {{typeLabels[item.type] || item.type}}
-              </t-tag>
+              <view class="color-tag {{item.tagClass}}">
+                {{item.emoji}} {{typeLabels[item.type]}}
+              </view>
               <text class="timeline-time">{{item.created_at}}</text>
             </view>
             <text class="timeline-desc">{{item.content || ''}}</text>
@@ -89,7 +99,7 @@
             </text>
           </view>
         </view>
-      </t-swipe-cell>
+      </view>
     </view>
   </block>
 </view>
@@ -98,7 +108,7 @@
 <view class="action-mask" wx:if="{{showAction}}" bindtap="closeAction"></view>
 <view class="action-sheet" wx:if="{{showAction}}">
   <view class="action-title">
-    {{actionType === 'attendance' ? '记考勤' : actionType === 'leave' ? '记请假' : '加扣分'}}
+    {{actionType === 'attendance' ? '📅 记考勤' : actionType === 'leave' ? '🚪 记请假' : '⭐ 加扣分'}}
     <text class="action-close" bindtap="closeAction">✕</text>
   </view>
   <view class="action-body">

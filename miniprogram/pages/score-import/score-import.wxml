@@ -3,13 +3,13 @@
   <view wx:if="{{step === 1}}">
     <view class="card">
       <view class="form-item">
-        <text class="form-label">选择成绩Excel</text>
+        <text class="form-label">📥 选择成绩Excel</text>
         <view class="upload-area" bindtap="chooseFile">
           <view wx:if="{{uploading}}" class="uploading">
             <text>解析中...</text>
           </view>
           <view wx:elif="{{fileName}}" class="file-info">
-            <text class="file-name">{{fileName}}</text>
+            <text class="file-name">📊 {{fileName}}</text>
             <text class="file-change">点击重新选择</text>
           </view>
           <view wx:else class="upload-placeholder">
@@ -21,14 +21,14 @@
     </view>
 
     <view class="card">
-      <view class="card-title">格式要求</view>
+      <view class="card-title">📋 格式要求</view>
       <view class="format-desc">
         Excel 第一行需包含:
       </view>
       <view class="format-list">
-        <t-tag theme="primary" variant="light" size="small">姓名(必填)</t-tag>
-        <t-tag theme="primary" variant="light" size="small">科目列(如:物理/语文/数学)</t-tag>
-        <t-tag theme="primary" variant="light" size="small">考试名称(可选列)</t-tag>
+        <view class="color-tag tag-blue">姓名(必填)</view>
+        <view class="color-tag tag-green">科目列(如:物理/语文/数学)</view>
+        <view class="color-tag tag-purple">考试名称(可选列)</view>
       </view>
       <view class="format-desc" style="margin-top: 16rpx;">
         示例: 姓名 | 物理 | 语文 | 数学
@@ -39,10 +39,10 @@
   <!-- 步骤2: 预览确认 -->
   <view wx:if="{{step === 2 && previewData}}">
     <view class="card">
-      <view class="card-title">导入设置</view>
+      <view class="card-title">⚙️ 导入设置</view>
 
       <view class="form-item">
-        <text class="form-label">导入到班级</text>
+        <text class="form-label">👥 导入到班级</text>
         <picker wx:if="{{classes.length > 0}}" range="{{classes}}" range-key="name" value="{{classIndex}}" bindchange="onClassChange">
           <view class="form-picker">{{classes[classIndex].name}} ›</view>
         </picker>
@@ -50,12 +50,12 @@
       </view>
 
       <view class="form-item">
-        <text class="form-label">考试名称</text>
+        <text class="form-label">📝 考试名称</text>
         <input class="form-input" placeholder="如:期中考试" value="{{examName}}" bindinput="onExamInput" />
       </view>
 
       <view class="form-item">
-        <text class="form-label">导入科目</text>
+        <text class="form-label">📖 导入科目</text>
         <picker range="{{previewData.subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
           <view class="form-picker">{{selectedSubject}} ›</view>
         </picker>
@@ -63,7 +63,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">预览 ({{previewData.total_students}}人)</view>
+      <view class="card-title">👁️ 预览 ({{previewData.total_students}}人)</view>
       <view class="preview-header">
         <text class="preview-cell">姓名</text>
         <text class="preview-cell">{{selectedSubject}}</text>
@@ -76,13 +76,13 @@
 
     <view class="card">
       <view class="tip-text">
-        导入时按姓名匹配学生,未匹配的自动创建(学号留空,以后补)。一次只导入一个科目,可多次导入不同科目。
+        💡 导入时按姓名匹配学生,未匹配的自动创建(学号留空,以后补)。一次只导入一个科目,可多次导入不同科目。
       </view>
     </view>
 
-    <t-button theme="primary" size="large" bindtap="confirmImport" loading="{{importing}}" t-class="save-btn">
-      {{importing ? '导入中...' : '确认导入'}}
-    </t-button>
+    <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
+      {{importing ? '导入中...' : '📥 确认导入'}}
+    </view>
     <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
   </view>
 </view>

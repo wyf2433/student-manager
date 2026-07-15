@@ -1,38 +1,37 @@
 <view class="container">
-  <!-- 星期选择 -->
-  <t-tabs value="{{currentWeekday}}" bindchange="onWeekdayChange">
-    <t-tab-panel
-      wx:for="{{weekdays}}"
-      wx:key="value"
-      label="{{item.label}}"
-      value="{{item.value}}"
-    />
+  <t-tabs value="{{currentWeekday}}" bindchange="onWeekdayChange" t-class="weekday-tabs">
+    <t-tab-panel wx:for="{{weekdays}}" wx:key="value" label="{{item.label}}" value="{{item.value}}" />
   </t-tabs>
 
-  <!-- 课表列表 -->
-  <t-loading wx:if="{{loading}}" theme="circular" text="加载中..." inherit />
-  <t-empty wx:elif="{{schedules.length === 0}}" description="暂无课程,点击右下角添加" />
-  <block wx:else>
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
+
+  <block wx:if="{{!loading}}">
+    <view wx:if="{{schedules.length === 0}}" class="empty">
+      <text class="empty-emoji">🎉</text>
+      <text>暂无课程,点击右下角添加</text>
+    </view>
     <t-swipe-cell
       wx:for="{{schedules}}"
       wx:key="id"
-      right="{{[{ text: '删除', className: 'swipe-del' }]}}"
+      right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
       bind:click="onDeleteSwipe"
       data-id="{{item.id}}"
     >
-      <view class="schedule-item" bindtap="goEdit" data-id="{{item.id}}">
-        <t-tag theme="primary" variant="light" size="small">第{{item.period}}节</t-tag>
-        <view class="schedule-info">
-          <text class="schedule-subject">{{item.subject}}</text>
-          <text class="schedule-class" wx:if="{{item.class_name}}">{{item.class_name}}</text>
+      <view class="card card-bar bar-blue" bindtap="goEdit" data-id="{{item.id}}">
+        <view class="schedule-row">
+          <text class="schedule-emoji">{{item.emoji}}</text>
+          <view class="schedule-detail">
+            <text class="schedule-subject">{{item.subject}}</text>
+            <text class="schedule-class">第{{item.period}}节{{item.class_name ? ' · ' + item.class_name : ''}}</text>
+          </view>
+          <view class="color-tag tag-blue">第{{item.period}}节</view>
         </view>
       </view>
     </t-swipe-cell>
   </block>
 </view>
 
-<!-- 底部按钮 -->
 <view class="bottom-bar">
-  <view class="btn-outline warn" bindtap="goOverride">临时调课</view>
-  <t-fab icon="add" bind:click="goAdd" />
+  <view class="btn-outline warn" bindtap="goOverride">🔀 临时调课</view>
+  <view class="fab" bindtap="goAdd">+</view>
 </view>

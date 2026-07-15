@@ -1,5 +1,14 @@
 const api = require('../../utils/api.js')
 
+function avatarIndex(name) {
+  if (!name) return 0
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = hash + name.charCodeAt(i)
+  }
+  return hash % 8
+}
+
 Page({
   data: {
     students: [],
@@ -39,8 +48,13 @@ Page({
       }
       const res = await api.get('/students', params)
       const data = res.data || {}
+      const students = (data.items || []).map(s => ({
+        ...s,
+        avatarIdx: avatarIndex(s.name),
+        genderEmoji: s.gender === '女' ? '👧' : '👦',
+      }))
       this.setData({
-        students: data.items || [],
+        students,
         loading: false,
       })
     } catch (err) {

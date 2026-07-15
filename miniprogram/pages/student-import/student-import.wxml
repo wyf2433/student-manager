@@ -3,7 +3,7 @@
   <view wx:if="{{step === 1}}">
     <view class="card">
       <view class="form-item">
-        <text class="form-label">导入到班级</text>
+        <text class="form-label">👥 导入到班级</text>
         <picker wx:if="{{classes.length > 0}}" range="{{classes}}" range-key="name" value="{{classIndex}}" bindchange="onClassChange">
           <view class="form-picker">{{classes[classIndex].name}} ›</view>
         </picker>
@@ -11,13 +11,13 @@
       </view>
 
       <view class="form-item">
-        <text class="form-label">选择Excel文件</text>
+        <text class="form-label">📥 选择Excel文件</text>
         <view class="upload-area" bindtap="chooseFile">
           <view wx:if="{{uploading}}" class="uploading">
             <text>解析中...</text>
           </view>
           <view wx:elif="{{fileName}}" class="file-info">
-            <text class="file-name">{{fileName}}</text>
+            <text class="file-name">📊 {{fileName}}</text>
             <text class="file-change">点击重新选择</text>
           </view>
           <view wx:else class="upload-placeholder">
@@ -29,14 +29,14 @@
     </view>
 
     <view class="card">
-      <view class="card-title">格式要求</view>
+      <view class="card-title">📋 格式要求</view>
       <view class="format-desc">
         Excel 第一行需包含以下列名(顺序不限):
       </view>
       <view class="format-list">
-        <t-tag theme="primary" variant="light" size="small">姓名(必填)</t-tag>
-        <t-tag theme="primary" variant="light" size="small">学号(可选)</t-tag>
-        <t-tag theme="primary" variant="light" size="small">性别(可选,男/女)</t-tag>
+        <view class="color-tag tag-blue">姓名(必填)</view>
+        <view class="color-tag tag-green">学号(可选)</view>
+        <view class="color-tag tag-purple">性别(可选,男/女)</view>
       </view>
     </view>
   </view>
@@ -44,7 +44,7 @@
   <!-- 步骤2: 预览确认 -->
   <view wx:if="{{step === 2}}">
     <view class="card">
-      <view class="card-title">预览 ({{previewStudents.length}}人)</view>
+      <view class="card-title">👁️ 预览 ({{previewStudents.length}}人)</view>
       <view class="preview-header">
         <text class="preview-cell">姓名</text>
         <text class="preview-cell">学号</text>
@@ -57,9 +57,9 @@
       </view>
     </view>
 
-    <t-button theme="primary" size="large" bindtap="confirmImport" loading="{{importing}}" t-class="save-btn">
-      {{importing ? '导入中...' : '确认导入'}}
-    </t-button>
+    <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
+      {{importing ? '导入中...' : '📥 确认导入'}}
+    </view>
     <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
   </view>
 </view>

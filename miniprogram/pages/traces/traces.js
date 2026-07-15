@@ -1,14 +1,14 @@
 const api = require('../../utils/api.js')
 
 const TYPE_OPTIONS = [
-  { value: '', label: '全部' },
-  { value: 'classroom_discipline', label: '课堂纪律' },
-  { value: 'experiment_record', label: '实验课记录' },
-  { value: 'homework_feedback', label: '作业反馈' },
-  { value: 'exam_analysis', label: '考试分析' },
-  { value: 'student_talk', label: '学生谈话' },
-  { value: 'parent_communication', label: '家长沟通' },
-  { value: 'other', label: '其他' },
+  { value: '', label: '📦 全部' },
+  { value: 'classroom_discipline', label: '📏 课堂纪律' },
+  { value: 'experiment_record', label: '🔬 实验记录' },
+  { value: 'homework_feedback', label: '📝 作业反馈' },
+  { value: 'exam_analysis', label: '📊 考试分析' },
+  { value: 'student_talk', label: '💬 学生谈话' },
+  { value: 'parent_communication', label: '📞 家长沟通' },
+  { value: 'other', label: '📎 其他' },
 ]
 
 const TYPE_LABELS = {
@@ -21,6 +21,16 @@ const TYPE_LABELS = {
   other: '其他',
 }
 
+const TYPE_EMOJI = {
+  classroom_discipline: '📏',
+  experiment_record: '🔬',
+  homework_feedback: '📝',
+  exam_analysis: '📊',
+  student_talk: '💬',
+  parent_communication: '📞',
+  other: '📎',
+}
+
 Page({
   data: {
     traces: [],
@@ -28,6 +38,7 @@ Page({
     loading: true,
     typeOptions: TYPE_OPTIONS,
     typeLabels: TYPE_LABELS,
+    typeEmojis: TYPE_EMOJI,
   },
 
   onShow() {
@@ -41,8 +52,12 @@ Page({
       if (this.data.filterType) params.type = this.data.filterType
       const res = await api.get('/traces', params)
       const data = res.data || {}
+      const traces = (data.items || []).map(t => ({
+        ...t,
+        emoji: TYPE_EMOJI[t.type] || '📎',
+      }))
       this.setData({
-        traces: data.items || [],
+        traces: traces,
         loading: false,
       })
     } catch (err) {

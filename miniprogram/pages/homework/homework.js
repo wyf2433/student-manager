@@ -9,6 +9,33 @@ const TYPE_LABELS = {
   exam: '试卷',
 }
 
+const TYPE_EMOJI = {
+  daily: '📝',
+  experiment_report: '🔬',
+  review: '📋',
+  exam: '📄',
+}
+
+const BAR_CLASS = {
+  daily: 'bar-blue',
+  experiment_report: 'bar-green',
+  review: 'bar-purple',
+  exam: 'bar-red',
+}
+
+const TAG_CLASS = {
+  daily: 'tag-blue',
+  experiment_report: 'tag-green',
+  review: 'tag-purple',
+  exam: 'tag-red',
+}
+
+const STATUS_TAG = {
+  active: 'tag-blue',
+  collected: 'tag-orange',
+  graded: 'tag-green',
+}
+
 Page({
   data: {
     homework: [],
@@ -18,11 +45,12 @@ Page({
     loading: true,
     statusLabels: STATUS_LABELS,
     typeLabels: TYPE_LABELS,
+    typeEmojis: TYPE_EMOJI,
     statusFilters: [
-      { value: '', label: '全部' },
-      { value: 'active', label: '进行中' },
-      { value: 'collected', label: '已收' },
-      { value: 'graded', label: '已改' },
+      { value: '', label: '📖 全部' },
+      { value: 'active', label: '🔵 进行中' },
+      { value: 'collected', label: '🟡 已收' },
+      { value: 'graded', label: '🟢 已改' },
     ],
   },
 
@@ -48,8 +76,15 @@ Page({
       if (this.data.filterStatus) params.status = this.data.filterStatus
       const res = await api.get('/homework', params)
       const data = res.data || {}
+      const homework = (data.items || []).map(h => ({
+        ...h,
+        emoji: TYPE_EMOJI[h.type] || '📝',
+        barClass: BAR_CLASS[h.type] || 'bar-blue',
+        tagClass: TAG_CLASS[h.type] || 'tag-blue',
+        statusTag: STATUS_TAG[h.status] || 'tag-gray',
+      }))
       this.setData({
-        homework: data.items || [],
+        homework: homework,
         loading: false,
       })
     } catch (err) {

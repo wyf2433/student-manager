@@ -10,6 +10,21 @@ const WEEKDAYS = [
   { value: 7, label: '周日' },
 ]
 
+const SUBJECT_EMOJI = {
+  '物理': '🔬', '语文': '📚', '数学': '➗', '英语': '🔤',
+  '道法': '⚖️', '历史': '📜', '地理': '🌍', '生物': '🧬',
+  '体育': '⚽', '音乐': '🎵', '美术': '🎨', '信息技术': '💻',
+  '自习': '📖', '班会': '👥', '化学': '🧪',
+}
+
+function getSubjectEmoji(subject) {
+  if (!subject) return '📘'
+  for (const key in SUBJECT_EMOJI) {
+    if (subject.indexOf(key) >= 0) return SUBJECT_EMOJI[key]
+  }
+  return '📘'
+}
+
 Page({
   data: {
     schedules: [],
@@ -31,8 +46,12 @@ Page({
     try {
       const res = await api.get('/schedule', { weekday: this.data.currentWeekday })
       const data = res.data || {}
+      const schedules = (data.items || []).map(s => ({
+        ...s,
+        emoji: getSubjectEmoji(s.subject),
+      }))
       this.setData({
-        schedules: data.items || [],
+        schedules: schedules,
         loading: false,
       })
     } catch (err) {
@@ -62,8 +81,6 @@ Page({
   },
 
   async onDeleteSwipe(e) {
-    const detail = e.detail || {}
-    if (detail.source && detail.source !== 'right') return
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
@@ -73,7 +90,10 @@ Page({
         this.loadSchedule()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
+        this.loadSchedule()
       }
+    } else {
+      this.loadSchedule()
     }
   },
 

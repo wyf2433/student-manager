@@ -1,47 +1,40 @@
 <view class="container">
-  <!-- 状态筛选 -->
-  <t-tabs value="{{filterStatus}}" bindchange="onStatusTabChange">
+  <t-tabs value="{{filterStatus}}" bindchange="onStatusTabChange" t-class="filter-tabs">
     <t-tab-panel wx:for="{{statusFilters}}" wx:key="value" label="{{item.label}}" value="{{item.value}}" />
   </t-tabs>
 
-  <!-- 作业列表 -->
-  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." />
-  <t-empty wx:if="{{homework.length === 0 && !loading}}" description="暂无作业" />
-  <t-swipe-cell
-    wx:for="{{homework}}"
-    wx:key="id"
-    right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
-    bind:click="onDeleteSwipe"
-    data-id="{{item.id}}"
-  >
-    <view class="hw-card">
-      <view class="hw-header">
-        <t-tag
-          theme="{{item.type === 'daily' ? 'primary' : item.type === 'experiment_report' ? 'success' : item.type === 'review' ? 'default' : 'danger'}}"
-          variant="light"
-          size="small"
-        >
-          {{typeLabels[item.type] || item.type}}
-        </t-tag>
-        <t-tag
-          theme="{{item.status === 'active' ? 'primary' : item.status === 'collected' ? 'warning' : 'success'}}"
-          variant="light"
-          size="small"
-          bind:tap="onStatusChange"
-          data-id="{{item.id}}"
-          data-status="{{item.status}}"
-        >
-          {{statusLabels[item.status]}} ›
-        </t-tag>
-      </view>
-      <text class="hw-content">{{item.content}}</text>
-      <view class="hw-footer">
-        <text class="hw-date">{{item.created_at}}</text>
-        <text class="hw-due" wx:if="{{item.due_date}}">截止: {{item.due_date}}</text>
-        <text class="hw-note" wx:if="{{item.note}}">{{item.note}}</text>
-      </view>
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
+
+  <block wx:if="{{!loading}}">
+    <view wx:if="{{homework.length === 0}}" class="empty">
+      <text class="empty-emoji">📭</text>
+      <text>暂无作业</text>
     </view>
-  </t-swipe-cell>
+    <t-swipe-cell
+      wx:for="{{homework}}"
+      wx:key="id"
+      right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
+      bind:click="onDeleteSwipe"
+      data-id="{{item.id}}"
+    >
+      <view class="card card-bar {{item.barClass}}">
+        <view class="hw-header">
+          <view class="color-tag {{item.tagClass}}">
+            {{item.emoji}} {{typeLabels[item.type]}}
+          </view>
+          <view class="color-tag {{item.statusTag}}" bindtap="onStatusChange" data-id="{{item.id}}" data-status="{{item.status}}">
+            {{statusLabels[item.status]}} ›
+          </view>
+        </view>
+        <text class="hw-content">{{item.content}}</text>
+        <view class="hw-footer">
+          <text class="hw-date">🕐 {{item.created_at}}</text>
+          <text class="hw-due" wx:if="{{item.due_date}}">⏰ 截止: {{item.due_date}}</text>
+          <text class="hw-note" wx:if="{{item.note}}">📝 {{item.note}}</text>
+        </view>
+      </view>
+    </t-swipe-cell>
+  </block>
 </view>
 
-<t-fab icon="add" bind:click="goAdd" />
+<view class="fab" bindtap="goAdd">+</view>

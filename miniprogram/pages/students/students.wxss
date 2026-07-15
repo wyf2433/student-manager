@@ -12,58 +12,38 @@
 .picker-text {
   background: #fff;
   padding: 16rpx 24rpx;
-  border-radius: 12rpx;
+  border-radius: 14rpx;
   font-size: 28rpx;
-  color: #181818;
+  color: #1F2937;
   display: flex;
   align-items: center;
   gap: 8rpx;
+  font-weight: 600;
 }
 
 .picker-arrow {
   font-size: 20rpx;
-  color: #999;
-}
-
-.search-wrap {
-  flex: 1;
+  color: #9CA3AF;
 }
 
 .search-comp {
   background: #fff !important;
-  border-radius: 12rpx !important;
+  border-radius: 14rpx !important;
 }
 
 .student-card {
   display: flex;
   align-items: center;
   background: #fff;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   padding: 24rpx 28rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
 }
 
 .student-card:active {
   background: #F5F7FA;
 }
-
-.avatar {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 32rpx;
-  font-weight: 600;
-  margin-right: 24rpx;
-  flex-shrink: 0;
-}
-
-.avatar-male { background: #0052D9; }
-.avatar-female { background: #FF7A9C; }
 
 .student-info {
   flex: 1;
@@ -71,16 +51,31 @@
   flex-direction: column;
 }
 
+.student-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
 .student-name {
   font-size: 30rpx;
-  font-weight: 600;
-  color: #181818;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.student-gender {
+  font-size: 28rpx;
 }
 
 .student-meta {
   font-size: 24rpx;
-  color: #999;
+  color: #9CA3AF;
   margin-top: 4rpx;
+}
+
+.arrow {
+  font-size: 40rpx;
+  color: #D1D5DB;
 }
 
 .bottom-bar {
@@ -90,6 +85,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 20rpx;
+  gap: 16rpx;
   z-index: 100;
 }

@@ -15,7 +15,7 @@
 
     <!-- 班级 -->
     <view class="form-item">
-      <text class="form-label">班级</text>
+      <text class="form-label">👥 班级</text>
       <picker
         wx:if="{{classes.length > 0}}"
         range="{{classes}}"
@@ -30,7 +30,7 @@
 
     <!-- 学生 -->
     <view class="form-item">
-      <text class="form-label">学生</text>
+      <text class="form-label">🧑‍🎓 学生</text>
       <picker
         wx:if="{{students.length > 0}}"
         range="{{students}}"
@@ -45,7 +45,7 @@
 
     <!-- 分数(仅加扣分) -->
     <view class="form-item" wx:if="{{type === 'score'}}">
-      <text class="form-label">分数</text>
+      <text class="form-label">⭐ 分数</text>
       <input
         class="form-input"
         type="digit"
@@ -57,7 +57,7 @@
 
     <!-- 内容 -->
     <view class="form-item">
-      <text class="form-label">内容</text>
+      <text class="form-label">📝 内容</text>
       <textarea
         class="form-textarea"
         placeholder="输入描述..."
@@ -68,5 +68,7 @@
     </view>
   </view>
 
-  <t-button theme="primary" size="large" bindtap="onSave" loading="{{saving}}" t-class="save-btn">保存</t-button>
+  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
+    {{saving ? '保存中...' : '💾 保存'}}
+  </view>
 </view>

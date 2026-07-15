@@ -7,6 +7,57 @@ const TYPE_LABELS = {
   note: '速记',
 }
 
+const SUBJECT_EMOJI = {
+  '物理': '🔬', '语文': '📚', '数学': '➗', '英语': '🔤',
+  '道法': '⚖️', '历史': '📜', '地理': '🌍', '生物': '🧬',
+  '体育': '⚽', '音乐': '🎵', '美术': '🎨', '信息技术': '💻',
+  '自习': '📖', '班会': '👥', '化学': '🧪', '科学': '🔭',
+}
+
+const RECENT_EMOJI = {
+  attendance: '✅',
+  leave: '🚪',
+  score: '⭐',
+  note: '📝',
+}
+
+const HOMEWORK_TYPE_EMOJI = {
+  daily: '📝',
+  experiment_report: '🔬',
+  review: '📋',
+  exam: '📄',
+}
+
+const HOMEWORK_STATUS_LABEL = {
+  active: '进行中',
+  collected: '已收',
+  graded: '已改',
+}
+
+function getSubjectEmoji(subject) {
+  if (!subject) return '📘'
+  for (const key in SUBJECT_EMOJI) {
+    if (subject.indexOf(key) >= 0) return SUBJECT_EMOJI[key]
+  }
+  return '📘'
+}
+
+function getGreeting() {
+  const h = new Date().getHours()
+  if (h < 6) return '夜深了'
+  if (h < 9) return '早上好'
+  if (h < 12) return '上午好'
+  if (h < 14) return '中午好'
+  if (h < 18) return '下午好'
+  return '晚上好'
+}
+
+function formatDate() {
+  const d = new Date()
+  const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  return `${d.getMonth() + 1}月${d.getDate()}日 ${week[d.getDay()]}`
+}
+
 Page({
   data: {
     overview: null,
@@ -15,9 +66,17 @@ Page({
     todayHomework: [],
     loading: true,
     quickNote: '',
+    greeting: '',
+    todayDate: '',
+    scheduleCount: 0,
+    homeworkCount: 0,
+    recentEmojis: RECENT_EMOJI,
+    hwTypeEmojis: HOMEWORK_TYPE_EMOJI,
+    hwStatusLabels: HOMEWORK_STATUS_LABEL,
   },
 
   onShow() {
+    this.setData({ greeting: getGreeting(), todayDate: formatDate() })
     this.loadData()
   },
 
@@ -37,17 +96,28 @@ Page({
           id: item.id,
           type: type,
           type_label: TYPE_LABELS[type] || type,
+          emoji: RECENT_EMOJI[type] || '📌',
           summary: item.content || '',
           time_label: item.created_at || '',
         }
       })
       const scheduleData = scheduleRes.data || {}
       const homeworkData = homeworkRes.data || {}
+      const schedules = (scheduleData.items || []).map(s => ({
+        ...s,
+        emoji: getSubjectEmoji(s.subject),
+      }))
+      const homework = (homeworkData.items || []).map(h => ({
+        ...h,
+        emoji: HOMEWORK_TYPE_EMOJI[h.type] || '📝',
+      }))
       this.setData({
         overview: overviewRes.data,
         recent: items,
-        todaySchedule: scheduleData.items || [],
-        todayHomework: homeworkData.items || [],
+        todaySchedule: schedules,
+        todayHomework: homework,
+        scheduleCount: schedules.length,
+        homeworkCount: homework.length,
         loading: false,
       })
     } catch (err) {

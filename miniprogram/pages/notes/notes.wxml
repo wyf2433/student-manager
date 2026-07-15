@@ -3,7 +3,7 @@
   <view class="filter-bar">
     <view class="search-wrap">
       <t-search
-        placeholder="搜索速记内容"
+        placeholder="🔍 搜索速记内容"
         value="{{keyword}}"
         bind:change="onSearch"
         t-class="search-comp"
@@ -11,7 +11,7 @@
     </view>
     <picker mode="date" value="{{filterDate}}" bindchange="onDateChange">
       <view class="date-picker {{filterDate ? 'active' : ''}}">
-        <text>{{filterDate || '日期'}}</text>
+        <text>{{filterDate ? '📅 ' + filterDate : '📅 日期'}}</text>
       </view>
     </picker>
     <text wx:if="{{filterDate}}" class="clear-date" bindtap="clearDate">✕</text>
@@ -21,9 +21,10 @@
 
   <block wx:if="{{!loading}}">
     <!-- 速记输入区 -->
-    <view class="input-area" wx:if="{{showInput}}">
+    <view class="sticky-note sticky-yellow" wx:if="{{showInput}}">
+      <view class="sticky-title">📝 新速记</view>
       <textarea
-        class="note-input"
+        class="sticky-note-input"
         placeholder="想到什么就记一笔..."
         value="{{noteContent}}"
         bindinput="onNoteInput"
@@ -33,12 +34,15 @@
       />
       <view class="input-actions">
         <t-button theme="default" variant="text" size="small" bindtap="toggleInput">取消</t-button>
-        <t-button theme="primary" size="small" bindtap="saveNote">保存</t-button>
+        <t-button theme="primary" size="small" bindtap="saveNote">保存 ✏️</t-button>
       </view>
     </view>
 
     <!-- 速记列表 -->
-    <t-empty wx:if="{{notes.length === 0}}" description="暂无速记" />
+    <view wx:if="{{notes.length === 0}}" class="empty">
+      <text class="empty-emoji">📝</text>
+      <text>暂无速记,快记一笔吧~</text>
+    </view>
     <t-swipe-cell
       wx:for="{{notes}}"
       wx:key="id"
@@ -46,14 +50,14 @@
       bind:click="onDeleteSwipe"
       data-id="{{item.id}}"
     >
-      <view class="note-card">
+      <view class="sticky-note {{item.stickyClass}}">
         <view class="note-content">{{item.content}}</view>
         <view class="note-footer">
-          <text class="note-time">{{item.created_at}}</text>
+          <text class="note-time">🕐 {{item.created_at}}</text>
         </view>
       </view>
     </t-swipe-cell>
   </block>
 </view>
 
-<t-fab wx:if="{{!showInput}}" icon="add" bind:click="toggleInput" />
+<view class="fab" wx:if="{{!showInput}}" bindtap="toggleInput">+</view>

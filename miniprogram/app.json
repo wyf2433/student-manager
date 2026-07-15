@@ -19,14 +19,14 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0052D9",
+    "navigationBarBackgroundColor": "#667EEA",
     "navigationBarTitleText": "学生管理",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F7FA"
+    "backgroundColor": "#F0F2F5"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#0052D9",
+    "color": "#9CA3AF",
+    "selectedColor": "#6366F1",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [

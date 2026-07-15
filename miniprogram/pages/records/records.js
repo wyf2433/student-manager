@@ -6,17 +6,24 @@ const TYPE_LABELS = {
   score: '加扣分',
 }
 
+const TYPE_EMOJI = {
+  attendance: '✅',
+  leave: '🚪',
+  score: '⭐',
+}
+
 Page({
   data: {
     records: [],
     filterType: '',
     loading: true,
     typeLabels: TYPE_LABELS,
+    typeEmojis: TYPE_EMOJI,
     typeFilters: [
-      { value: '', label: '全部' },
-      { value: 'attendance', label: '考勤' },
-      { value: 'leave', label: '请假' },
-      { value: 'score', label: '加扣分' },
+      { value: '', label: '📋 全部' },
+      { value: 'attendance', label: '✅ 考勤' },
+      { value: 'leave', label: '🚪 请假' },
+      { value: 'score', label: '⭐ 加扣分' },
     ],
   },
 
@@ -33,8 +40,14 @@ Page({
       }
       const res = await api.get('/records', params)
       const data = res.data || {}
+      const records = (data.items || []).map(r => ({
+        ...r,
+        emoji: TYPE_EMOJI[r.type] || '📌',
+        barClass: r.type === 'attendance' ? 'bar-green' : r.type === 'leave' ? 'bar-orange' : 'bar-red',
+        tagClass: r.type === 'attendance' ? 'tag-green' : r.type === 'leave' ? 'tag-orange' : 'tag-red',
+      }))
       this.setData({
-        records: data.items || [],
+        records: records,
         loading: false,
       })
     } catch (err) {

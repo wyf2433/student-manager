@@ -1,36 +1,43 @@
-.schedule-item {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  padding: 24rpx 28rpx;
-  border-radius: 16rpx;
-  margin-bottom: 16rpx;
-  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.05);
+.weekday-tabs {
+  margin-bottom: 20rpx;
 }
 
-.schedule-info {
+.schedule-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.schedule-emoji {
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.schedule-detail {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 24rpx;
 }
 
 .schedule-subject {
   font-size: 32rpx;
-  font-weight: 600;
-  color: #181818;
+  font-weight: 700;
+  color: #1F2937;
 }
 
 .schedule-class {
   font-size: 24rpx;
-  color: #999;
+  color: #9CA3AF;
   margin-top: 4rpx;
 }
 
-.swipe-del {
-  background: #D54941;
-  color: #fff;
-}
-
 .bottom-bar {
-  bottom: 240rpx;
+  position: fixed;
+  right: 32rpx;
+  bottom: 140rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16rpx;
+  z-index: 100;
 }

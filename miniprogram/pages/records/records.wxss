@@ -1,11 +1,3 @@
-.record-card {
-  background: #fff;
-  border-radius: 16rpx;
-  padding: 28rpx;
-  margin-bottom: 16rpx;
-  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.05);
-}
-
 .record-header {
   display: flex;
   align-items: center;
@@ -15,7 +7,7 @@
 
 .record-time {
   font-size: 22rpx;
-  color: #BBB;
+  color: #9CA3AF;
 }
 
 .record-body {
@@ -27,20 +19,16 @@
 .record-student {
   font-size: 28rpx;
   font-weight: 600;
-  color: #181818;
+  color: #1F2937;
 }
 
 .record-desc {
   font-size: 26rpx;
-  color: #666;
+  color: #6B7280;
 }
 
 .record-value {
-  font-size: 30rpx;
-  font-weight: 700;
-  color: #D54941;
-}
-
-.swipe-delete-btn {
-  background: #D54941 !important;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #EF4444;
 }

@@ -1,5 +1,26 @@
 const api = require('../../utils/api.js')
 
+const TYPE_LABELS = {
+  attendance: '考勤',
+  leave: '请假',
+  score: '加扣分',
+}
+
+const RECORD_EMOJI = {
+  attendance: '✅',
+  leave: '🚪',
+  score: '⭐',
+}
+
+function avatarIndex(name) {
+  if (!name) return 0
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = hash + name.charCodeAt(i)
+  }
+  return hash % 8
+}
+
 Page({
   data: {
     student: null,
@@ -8,11 +29,9 @@ Page({
     notes: [],
     studentId: null,
     loading: true,
-    typeLabels: {
-      attendance: '考勤',
-      leave: '请假',
-      score: '加扣分',
-    },
+    avatarIdx: 0,
+    typeLabels: TYPE_LABELS,
+    recordEmojis: RECORD_EMOJI,
     showAction: false,
     actionType: '',
     actionContent: '',
@@ -35,11 +54,19 @@ Page({
         api.get('/scores', { student_id: this.data.studentId }),
         api.get('/notes', { student_id: this.data.studentId }),
       ])
+      const student = studentRes.data
+      const records = ((recordsRes.data || {}).items || []).map(r => ({
+        ...r,
+        emoji: RECORD_EMOJI[r.type] || '📌',
+        dotClass: r.type === 'attendance' ? 'dot-green' : r.type === 'leave' ? 'dot-orange' : 'dot-red',
+        tagClass: r.type === 'attendance' ? 'tag-green' : r.type === 'leave' ? 'tag-orange' : 'tag-red',
+      }))
       this.setData({
-        student: studentRes.data,
-        records: (recordsRes.data || {}).items || [],
-        scores: (scoresRes.data || {}).items || [],
-        notes: (notesRes.data || {}).items || [],
+        student: student,
+        avatarIdx: avatarIndex(student.name),
+        records: records,
+        scores: ((scoresRes.data || {}).items || []),
+        notes: ((notesRes.data || {}).items || []),
         loading: false,
       })
     } catch (err) {
@@ -50,7 +77,7 @@ Page({
 
   showActionSheet() {
     wx.showActionSheet({
-      itemList: ['记考勤', '记请假', '加扣分'],
+      itemList: ['📅 记考勤', '🚪 记请假', '⭐ 加扣分'],
       success: (res) => {
         const types = ['attendance', 'leave', 'score']
         this.setData({
@@ -60,6 +87,16 @@ Page({
           actionValue: '',
         })
       },
+    })
+  },
+
+  quickAction(e) {
+    const type = e.currentTarget.dataset.type
+    this.setData({
+      showAction: true,
+      actionType: type,
+      actionContent: '',
+      actionValue: '',
     })
   },
 
