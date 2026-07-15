@@ -51,7 +51,8 @@ Page({
   },
 
   goAdd() {
-    wx.navigateTo({ url: '/pages/add-record/add-record' })
+    const type = this.data.filterType || ''
+    wx.navigateTo({ url: '/pages/add-record/add-record' + (type ? '?type=' + type : '') })
   },
 
   async onDelete(e) {
