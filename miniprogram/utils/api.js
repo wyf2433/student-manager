@@ -1,22 +1,38 @@
+const BASE_URL = 'http://47.239.25.178'
+const API_KEY = 'REDACTED'
+
 function request(options) {
   const { method = 'GET', path = '', query = {}, body = null } = options
 
+  let url = `${BASE_URL}/api${path}`
+  const params = []
+  for (const key in query) {
+    if (query[key] !== undefined && query[key] !== null) {
+      params.push(`${key}=${encodeURIComponent(query[key])}`)
+    }
+  }
+  if (params.length > 0) {
+    url += `?${params.join('&')}`
+  }
+
   return new Promise((resolve, reject) => {
-    wx.cloud.callFunction({
-      name: 'api',
-      data: { method, path, query, body },
+    wx.request({
+      url,
+      method,
+      data: body,
+      header: {
+        'X-API-Key': API_KEY,
+        'Content-Type': 'application/json',
+      },
       success(res) {
-        const result = res.result
-        if (result && result.statusCode >= 200 && result.statusCode < 300) {
-          resolve(result.data)
-        } else if (result && result.data) {
-          reject(result.data)
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res.data)
         } else {
-          reject({ code: -1, message: '请求失败', data: null })
+          reject(res.data || { code: -1, message: '请求失败' })
         }
       },
       fail(err) {
-        reject({ code: -1, message: `云函数调用失败: ${err.errMsg}`, data: null })
+        reject({ code: -1, message: `网络错误: ${err.errMsg}` })
       },
     })
   })
