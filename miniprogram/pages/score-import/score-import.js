@@ -10,8 +10,32 @@ Page({
     examName: '',
     selectedSubject: '',
     subjectIndex: 0,
+    classes: [],
+    classIndex: 0,
     students: [],
     importing: false,
+  },
+
+  onLoad() {
+    this.loadClasses()
+  },
+
+  async loadClasses() {
+    try {
+      const res = await api.get('/classes')
+      const data = res.data || {}
+      const classes = data.items || []
+      this.setData({ classes })
+      if (classes.length === 0) {
+        wx.showToast({ title: '请先创建班级', icon: 'none' })
+      }
+    } catch (err) {
+      console.error('加载班级失败', err)
+    }
+  },
+
+  onClassChange(e) {
+    this.setData({ classIndex: e.detail.value })
   },
 
   chooseFile() {
@@ -68,9 +92,13 @@ Page({
   },
 
   async confirmImport() {
-    const { examName, selectedSubject, previewData } = this.data
+    const { examName, selectedSubject, previewData, classes, classIndex } = this.data
     if (!examName.trim()) {
       wx.showToast({ title: '请输入考试名称', icon: 'none' })
+      return
+    }
+    if (classes.length === 0) {
+      wx.showToast({ title: '请先创建班级', icon: 'none' })
       return
     }
 
@@ -79,48 +107,25 @@ Page({
       score: s.scores[selectedSubject],
     }))
 
-    const studentNames = students.map(s => s.name)
-    if (studentNames.length === 0) {
+    if (students.length === 0) {
       wx.showToast({ title: '无有效数据', icon: 'none' })
       return
     }
 
     this.setData({ importing: true })
     try {
-      const listRes = await api.get('/students', { page_size: 200 })
-      const allStudents = (listRes.data && listRes.data.items) || []
-      const nameToId = {}
-      allStudents.forEach(s => {
-        nameToId[s.name] = s.id
-      })
-
-      const confirmStudents = []
-      const unmatched = []
-      for (const s of students) {
-        const sid = nameToId[s.name]
-        if (sid !== undefined) {
-          confirmStudents.push({ student_id: sid, score: s.score })
-        } else {
-          unmatched.push(s.name)
-        }
-      }
-
-      if (confirmStudents.length === 0) {
-        wx.showToast({ title: '未匹配到任何学生', icon: 'none' })
-        this.setData({ importing: false })
-        return
-      }
-
       const res = await api.post('/scores/import/confirm', {
         exam_name: examName.trim(),
         subject: selectedSubject,
-        students: confirmStudents,
+        class_id: classes[classIndex].id,
+        students,
       })
 
       const imported = res.data.imported_count
+      const autoCreated = res.data.auto_created_students || 0
       let msg = `已导入${imported}条成绩`
-      if (unmatched.length > 0) {
-        msg += `\n${unmatched.length}人未匹配: ${unmatched.slice(0, 3).join('、')}${unmatched.length > 3 ? '...' : ''}`
+      if (autoCreated > 0) {
+        msg += `\n自动创建${autoCreated}名学生(学号待补)`
       }
       wx.showModal({ title: '导入完成', content: msg, showCancel: false })
       this.setData({ importing: false })

@@ -47,21 +47,36 @@ async def import_preview(file: UploadFile = File(...)):
 @router.post("/import/confirm")
 async def import_confirm(body: ScoreImportConfirm):
     scores_to_insert = []
+    auto_created = 0
     for s in body.students:
         student_id = s.get("student_id")
         score_val = s.get("score")
+
         if student_id is None:
-            continue
+            name = s.get("name")
+            if not name:
+                continue
+            existing = student_model.list_students(class_id=body.class_id, keyword=name)
+            items = existing.get("items", [])
+            matched = [st for st in items if st["name"] == name]
+            if matched:
+                student_id = matched[0]["id"]
+            else:
+                new_student = student_model.create_student(body.class_id, name)
+                student_id = new_student["id"]
+                auto_created += 1
+
         scores_to_insert.append({
             "student_id": student_id,
             "exam_name": body.exam_name,
             "subject": body.subject,
             "score": score_val,
         })
+
     if not scores_to_insert:
         raise HTTPException(status_code=400, detail="无有效数据")
     count = score_model.batch_create_scores(scores_to_insert)
-    return success({"imported_count": count})
+    return success({"imported_count": count, "auto_created_students": auto_created})
 
 
 @router.delete("/{score_id}")

@@ -42,6 +42,14 @@
       <view class="card-title">导入设置</view>
 
       <view class="form-item">
+        <text class="form-label">导入到班级</text>
+        <picker wx:if="{{classes.length > 0}}" range="{{classes}}" range-key="name" value="{{classIndex}}" bindchange="onClassChange">
+          <view class="form-picker">{{classes[classIndex].name}} ›</view>
+        </picker>
+        <view wx:else class="form-empty">请先创建班级</view>
+      </view>
+
+      <view class="form-item">
         <text class="form-label">考试名称</text>
         <input class="form-input" placeholder="如:期中考试" value="{{examName}}" bindinput="onExamInput" />
       </view>
@@ -68,7 +76,7 @@
 
     <view class="card">
       <view class="tip-text">
-        导入时按姓名匹配系统中的学生,未匹配的将跳过。请确保学生已先录入系统。
+        导入时按姓名匹配学生,未匹配的自动创建(学号留空,以后补)。一次只导入一个科目,可多次导入不同科目。
       </view>
     </view>
 

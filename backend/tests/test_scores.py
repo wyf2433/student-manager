@@ -99,6 +99,7 @@ class TestScoreImport:
         confirm_body = {
             "exam_name": "期中考试",
             "subject": "物理",
+            "class_id": cid,
             "students": [
                 {"student_id": sids["张三"], "score": students_data[0]["scores"]["物理"]},
                 {"student_id": sids["李四"], "score": students_data[1]["scores"]["物理"]},
@@ -107,6 +108,33 @@ class TestScoreImport:
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
         assert res.status_code == 200
         assert res.json()["data"]["imported_count"] == 2
+        assert res.json()["data"]["auto_created_students"] == 0
 
         list_res = client.get(f"/api/scores?student_id={sids['张三']}&subject=物理", headers=headers)
         assert list_res.json()["data"]["items"][0]["score"] == 95
+
+    def test_confirm_auto_create(self, client, headers):
+        cid = client.post("/api/classes", json={"name": "初二1班"}, headers=headers).json()["data"]["id"]
+        excel = make_score_excel([["王五", 90], ["赵六", 85]])
+        preview = client.post(
+            "/api/scores/import/preview",
+            files={"file": ("test.xlsx", excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+            headers=headers,
+        )
+        students_data = preview.json()["data"]["students"]
+        confirm_body = {
+            "exam_name": "期中考试",
+            "subject": "物理",
+            "class_id": cid,
+            "students": [
+                {"name": "王五", "score": students_data[0]["scores"]["物理"]},
+                {"name": "赵六", "score": students_data[1]["scores"]["物理"]},
+            ],
+        }
+        res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
+        assert res.status_code == 200
+        assert res.json()["data"]["imported_count"] == 2
+        assert res.json()["data"]["auto_created_students"] == 2
+
+        list_res = client.get(f"/api/students?class_id={cid}", headers=headers)
+        assert list_res.json()["data"]["total"] == 2
