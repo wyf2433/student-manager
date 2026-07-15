@@ -53,8 +53,7 @@
   box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.08);
 }
 
-.fab {
-  position: relative;
+.schedule-add-btn {
   width: 96rpx;
   height: 96rpx;
   border-radius: 50%;

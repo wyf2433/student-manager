@@ -33,5 +33,5 @@
 
 <view class="bottom-bar">
   <view class="btn-outline warn" bindtap="goOverride">🔀 临时调课</view>
-  <view class="fab" bindtap="goAdd">+</view>
+  <view class="schedule-add-btn" bindtap="goAdd">+</view>
 </view>
