@@ -91,7 +91,6 @@
       <view class="trend-chart-container">
         <ec-canvas id="trendChart" canvas-id="trendChart" ec="{{ec}}"></ec-canvas>
       </view>
-    </view>
 
       <!-- 趋势详情列表 -->
       <view class="trend-detail-list">
