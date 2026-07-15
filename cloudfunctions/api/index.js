@@ -1,10 +1,10 @@
 const cloud = require('wx-server-sdk')
 const axios = require('axios')
+const FormData = require('form-data')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const BASE_URL = 'http://47.239.25.178'
-const API_KEY = process.env.API_KEY || 'REDACTED'
 
 exports.main = async (event, context) => {
   const {
@@ -12,15 +12,46 @@ exports.main = async (event, context) => {
     path = '',
     query = {},
     body = null,
+    isUpload = false,
+    fileBase64 = null,
+    fileName = 'file',
+    formData = {},
   } = event
 
   const url = `${BASE_URL}/api${path}`
-  const headers = {
-    'X-API-Key': API_KEY,
-    'Content-Type': 'application/json',
+  const apiKey = process.env.API_KEY
+
+  if (!apiKey) {
+    return {
+      statusCode: 500,
+      data: { code: -1, message: '云函数未配置 API_KEY 环境变量', data: null },
+    }
   }
 
+  const headers = { 'X-API-Key': apiKey }
+
   try {
+    if (isUpload && fileBase64) {
+      const buffer = Buffer.from(fileBase64, 'base64')
+      const form = new FormData()
+      form.append('file', buffer, fileName)
+      for (const key in formData) {
+        form.append(key, formData[key])
+      }
+      Object.assign(headers, form.getHeaders())
+
+      const response = await axios({
+        method: 'post',
+        url,
+        data: form,
+        headers,
+        params: query,
+        timeout: 30000,
+      })
+      return { statusCode: response.status, data: response.data }
+    }
+
+    headers['Content-Type'] = 'application/json'
     const response = await axios({
       method: method.toLowerCase(),
       url,
@@ -29,11 +60,7 @@ exports.main = async (event, context) => {
       headers,
       timeout: 15000,
     })
-
-    return {
-      statusCode: response.status,
-      data: response.data,
-    }
+    return { statusCode: response.status, data: response.data }
   } catch (error) {
     if (error.response) {
       return {

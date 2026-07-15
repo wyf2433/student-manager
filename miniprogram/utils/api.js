@@ -1,64 +1,58 @@
-const BASE_URL = 'http://47.239.25.178'
-const API_KEY = 'REDACTED'
-
 function request(options) {
   const { method = 'GET', path = '', query = {}, body = null } = options
 
-  let url = `${BASE_URL}/api${path}`
-  const params = []
-  for (const key in query) {
-    if (query[key] !== undefined && query[key] !== null) {
-      params.push(`${key}=${encodeURIComponent(query[key])}`)
-    }
-  }
-  if (params.length > 0) {
-    url += `?${params.join('&')}`
-  }
-
   return new Promise((resolve, reject) => {
-    wx.request({
-      url,
-      method,
-      data: body,
-      header: {
-        'X-API-Key': API_KEY,
-        'Content-Type': 'application/json',
-      },
+    wx.cloud.callFunction({
+      name: 'api',
+      data: { method, path, query, body },
       success(res) {
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(res.data)
+        const result = res.result
+        if (result && result.statusCode >= 200 && result.statusCode < 300) {
+          resolve(result.data)
         } else {
-          reject(res.data || { code: -1, message: '请求失败' })
+          reject((result && result.data) || { code: -1, message: '请求失败' })
         }
       },
       fail(err) {
-        reject({ code: -1, message: `网络错误: ${err.errMsg}` })
+        reject({ code: -1, message: `云函数调用失败: ${err.errMsg}` })
       },
     })
   })
 }
 
 function upload(path, filePath, formData) {
-  let url = `${BASE_URL}/api${path}`
   return new Promise((resolve, reject) => {
-    wx.uploadFile({
-      url,
+    const fs = wx.getFileSystemManager()
+    fs.readFile({
       filePath,
-      name: 'file',
-      formData,
-      header: {
-        'X-API-Key': API_KEY,
-      },
-      success(res) {
-        const data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(data)
-        } else {
-          reject(data || { code: -1, message: '上传失败' })
-        }
+      encoding: 'base64',
+      success(readRes) {
+        const fileName = filePath.split('/').pop()
+        wx.cloud.callFunction({
+          name: 'api',
+          data: {
+            method: 'POST',
+            path,
+            isUpload: true,
+            fileBase64: readRes.data,
+            fileName,
+            formData,
+          },
+          success(res) {
+            const result = res.result
+            if (result && result.statusCode >= 200 && result.statusCode < 300) {
+              resolve(result.data)
+            } else {
+              reject((result && result.data) || { code: -1, message: '上传失败' })
+            }
+          },
+          fail(err) {
+            reject({ code: -1, message: `云函数调用失败: ${err.errMsg}` })
+          },
+        })
       },
       fail(err) {
-        reject({ code: -1, message: `网络错误: ${err.errMsg}` })
+        reject({ code: -1, message: `文件读取失败: ${err.errMsg}` })
       },
     })
   })
