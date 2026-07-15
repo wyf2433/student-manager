@@ -26,16 +26,6 @@ function avatarIndex(name) {
 let chartInstance = null
 let chartReady = false
 
-function initChart(canvas, width, height, dpr) {
-  if (chartInstance) {
-    chartInstance.dispose && chartInstance.dispose()
-  }
-  chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
-  canvas.setChart(chartInstance)
-  chartReady = true
-  return chartInstance
-}
-
 Page({
   data: {
     student: null,
@@ -56,13 +46,12 @@ Page({
     actionValue: '',
     noteContent: '',
     saving: false,
-    ec: { onInit: initChart },
+    ec: { lazyLoad: true },
   },
 
   onLoad(options) {
     chartInstance = null
     chartReady = false
-    this._renderRetry = 0
     this.setData({ studentId: options.id })
     this.loadData()
   },
@@ -148,16 +137,6 @@ Page({
     const exams = this.data.trendExams
     if (!exams || exams.length === 0) return
 
-    if (!chartReady || !chartInstance) {
-      if (this._renderRetry < 10) {
-        this._renderRetry++
-        setTimeout(() => this._renderChart(), 300)
-      }
-      return
-    }
-
-    chartInstance.clear()
-
     const xData = exams.map(e => e.exam_name)
     const studentScores = exams.map(e => e.score)
     const classAvgs = exams.map(e => e.class_avg || null)
@@ -184,6 +163,7 @@ Page({
         max: fullScore,
         axisLabel: { fontSize: 11 },
       },
+      animation: false,
       series: [
         {
           name: '本人成绩',
@@ -222,7 +202,18 @@ Page({
       })
     }
 
-    chartInstance.setOption(option)
+    if (!chartInstance) {
+      this.selectComponent('#trendChart').init((canvas, width, height, dpr) => {
+        chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
+        canvas.setChart(chartInstance)
+        chartReady = true
+        chartInstance.setOption(option)
+        return chartInstance
+      })
+    } else {
+      chartInstance.clear()
+      chartInstance.setOption(option)
+    }
   },
 
   onTrendSubjectChange(e) {

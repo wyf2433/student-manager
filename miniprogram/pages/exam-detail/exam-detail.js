@@ -39,10 +39,11 @@ Page({
         this.setData({ loading: false })
         return
       }
+      const defaultIdx = subjects.indexOf('物理') >= 0 ? subjects.indexOf('物理') : 0
       this.setData({
         subjects,
-        selectedSubject: subjects[0],
-        subjectIndex: 0,
+        selectedSubject: subjects[defaultIdx],
+        subjectIndex: defaultIdx,
       })
       this.loadAnalysis()
     } catch (err) {
