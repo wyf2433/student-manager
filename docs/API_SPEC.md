@@ -105,9 +105,16 @@ X-API-Key: <你的API Key>
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | GET | `/api/scores` | 成绩列表(支持 student_id/exam_name/subject 筛选) |
-| POST | `/api/scores` | 新增单条成绩 |
+| GET | `/api/scores/exams` | 考试名称列表 |
+| GET | `/api/scores/exams/{exam_name}/subjects` | 某场考试的科目列表 |
+| POST | `/api/scores` | 新增单条成绩(支持 full_score) |
 | POST | `/api/scores/import/preview` | Excel 导入预览 |
-| POST | `/api/scores/import/confirm` | Excel 导入确认 |
+| POST | `/api/scores/import/confirm` | Excel 导入确认(支持 full_score/grade_prefix) |
+| DELETE | `/api/scores/{id}` | 删除成绩 |
+| GET | `/api/scores/analysis/exam` | 单次考试分析(均分/中位数/标准差/分数段/难度/班级对比) |
+| GET | `/api/scores/analysis/trend` | 学生个人多次成绩趋势(含班级均分+进退步) |
+| GET | `/api/scores/analysis/class-trend` | 班级多次考试成绩趋势 |
+| GET | `/api/scores/analysis/ranking` | 排行榜+进步/退步榜TOP5 |
 
 ### 工作留痕
 

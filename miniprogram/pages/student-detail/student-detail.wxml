@@ -76,6 +76,46 @@
       </view>
     </view>
 
+    <!-- 成绩趋势 -->
+    <view class="card" wx:if="{{trend && trend.exams.length > 0}}">
+      <view class="card-title">📈 成绩趋势</view>
+      <!-- 趋势图 -->
+      <view class="trend-chart">
+        <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-bar-group">
+          <view class="trend-bar-pair">
+            <view class="trend-bar-col">
+              <view class="trend-bar trend-bar-student" style="height: {{maxTrendScore > 0 ? item.score / maxTrendScore * 200 : 0}}rpx;"></view>
+            </view>
+            <view class="trend-bar-col" wx:if="{{item.class_avg}}">
+              <view class="trend-bar trend-bar-class" style="height: {{maxTrendScore > 0 ? item.class_avg / maxTrendScore * 200 : 0}}rpx;"></view>
+            </view>
+          </view>
+          <text class="trend-score">{{item.score}}</text>
+          <text class="trend-exam-label">{{item.exam_name}}</text>
+        </view>
+      </view>
+      <view class="trend-legend">
+        <view class="legend-item"><view class="legend-dot student-dot"></view><text>本人</text></view>
+        <view class="legend-item"><view class="legend-dot class-dot"></view><text>班级均分</text></view>
+      </view>
+      <!-- 每次考试详情 -->
+      <view class="trend-detail-list">
+        <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-detail-item">
+          <view class="trend-detail-info">
+            <text class="trend-detail-exam">{{item.exam_name}}</text>
+            <text class="trend-detail-subject">{{item.subject}} · 满分{{item.full_score}}</text>
+          </view>
+          <view class="trend-detail-right">
+            <text class="trend-detail-score">{{item.score}}分</text>
+            <text class="trend-detail-avg" wx:if="{{item.class_avg}}">班均{{item.class_avg}}</text>
+            <view wx:if="{{item.change !== null}}" class="color-tag {{item.change > 0 ? 'tag-green' : item.change < 0 ? 'tag-red' : 'tag-gray'}}">
+              {{item.change > 0 ? '↑' + item.change : item.change < 0 ? '↓' + Math.abs(item.change) : '—'}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <!-- 记录时间线 -->
     <view class="card">
       <view class="card-title">📋 记录时间线</view>

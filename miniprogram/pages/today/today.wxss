@@ -103,6 +103,22 @@
   color: #B83280;
 }
 
+.score-entry-card {
+  background: linear-gradient(135deg, #DBEAFE 0%, #E0E7FF 100%);
+}
+
+.score-entry-card .trace-entry-title {
+  color: #4338CA;
+}
+
+.score-entry-card .trace-entry-desc {
+  color: #6366F1;
+}
+
+.score-entry-card .trace-entry-arrow {
+  color: #6366F1;
+}
+
 .sticky-title {
   font-size: 28rpx;
   font-weight: 700;

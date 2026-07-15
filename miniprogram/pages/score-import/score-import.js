@@ -11,6 +11,7 @@ Page({
     selectedSubject: '',
     subjectIndex: 0,
     gradePrefix: '',
+    fullScore: '100',
     hasClassColumn: false,
     importing: false,
   },
@@ -72,6 +73,10 @@ Page({
     this.setData({ gradePrefix: e.detail.value })
   },
 
+  onFullScoreInput(e) {
+    this.setData({ fullScore: e.detail.value })
+  },
+
   onSubjectChange(e) {
     const index = e.detail.value
     this.setData({
@@ -81,13 +86,18 @@ Page({
   },
 
   async confirmImport() {
-    const { examName, selectedSubject, previewData, gradePrefix, hasClassColumn } = this.data
+    const { examName, selectedSubject, previewData, gradePrefix, hasClassColumn, fullScore } = this.data
     if (!examName.trim()) {
       wx.showToast({ title: '请输入考试名称', icon: 'none' })
       return
     }
     if (hasClassColumn && !gradePrefix.trim()) {
       wx.showToast({ title: '请输入年级前缀', icon: 'none' })
+      return
+    }
+    const fullScoreNum = parseFloat(fullScore)
+    if (isNaN(fullScoreNum) || fullScoreNum <= 0) {
+      wx.showToast({ title: '请输入有效满分', icon: 'none' })
       return
     }
 
@@ -109,6 +119,7 @@ Page({
       const body = {
         exam_name: examName.trim(),
         subject: selectedSubject,
+        full_score: fullScoreNum,
         students,
       }
       if (hasClassColumn && gradePrefix.trim()) {
@@ -145,6 +156,7 @@ Page({
       previewData: null,
       examName: '',
       selectedSubject: '',
+      fullScore: '100',
     })
   },
 })

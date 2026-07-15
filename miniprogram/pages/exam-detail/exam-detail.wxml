@@ -1,0 +1,176 @@
+<view class="container">
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
+
+  <block wx:if="{{!loading && analysis}}">
+    <!-- 渐变头部 -->
+    <view class="gradient-header">
+      <view class="greeting">📊 {{examName}}</view>
+      <view class="greeting-sub">
+        <view class="greeting-sub-item">🔬 {{selectedSubject}}</view>
+        <view class="greeting-sub-item">👥 {{analysis.total_students}}人</view>
+        <view class="greeting-sub-item">💯 满分{{analysis.full_score}}</view>
+      </view>
+    </view>
+
+    <!-- 科目选择 -->
+    <view class="card" wx:if="{{subjects.length > 1}}">
+      <view class="form-item" style="margin-bottom: 0;">
+        <picker range="{{subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
+          <view class="form-picker">📖 {{selectedSubject}} ›</view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <t-tabs value="{{activeTab}}" bindchange="onTabChange">
+      <t-tab-panel label="📊 考试概览" value="0" />
+      <t-tab-panel label="🏆 排行榜" value="1" />
+    </t-tabs>
+
+    <!-- Tab 1: 考试概览 -->
+    <block wx:if="{{activeTab === 0}}">
+      <!-- 统计卡片网格 -->
+      <view class="stat-grid">
+        <view class="stat-card stat-blue">
+          <text class="stat-emoji">📈</text>
+          <text class="stat-num">{{analysis.avg_score}}</text>
+          <text class="stat-label">均分</text>
+        </view>
+        <view class="stat-card stat-green">
+          <text class="stat-emoji">🏆</text>
+          <text class="stat-num">{{analysis.max_score}}</text>
+          <text class="stat-label">最高分</text>
+        </view>
+        <view class="stat-card stat-orange">
+          <text class="stat-emoji">📊</text>
+          <text class="stat-num">{{analysis.median_score}}</text>
+          <text class="stat-label">中位数</text>
+        </view>
+        <view class="stat-card stat-red">
+          <text class="stat-emoji">📉</text>
+          <text class="stat-num">{{analysis.min_score}}</text>
+          <text class="stat-label">最低分</text>
+        </view>
+      </view>
+
+      <!-- 比率卡片 -->
+      <view class="card">
+        <view class="card-title">📌 关键指标</view>
+        <view class="metric-row">
+          <view class="metric-item">
+            <text class="metric-val pass-color">{{analysis.pass_rate}}%</text>
+            <text class="metric-label">及格率</text>
+          </view>
+          <view class="metric-item">
+            <text class="metric-val exc-color">{{analysis.excellent_rate}}%</text>
+            <text class="metric-label">优秀率</text>
+          </view>
+          <view class="metric-item">
+            <text class="metric-val std-color">{{analysis.std_dev}}</text>
+            <text class="metric-label">标准差</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 难度评估 -->
+      <view class="card difficulty-card {{analysis.difficulty_level}}">
+        <view class="diff-header">
+          <text class="diff-emoji">{{diffEmoji[analysis.difficulty_level]}}</text>
+          <text class="diff-label">题目难度评估</text>
+        </view>
+        <text class="diff-value">{{analysis.difficulty}}</text>
+        <text class="diff-desc">
+          难度系数 {{analysis.difficulty_ratio}}（均分/满分）
+        </text>
+        <text class="diff-hint">
+          {{analysis.difficulty_level === 'easy' ? '题目偏简单，可适当增加难度' : analysis.difficulty_level === 'moderate' ? '难度适中，符合预期水平' : analysis.difficulty_level === 'hard' ? '题目偏难，建议讲解重点错题' : '难度过高，需重点关注薄弱学生'}}
+        </text>
+      </view>
+
+      <!-- 分数段分布 -->
+      <view class="card">
+        <view class="card-title">📊 分数段分布</view>
+        <view class="range-list">
+          <view wx:for="{{analysis.score_ranges}}" wx:for-item="range" wx:for-index="key" wx:key="key" class="range-item">
+            <view class="range-label">
+              <view class="color-tag {{rangeColors[index]}}">{{key}}</view>
+            </view>
+            <view class="range-bar-wrap">
+              <view class="range-bar" style="width: {{maxRangePercent > 0 ? range.percent / maxRangePercent * 100 : 0}}%; background: {{index === 0 ? '#EF4444' : index === 1 ? '#F59E0B' : index === 2 ? '#3B82F6' : index === 3 ? '#10B981' : '#8B5CF6'}};"></view>
+            </view>
+            <view class="range-num">
+              <text class="range-count">{{range.count}}人</text>
+              <text class="range-percent">{{range.percent}}%</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 班级对比 -->
+      <view class="card" wx:if="{{analysis.class_comparison.length > 1}}">
+        <view class="card-title">👥 班级对比</view>
+        <view wx:for="{{analysis.class_comparison}}" wx:key="class_name" class="class-compare-item">
+          <view class="class-compare-header">
+            <text class="class-compare-name">{{item.class_name}}</text>
+            <text class="class-compare-count">{{item.count}}人</text>
+          </view>
+          <view class="class-compare-bar-wrap">
+            <view class="class-compare-bar" style="width: {{item.avg / analysis.full_score * 100}}%;"></view>
+          </view>
+          <view class="class-compare-stats">
+            <text class="class-compare-avg">均分 {{item.avg}}</text>
+            <text class="class-compare-pass">及格率 {{item.pass_rate}}%</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- Tab 2: 排行榜 -->
+    <block wx:if="{{activeTab === 1 && ranking}}">
+      <!-- 进步榜 -->
+      <view class="card" wx:if="{{ranking.top_improved.length > 0}}">
+        <view class="card-title">📈 进步榜 TOP5</view>
+        <view wx:for="{{ranking.top_improved}}" wx:key="student_id" class="rank-item improved" bindtap="goStudentDetail" data-id="{{item.student_id}}">
+          <text class="rank-num-improved">{{index + 1}}</text>
+          <text class="rank-name">{{item.student_name}}</text>
+          <text class="rank-score">{{item.score}}分</text>
+          <view class="color-tag tag-green">↑{{item.change}}</view>
+        </view>
+      </view>
+
+      <!-- 退步榜 -->
+      <view class="card" wx:if="{{ranking.top_declined.length > 0}}">
+        <view class="card-title">📉 需关注</view>
+        <view wx:for="{{ranking.top_declined}}" wx:key="student_id" class="rank-item declined" bindtap="goStudentDetail" data-id="{{item.student_id}}">
+          <text class="rank-num-declined">{{index + 1}}</text>
+          <text class="rank-name">{{item.student_name}}</text>
+          <text class="rank-score">{{item.score}}分</text>
+          <view class="color-tag tag-red">↓{{item.change}}</view>
+        </view>
+      </view>
+
+      <!-- 完整排名 -->
+      <view class="card">
+        <view class="card-title">🏆 完整排名</view>
+        <view wx:if="{{ranking.prev_exam_name}}" class="prev-exam-hint">
+          📝 与「{{ranking.prev_exam_name}}」对比
+        </view>
+        <view wx:for="{{ranking.rankings}}" wx:key="student_id" class="rank-item" bindtap="goStudentDetail" data-id="{{item.student_id}}">
+          <text class="rank-num {{item.rank <= 3 ? 'rank-top-' + item.rank : ''}}">{{item.rank}}</text>
+          <text class="rank-name">{{item.student_name}}</text>
+          <text class="rank-score">{{item.score}}分</text>
+          <view wx:if="{{item.change !== null}}" class="color-tag {{item.change > 0 ? 'tag-green' : item.change < 0 ? 'tag-red' : 'tag-gray'}}">
+            {{item.change > 0 ? '↑' + item.change : item.change < 0 ? '↓' + Math.abs(item.change) : '—'}}
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <view wx:if="{{!loading && !analysis}}" class="card">
+    <view class="empty">
+      <text class="empty-emoji">📭</text>
+      <text>暂无分析数据</text>
+    </view>
+  </view>
+</view>

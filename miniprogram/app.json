@@ -14,6 +14,8 @@
     "pages/student-add/student-add",
     "pages/student-import/student-import",
     "pages/score-import/score-import",
+    "pages/score-analysis/score-analysis",
+    "pages/exam-detail/exam-detail",
     "pages/traces/traces",
     "pages/trace-add/trace-add"
   ],

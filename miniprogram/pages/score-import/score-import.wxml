@@ -49,6 +49,11 @@
         <input class="form-input" placeholder="如:期中考试" value="{{examName}}" bindinput="onExamInput" />
       </view>
 
+      <view class="form-item">
+        <text class="form-label">💯 满分</text>
+        <input class="form-input" type="digit" placeholder="如:100" value="{{fullScore}}" bindinput="onFullScoreInput" />
+      </view>
+
       <view class="form-item" wx:if="{{hasClassColumn}}">
         <text class="form-label">🎓 年级前缀</text>
         <input class="form-input" placeholder="如:初二" value="{{gradePrefix}}" bindinput="onGradeInput" />

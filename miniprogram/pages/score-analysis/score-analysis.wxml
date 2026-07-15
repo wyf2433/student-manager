@@ -1,0 +1,46 @@
+<view class="container">
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
+
+  <block wx:if="{{!loading}}">
+    <!-- 渐变头部 -->
+    <view class="gradient-header">
+      <view class="greeting">📊 成绩分析</view>
+      <view class="greeting-sub">
+        <view class="greeting-sub-item">{{exams.length}}场考试</view>
+      </view>
+    </view>
+
+    <!-- 考试列表 -->
+    <view wx:if="{{exams.length > 0}}">
+      <view
+        wx:for="{{exams}}"
+        wx:key="name"
+        class="card card-bar bar-blue exam-item"
+        bindtap="goExamDetail"
+        data-name="{{item.name}}"
+      >
+        <view class="exam-item-row">
+          <text class="exam-emoji">{{item.emoji}}</text>
+          <view class="exam-info">
+            <text class="exam-name">{{item.name}}</text>
+            <text class="exam-desc">点击查看分析报告</text>
+          </view>
+          <text class="exam-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{exams.length === 0}}" class="card">
+      <view class="empty">
+        <text class="empty-emoji">📭</text>
+        <text>还没有导入成绩</text>
+      </view>
+    </view>
+
+    <!-- 导入按钮 -->
+    <view class="btn-primary save-btn" bindtap="goImport">
+      📥 导入成绩
+    </view>
+  </block>
+</view>

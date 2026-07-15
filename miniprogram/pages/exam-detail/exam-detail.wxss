@@ -1,0 +1,257 @@
+.stat-blue { background: #DBEAFE; }
+.stat-blue .stat-num { color: #2563EB; }
+.stat-blue .stat-label { color: #2563EB; }
+
+/* 关键指标 */
+.metric-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.metric-val {
+  font-size: 44rpx;
+  font-weight: 800;
+}
+
+.pass-color { color: #10B981; }
+.exc-color { color: #8B5CF6; }
+.std-color { color: #F59E0B; }
+
+.metric-label {
+  font-size: 24rpx;
+  color: #6B7280;
+}
+
+/* 难度评估卡 */
+.difficulty-card {
+  text-align: center;
+  padding: 32rpx 28rpx;
+}
+
+.difficulty-card.easy { background: #F0FDF4; border: 2rpx solid #BBF7D0; }
+.difficulty-card.moderate { background: #FEFCE8; border: 2rpx solid #FEF08A; }
+.difficulty-card.hard { background: #FFF7ED; border: 2rpx solid #FDBA74; }
+.difficulty-card.very_hard { background: #FEF2F2; border: 2rpx solid #FECACA; }
+
+.diff-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.diff-emoji {
+  font-size: 40rpx;
+}
+
+.diff-label {
+  font-size: 26rpx;
+  color: #6B7280;
+  font-weight: 600;
+}
+
+.diff-value {
+  font-size: 52rpx;
+  font-weight: 800;
+  color: #1F2937;
+  display: block;
+  margin: 8rpx 0;
+}
+
+.diff-desc {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  display: block;
+}
+
+.diff-hint {
+  font-size: 24rpx;
+  color: #6B7280;
+  display: block;
+  margin-top: 12rpx;
+  line-height: 1.5;
+}
+
+/* 分数段分布 */
+.range-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.range-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.range-label {
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.range-bar-wrap {
+  flex: 1;
+  height: 36rpx;
+  background: #F3F4F6;
+  border-radius: 18rpx;
+  overflow: hidden;
+}
+
+.range-bar {
+  height: 100%;
+  border-radius: 18rpx;
+  transition: width 0.3s ease;
+  min-width: 8rpx;
+}
+
+.range-num {
+  width: 120rpx;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.range-count {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1F2937;
+  display: block;
+}
+
+.range-percent {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  display: block;
+}
+
+/* 班级对比 */
+.class-compare-item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+
+.class-compare-item:last-child {
+  border-bottom: none;
+}
+
+.class-compare-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+
+.class-compare-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.class-compare-count {
+  font-size: 24rpx;
+  color: #9CA3AF;
+}
+
+.class-compare-bar-wrap {
+  height: 24rpx;
+  background: #F3F4F6;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-bottom: 8rpx;
+}
+
+.class-compare-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #667EEA, #764BA2);
+  border-radius: 12rpx;
+  min-width: 8rpx;
+}
+
+.class-compare-stats {
+  display: flex;
+  gap: 24rpx;
+}
+
+.class-compare-avg {
+  font-size: 24rpx;
+  color: #6366F1;
+  font-weight: 600;
+}
+
+.class-compare-pass {
+  font-size: 24rpx;
+  color: #6B7280;
+}
+
+/* 排行榜 */
+.prev-exam-hint {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  margin-bottom: 12rpx;
+  padding: 8rpx 16rpx;
+  background: #F5F7FA;
+  border-radius: 8rpx;
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+
+.rank-item:last-child {
+  border-bottom: none;
+}
+
+.rank-num {
+  width: 56rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.rank-top-1 { color: #F59E0B; font-size: 36rpx; }
+.rank-top-2 { color: #9CA3AF; font-size: 34rpx; }
+.rank-top-3 { color: #D97706; font-size: 32rpx; }
+
+.rank-num-improved {
+  width: 56rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #10B981;
+  flex-shrink: 0;
+}
+
+.rank-num-declined {
+  width: 56rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #EF4444;
+  flex-shrink: 0;
+}
+
+.rank-name {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.rank-score {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #6366F1;
+}

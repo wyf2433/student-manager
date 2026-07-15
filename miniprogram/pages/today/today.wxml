@@ -87,6 +87,18 @@
       <text class="trace-entry-arrow">›</text>
     </view>
 
+    <!-- 成绩分析入口 -->
+    <view class="card trace-entry-card score-entry-card" bindtap="goScoreAnalysis">
+      <view class="trace-entry-left">
+        <text class="trace-entry-emoji">📊</text>
+        <view>
+          <text class="trace-entry-title">成绩分析</text>
+          <text class="trace-entry-desc">考试统计 / 分数段 / 排行榜 / 进退步</text>
+        </view>
+      </view>
+      <text class="trace-entry-arrow">›</text>
+    </view>
+
     <!-- 便利贴速记 -->
     <view class="sticky-note">
       <view class="sticky-title">📝 一句话速记</view>

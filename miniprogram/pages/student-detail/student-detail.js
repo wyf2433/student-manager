@@ -27,6 +27,7 @@ Page({
     records: [],
     scores: [],
     notes: [],
+    trend: null,
     studentId: null,
     loading: true,
     avatarIdx: 0,
@@ -48,11 +49,12 @@ Page({
   async loadData() {
     this.setData({ loading: true })
     try {
-      const [studentRes, recordsRes, scoresRes, notesRes] = await Promise.all([
+      const [studentRes, recordsRes, scoresRes, notesRes, trendRes] = await Promise.all([
         api.get('/students/' + this.data.studentId),
         api.get('/records', { student_id: this.data.studentId }),
         api.get('/scores', { student_id: this.data.studentId }),
         api.get('/notes', { student_id: this.data.studentId }),
+        api.get('/scores/analysis/trend', { student_id: this.data.studentId }).catch(() => ({ data: null })),
       ])
       const student = studentRes.data
       const records = ((recordsRes.data || {}).items || []).map(r => ({
@@ -61,12 +63,24 @@ Page({
         dotClass: r.type === 'attendance' ? 'dot-green' : r.type === 'leave' ? 'dot-orange' : 'dot-red',
         tagClass: r.type === 'attendance' ? 'tag-green' : r.type === 'leave' ? 'tag-orange' : 'tag-red',
       }))
+
+      const trend = trendRes.data
+      let maxTrendScore = 0
+      if (trend && trend.exams) {
+        for (const e of trend.exams) {
+          if (e.score > maxTrendScore) maxTrendScore = e.score
+          if (e.class_avg && e.class_avg > maxTrendScore) maxTrendScore = e.class_avg
+        }
+      }
+
       this.setData({
         student: student,
         avatarIdx: avatarIndex(student.name),
         records: records,
         scores: ((scoresRes.data || {}).items || []),
         notes: ((notesRes.data || {}).items || []),
+        trend: trend,
+        maxTrendScore: maxTrendScore,
         loading: false,
       })
     } catch (err) {

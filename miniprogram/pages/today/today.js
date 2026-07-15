@@ -159,6 +159,10 @@ Page({
     wx.navigateTo({ url: '/pages/traces/traces' })
   },
 
+  goScoreAnalysis() {
+    wx.navigateTo({ url: '/pages/score-analysis/score-analysis' })
+  },
+
   onPullDownRefresh() {
     this.loadData().then(() => wx.stopPullDownRefresh())
   },

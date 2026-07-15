@@ -137,3 +137,139 @@
   width: 100% !important;
   margin-top: 16rpx;
 }
+
+/* 成绩趋势图 */
+.trend-chart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 280rpx;
+  padding: 20rpx 0 0;
+  margin-bottom: 12rpx;
+  border-bottom: 2rpx solid #F3F4F6;
+}
+
+.trend-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.trend-bar-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 8rpx;
+  height: 220rpx;
+}
+
+.trend-bar-col {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.trend-bar {
+  width: 32rpx;
+  border-radius: 8rpx 8rpx 0 0;
+  transition: height 0.3s ease;
+  min-height: 4rpx;
+}
+
+.trend-bar-student {
+  background: linear-gradient(180deg, #667EEA, #764BA2);
+}
+
+.trend-bar-class {
+  background: #D1D5DB;
+}
+
+.trend-score {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #6366F1;
+  margin-top: 8rpx;
+}
+
+.trend-exam-label {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  margin-top: 4rpx;
+  max-width: 140rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trend-legend {
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+}
+
+.legend-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 4rpx;
+}
+
+.student-dot { background: linear-gradient(180deg, #667EEA, #764BA2); }
+.class-dot { background: #D1D5DB; }
+
+/* 趋势详情列表 */
+.trend-detail-list {
+  margin-top: 16rpx;
+}
+
+.trend-detail-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+
+.trend-detail-item:last-child { border-bottom: none; }
+
+.trend-detail-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.trend-detail-exam {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.trend-detail-subject {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  margin-top: 4rpx;
+}
+
+.trend-detail-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.trend-detail-score {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #6366F1;
+}
+
+.trend-detail-avg {
+  font-size: 22rpx;
+  color: #9CA3AF;
+}
