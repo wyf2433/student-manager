@@ -74,14 +74,16 @@ async def upload_image(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"图片不能超过 {MAX_IMAGE_SIZE // 1024 // 1024}MB")
 
     allowed_types = {"image/jpeg", "image/png", "image/jpg", "image/webp", "image/gif"}
-    if file.content_type and file.content_type not in allowed_types:
-        raise HTTPException(status_code=400, detail="仅支持 jpg/png/webp/gif 格式")
+    allowed_exts = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
-    ext = ".jpg"
-    for e in [".jpg", ".jpeg", ".png", ".webp", ".gif"]:
-        if file.filename and file.filename.lower().endswith(e):
-            ext = e
-            break
+    file_ext = ""
+    if file.filename:
+        file_ext = "." + file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+
+    if (file.content_type and file.content_type not in allowed_types) and file_ext not in allowed_exts:
+        raise HTTPException(status_code=400, detail=f"仅支持 jpg/png/webp/gif 格式 (收到: type={file.content_type}, ext={file_ext})")
+
+    ext = file_ext or ".jpg"
 
     upload_path = Path(UPLOAD_DIR)
     upload_path.mkdir(parents=True, exist_ok=True)
