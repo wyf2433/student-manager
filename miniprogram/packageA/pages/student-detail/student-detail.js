@@ -23,10 +23,12 @@ function avatarIndex(name) {
 }
 
 let chartInstance = null
+let chartReady = false
 
 function initChart(canvas, width, height, dpr) {
   chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
   canvas.setChart(chartInstance)
+  chartReady = true
   return chartInstance
 }
 
@@ -54,6 +56,9 @@ Page({
   },
 
   onLoad(options) {
+    chartInstance = null
+    chartReady = false
+    this._renderRetry = 0
     this.setData({ studentId: options.id })
     this.loadData()
   },
@@ -139,8 +144,11 @@ Page({
     const exams = this.data.trendExams
     if (!exams || exams.length === 0) return
 
-    if (!chartInstance) {
-      setTimeout(() => this._renderChart(), 200)
+    if (!chartReady || !chartInstance) {
+      if (this._renderRetry < 10) {
+        this._renderRetry++
+        setTimeout(() => this._renderChart(), 300)
+      }
       return
     }
 
