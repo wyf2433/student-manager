@@ -11,5 +11,6 @@ App({
   },
   globalData: {
     currentClassId: null,
+    dirty: {},
   },
 })

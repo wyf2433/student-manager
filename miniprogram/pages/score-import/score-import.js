@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 const FULL_SCORE_DEFAULTS = {
   '初一': { '语文': 150, '数学': 150, '英语': 150, '物理': 0, '政治': 50, '道法': 50, '历史': 50, '地理': 30, '生物': 30, '化学': 0 },
@@ -178,6 +179,9 @@ Page({
       }
       wx.showModal({ title: '导入完成', content: msg, showCancel: false })
       this.setData({ importing: false })
+      if (autoStudents > 0 || autoClasses > 0) {
+        app.globalData.dirty.students = true
+      }
       setTimeout(() => wx.navigateBack(), 1500)
     } catch (err) {
       const msg = (err && err.detail) || '导入失败'

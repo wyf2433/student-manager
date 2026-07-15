@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 const TYPE_LABELS = {
   attendance: '考勤',
@@ -75,8 +76,14 @@ Page({
     hwStatusLabels: HOMEWORK_STATUS_LABEL,
   },
 
+  _loaded: false,
+
   onShow() {
     this.setData({ greeting: getGreeting(), todayDate: formatDate() })
+    if (this._loaded && !app.globalData.dirty.today) {
+      return
+    }
+    app.globalData.dirty.today = false
     this.loadData()
   },
 
@@ -120,6 +127,7 @@ Page({
         homeworkCount: homework.length,
         loading: false,
       })
+      this._loaded = true
     } catch (err) {
       console.error('加载失败', err)
       this.setData({ loading: false })
@@ -141,6 +149,7 @@ Page({
       await api.post('/notes', { content })
       this.setData({ quickNote: '' })
       wx.showToast({ title: '已记录', icon: 'success' })
+      app.globalData.dirty.notes = true
       this.loadData()
     } catch (err) {
       wx.showToast({ title: '保存失败', icon: 'none' })

@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 const TYPE_LABELS = {
   attendance: '考勤',
@@ -27,8 +28,20 @@ Page({
     ],
   },
 
+  _loaded: false,
+  _scrollTop: 0,
+
   onShow() {
+    if (this._loaded && !app.globalData.dirty.records) {
+      wx.pageScrollTo({ scrollTop: this._scrollTop, duration: 0 })
+      return
+    }
+    app.globalData.dirty.records = false
     this.loadRecords()
+  },
+
+  onPageScroll(e) {
+    this._scrollTop = e.scrollTop
   },
 
   async loadRecords() {
@@ -50,6 +63,7 @@ Page({
         records: records,
         loading: false,
       })
+      this._loaded = true
     } catch (err) {
       console.error('加载记录失败', err)
       this.setData({ loading: false })

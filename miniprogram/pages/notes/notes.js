@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 const STICKY_CLASSES = ['sticky-yellow', 'sticky-pink', 'sticky-green', 'sticky-blue', 'sticky-purple']
 
@@ -12,8 +13,20 @@ Page({
     filterDate: '',
   },
 
+  _loaded: false,
+  _scrollTop: 0,
+
   onShow() {
+    if (this._loaded && !app.globalData.dirty.notes) {
+      wx.pageScrollTo({ scrollTop: this._scrollTop, duration: 0 })
+      return
+    }
+    app.globalData.dirty.notes = false
     this.loadNotes()
+  },
+
+  onPageScroll(e) {
+    this._scrollTop = e.scrollTop
   },
 
   async loadNotes() {
@@ -32,6 +45,7 @@ Page({
         notes: notes,
         loading: false,
       })
+      this._loaded = true
     } catch (err) {
       console.error('加载速记失败', err)
       this.setData({ loading: false })

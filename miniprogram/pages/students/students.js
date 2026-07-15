@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 function avatarIndex(name) {
   if (!name) return 0
@@ -24,8 +25,24 @@ Page({
     newClassNoIndex: 0,
   },
 
-  onShow() {
+  _scrollTop: 0,
+  _loaded: false,
+
+  onLoad() {
     this.loadClasses().then(() => this.loadStudents())
+  },
+
+  onShow() {
+    if (this._loaded && !app.globalData.dirty.students) {
+      wx.pageScrollTo({ scrollTop: this._scrollTop, duration: 0 })
+      return
+    }
+    app.globalData.dirty.students = false
+    this.loadClasses().then(() => this.loadStudents())
+  },
+
+  onPageScroll(e) {
+    this._scrollTop = e.scrollTop
   },
 
   async loadClasses() {
@@ -33,7 +50,7 @@ Page({
       const res = await api.get('/classes')
       const classes = (res.data && res.data.items) || res.data || []
       this.setData({ classes })
-      if (classes.length > 0) {
+      if (classes.length > 0 && !this.data.currentClassId) {
         this.setData({ currentClassId: classes[0].id, classIndex: 0 })
       }
     } catch (err) {
@@ -61,6 +78,7 @@ Page({
         students,
         loading: false,
       })
+      this._loaded = true
     } catch (err) {
       console.error('加载学生失败', err)
       this.setData({ loading: false })
@@ -147,5 +165,9 @@ Page({
     Promise.all([this.loadClasses(), this.loadStudents()]).then(() =>
       wx.stopPullDownRefresh()
     )
+  },
+
+  onHide() {
+    this._scrollTop = 0
   },
 })

@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 Page({
   data: {
@@ -106,6 +107,8 @@ Page({
     try {
       await api.post('/records', body)
       wx.showToast({ title: '已保存', icon: 'success' })
+      app.globalData.dirty.records = true
+      app.globalData.dirty.today = true
       setTimeout(() => wx.navigateBack(), 800)
     } catch (err) {
       wx.showToast({ title: '保存失败', icon: 'none' })

@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const app = getApp()
 
 Page({
   data: {
@@ -87,6 +88,7 @@ Page({
       })
       const count = res.data.imported_count
       wx.showToast({ title: `已导入${count}人`, icon: 'success' })
+      app.globalData.dirty.students = true
       setTimeout(() => wx.navigateBack(), 1000)
     } catch (err) {
       wx.showToast({ title: '导入失败', icon: 'none' })

@@ -1,5 +1,6 @@
 const api = require('../../../utils/api.js')
 const echarts = require('../../ec-canvas/echarts.js')
+const app = getApp()
 
 const TYPE_LABELS = {
   attendance: '考勤',
@@ -297,6 +298,8 @@ Page({
     try {
       await api.post('/records', body)
       wx.showToast({ title: '已记录', icon: 'success' })
+      app.globalData.dirty.records = true
+      app.globalData.dirty.today = true
       this.setData({ showAction: false, saving: false })
       this.loadData()
     } catch (err) {
@@ -319,6 +322,8 @@ Page({
       await api.post('/notes', { content, student_id: parseInt(this.data.studentId) })
       this.setData({ noteContent: '' })
       wx.showToast({ title: '已记录', icon: 'success' })
+      app.globalData.dirty.notes = true
+      app.globalData.dirty.today = true
       this.loadData()
     } catch (err) {
       wx.showToast({ title: '保存失败', icon: 'none' })
@@ -332,6 +337,8 @@ Page({
       try {
         await api.delete('/records/' + id)
         wx.showToast({ title: '已删除', icon: 'success' })
+        app.globalData.dirty.records = true
+        app.globalData.dirty.today = true
         this.loadData()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
@@ -349,6 +356,8 @@ Page({
       try {
         await api.delete('/notes/' + id)
         wx.showToast({ title: '已删除', icon: 'success' })
+        app.globalData.dirty.notes = true
+        app.globalData.dirty.today = true
         this.loadData()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
