@@ -79,7 +79,7 @@ def parse_score_excel(file_bytes: bytes) -> dict:
     for i, h in enumerate(header):
         if i == name_idx or i == exam_name_idx:
             continue
-        if h and h not in ("学号", "考号", "性别", "班级", "排名", "总分", "名次"):
+        if h and h not in ("学号", "考号", "性别", "班级", "年级", "排名", "总分", "名次", "班次", "校次", "班排", "校排", "级排"):
             score_cols[h] = i
 
     subjects = list(score_cols.keys())
