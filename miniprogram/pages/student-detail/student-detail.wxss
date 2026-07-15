@@ -138,7 +138,7 @@
   margin-top: 16rpx;
 }
 
-/* 成绩趋势折线图 */
+/* 成绩趋势 ECharts */
 .trend-subject-pick {
   font-size: 24rpx;
   color: #6366F1;
@@ -148,130 +148,16 @@
   border-radius: 20rpx;
 }
 
-.trend-chart-wrap {
-  margin: 20rpx 0 8rpx;
+.trend-chart-container {
+  width: 100%;
+  height: 400rpx;
+  margin: 16rpx 0;
 }
 
-.trend-chart-area {
-  position: relative;
-  height: 240rpx;
-  margin-left: 8rpx;
-  margin-right: 8rpx;
+.trend-chart-container ec-canvas {
+  width: 100%;
+  height: 100%;
 }
-
-.trend-grid-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1rpx;
-  background: #F3F4F6;
-}
-
-.trend-grid-line.top { top: 0; }
-.trend-grid-line.mid { top: 50%; background: #E5E7EB; }
-.trend-grid-line.bot { bottom: 0; }
-
-.trend-line-seg {
-  position: absolute;
-  height: 4rpx;
-  background: #6366F1;
-  transform-origin: left center;
-  border-radius: 2rpx;
-  z-index: 1;
-}
-
-.trend-point {
-  position: absolute;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-
-.trend-point-dot {
-  width: 20rpx;
-  height: 20rpx;
-  border-radius: 50%;
-  border: 3rpx solid #fff;
-  box-shadow: 0 0 0 2rpx currentColor;
-}
-
-.trend-point-dot.student-dot {
-  background: #6366F1;
-  color: #6366F1;
-}
-
-.trend-point-dot.class-dot {
-  background: #D1D5DB;
-  color: #D1D5DB;
-}
-
-.trend-point-label {
-  position: absolute;
-  bottom: 28rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 22rpx;
-  font-weight: 700;
-  color: #6366F1;
-  white-space: nowrap;
-}
-
-.trend-point.class-point {
-  transform: translateX(-50%) translateY(50%);
-}
-
-.trend-x-axis {
-  position: relative;
-  height: 56rpx;
-  margin-top: 8rpx;
-}
-
-.trend-x-label {
-  position: absolute;
-  transform: translateX(-50%);
-  text-align: center;
-  max-width: 160rpx;
-}
-
-.trend-x-exam {
-  font-size: 22rpx;
-  font-weight: 600;
-  color: #4B5563;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.trend-x-date {
-  font-size: 20rpx;
-  color: #9CA3AF;
-  display: block;
-  margin-top: 2rpx;
-}
-
-.trend-legend {
-  display: flex;
-  justify-content: center;
-  gap: 32rpx;
-  margin: 16rpx 0 20rpx;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  font-size: 24rpx;
-  color: #6B7280;
-}
-
-.legend-dot {
-  width: 20rpx;
-  height: 20rpx;
-  border-radius: 50%;
-}
-
-.legend-dot.student-dot { background: #6366F1; }
-.legend-dot.class-dot { background: #D1D5DB; }
 
 /* 趋势详情列表 */
 .trend-detail-list {

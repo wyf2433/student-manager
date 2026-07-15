@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const echarts = require('../../ec-canvas/echarts.js')
 
 const TYPE_LABELS = {
   attendance: '考勤',
@@ -21,6 +22,14 @@ function avatarIndex(name) {
   return hash % 8
 }
 
+let chartInstance = null
+
+function initChart(canvas, width, height, dpr) {
+  chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
+  canvas.setChart(chartInstance)
+  return chartInstance
+}
+
 Page({
   data: {
     student: null,
@@ -41,6 +50,7 @@ Page({
     actionValue: '',
     noteContent: '',
     saving: false,
+    ec: { onInit: initChart },
   },
 
   onLoad(options) {
@@ -70,9 +80,7 @@ Page({
       const trendSubjects = (trend && trend.subjects) || []
       const currentSubject = (trend && trend.current_subject) || ''
 
-      if (trend && trend.exams && trend.exams.length > 0) {
-        trend.exams = this._buildChartPoints(trend.exams)
-      }
+      const trendExams = this._processExams(trend)
 
       this.setData({
         student: student,
@@ -81,9 +89,12 @@ Page({
         scores: ((scoresRes.data || {}).items || []),
         notes: ((notesRes.data || {}).items || []),
         trend: trend,
+        trendExams: trendExams,
         trendSubjects: trendSubjects,
         currentSubject: currentSubject,
         loading: false,
+      }, () => {
+        this._renderChart()
       })
     } catch (err) {
       console.error('加载失败', err)
@@ -91,33 +102,95 @@ Page({
     }
   },
 
-  _buildChartPoints(exams) {
-    const n = exams.length
-    if (n === 0) return exams
+  _processExams(trend) {
+    if (!trend || !trend.exams || trend.exams.length === 0) return []
+    return trend.exams.map(e => {
+      let changeLabel = ''
+      let changeClass = 'tag-gray'
+      if (e.change !== null && e.change !== undefined) {
+        if (e.change > 0) {
+          changeLabel = '↑' + e.change
+          changeClass = 'tag-green'
+        } else if (e.change < 0) {
+          changeLabel = '↓' + Math.abs(e.change)
+          changeClass = 'tag-red'
+        } else {
+          changeLabel = '—'
+        }
+      }
+      return { ...e, changeLabel, changeClass }
+    })
+  },
+
+  _renderChart() {
+    const exams = this.data.trendExams
+    if (!exams || exams.length === 0 || !chartInstance) return
+
+    const xData = exams.map(e => e.exam_name)
+    const studentScores = exams.map(e => e.score)
+    const classAvgs = exams.map(e => e.class_avg || null)
     const fullScore = exams[0].full_score || 100
-    const pts = []
-    for (let i = 0; i < n; i++) {
-      pts.push({
-        ...exams[i],
-        xPercent: n === 1 ? 50 : i / (n - 1) * 100,
-        yPercent: exams[i].score / fullScore * 100,
-        classYPercent: exams[i].class_avg ? exams[i].class_avg / fullScore * 100 : null,
+
+    const hasClassAvg = classAvgs.some(v => v !== null)
+
+    const option = {
+      tooltip: { trigger: 'axis' },
+      legend: {
+        data: hasClassAvg ? ['本人成绩', '班级均分'] : ['本人成绩'],
+        bottom: 0,
+        textStyle: { fontSize: 12 },
+      },
+      grid: { left: 40, right: 20, top: 20, bottom: 40 },
+      xAxis: {
+        type: 'category',
+        data: xData,
+        axisLabel: { fontSize: 11, rotate: xData.length > 3 ? 15 : 0 },
+      },
+      yAxis: {
+        type: 'value',
+        min: 0,
+        max: fullScore,
+        axisLabel: { fontSize: 11 },
+      },
+      series: [
+        {
+          name: '本人成绩',
+          type: 'line',
+          data: studentScores,
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 8,
+          itemStyle: { color: '#6366F1' },
+          lineStyle: { color: '#6366F1', width: 3 },
+          label: { show: true, position: 'top', fontSize: 11, fontWeight: 'bold' },
+          areaStyle: {
+            color: {
+              type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(99,102,241,0.25)' },
+                { offset: 1, color: 'rgba(99,102,241,0.02)' },
+              ],
+            },
+          },
+        },
+      ],
+    }
+
+    if (hasClassAvg) {
+      option.series.push({
+        name: '班级均分',
+        type: 'line',
+        data: classAvgs,
+        smooth: true,
+        symbol: 'diamond',
+        symbolSize: 6,
+        itemStyle: { color: '#9CA3AF' },
+        lineStyle: { color: '#9CA3AF', width: 2, type: 'dashed' },
+        label: { show: false },
       })
     }
-    const segments = []
-    for (let i = 0; i < n - 1; i++) {
-      const x1 = pts[i].xPercent
-      const y1 = 100 - pts[i].yPercent
-      const x2 = pts[i + 1].xPercent
-      const y2 = 100 - pts[i + 1].yPercent
-      const dx = x2 - x1
-      const dy = y2 - y1
-      const len = Math.sqrt(dx * dx + dy * dy)
-      const angle = Math.atan2(dy, dx) * 180 / Math.PI
-      segments.push({ left: x1, top: y1, length: len, angle })
-    }
-    pts.lineSegments = segments
-    return pts
+
+    chartInstance.setOption(option)
   },
 
   onTrendSubjectChange(e) {
@@ -133,10 +206,10 @@ Page({
         subject: this.data.currentSubject || undefined,
       })
       const trend = res.data
-      if (trend && trend.exams && trend.exams.length > 0) {
-        trend.exams = this._buildChartPoints(trend.exams)
-      }
-      this.setData({ trend: trend })
+      const trendExams = this._processExams(trend)
+      this.setData({ trend: trend, trendExams: trendExams }, () => {
+        this._renderChart()
+      })
     } catch (err) {
       console.error('加载趋势失败', err)
     }

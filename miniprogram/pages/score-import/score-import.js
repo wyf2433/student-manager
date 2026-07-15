@@ -1,5 +1,20 @@
 const api = require('../../utils/api.js')
 
+const FULL_SCORE_DEFAULTS = {
+  '初一': { '语文': 150, '数学': 150, '英语': 150, '物理': 0, '政治': 50, '历史': 50, '地理': 30, '生物': 30, '化学': 0 },
+  '初二': { '语文': 150, '数学': 150, '英语': 150, '物理': 100, '政治': 50, '历史': 50, '地理': 30, '生物': 30, '化学': 0 },
+  '初三': { '语文': 150, '数学': 150, '英语': 150, '物理': 90, '政治': 50, '历史': 50, '地理': 30, '生物': 30, '化学': 100 },
+}
+
+function getFullScoreDefaults(grade, subjects) {
+  const map = FULL_SCORE_DEFAULTS[grade] || FULL_SCORE_DEFAULTS['初二']
+  const result = {}
+  for (const s of subjects) {
+    result[s] = map[s] || 100
+  }
+  return result
+}
+
 Page({
   data: {
     step: 1,
@@ -8,10 +23,9 @@ Page({
     uploading: false,
     previewData: null,
     examName: '',
-    selectedSubject: '',
-    subjectIndex: 0,
+    subjects: [],
+    fullScores: {},
     gradePrefix: '',
-    fullScore: '100',
     hasClassColumn: false,
     hasGradeColumn: false,
     importing: false,
@@ -50,13 +64,18 @@ Page({
     try {
       const res = await api.upload('/scores/import/preview', this.data.filePath)
       const data = res.data || {}
+      const subjects = data.subjects || []
+      const detectedGrade = (data.has_grade_column && data.students[0] && data.students[0].grade)
+        ? this._normalizeGrade(data.students[0].grade) : this.data.gradePrefix
+      const fullScores = getFullScoreDefaults(detectedGrade, subjects)
       this.setData({
         previewData: data,
         examName: data.exam_name || '',
-        selectedSubject: (data.subjects || [])[0] || '',
-        subjectIndex: 0,
+        subjects,
+        fullScores,
         hasClassColumn: data.has_class_column || false,
         hasGradeColumn: data.has_grade_column || false,
+        gradePrefix: detectedGrade,
         step: 2,
         uploading: false,
       })
@@ -65,6 +84,17 @@ Page({
       wx.showToast({ title: msg, icon: 'none' })
       this.setData({ uploading: false, filePath: '', fileName: '' })
     }
+  },
+
+  _normalizeGrade(raw) {
+    if (!raw) return '初二'
+    const s = String(raw).trim()
+    const map = { '7': '初一', '8': '初二', '9': '初三', '七': '初一', '八': '初二', '九': '初三' }
+    if (map[s]) return map[s]
+    for (const k in map) {
+      if (s.indexOf(k) >= 0) return map[k]
+    }
+    return '初二'
   },
 
   onExamInput(e) {
@@ -76,19 +106,13 @@ Page({
   },
 
   onFullScoreInput(e) {
-    this.setData({ fullScore: e.detail.value })
-  },
-
-  onSubjectChange(e) {
-    const index = e.detail.value
-    this.setData({
-      subjectIndex: index,
-      selectedSubject: this.data.previewData.subjects[index],
-    })
+    const subject = e.currentTarget.dataset.subject
+    const val = e.detail.value
+    this.setData({ ['fullScores.' + subject]: val })
   },
 
   async confirmImport() {
-    const { examName, selectedSubject, previewData, gradePrefix, hasClassColumn, hasGradeColumn, fullScore } = this.data
+    const { examName, previewData, gradePrefix, hasClassColumn, hasGradeColumn, subjects, fullScores } = this.data
     if (!examName.trim()) {
       wx.showToast({ title: '请输入考试名称', icon: 'none' })
       return
@@ -97,14 +121,24 @@ Page({
       wx.showToast({ title: '请输入年级前缀', icon: 'none' })
       return
     }
-    const fullScoreNum = parseFloat(fullScore)
-    if (isNaN(fullScoreNum) || fullScoreNum <= 0) {
-      wx.showToast({ title: '请输入有效满分', icon: 'none' })
-      return
+
+    const fullScoresNum = {}
+    for (const s of subjects) {
+      const v = parseFloat(fullScores[s])
+      if (isNaN(v) || v <= 0) {
+        wx.showToast({ title: s + ' 满分无效', icon: 'none' })
+        return
+      }
+      fullScoresNum[s] = v
     }
 
     const students = (previewData.students || []).map(s => {
-      const item = { name: s.name, score: s.scores[selectedSubject] }
+      const item = { name: s.name, scores: {} }
+      for (const subj of subjects) {
+        if (s.scores[subj] !== null && s.scores[subj] !== undefined) {
+          item.scores[subj] = s.scores[subj]
+        }
+      }
       if (hasClassColumn && s.class_name) {
         item.class_name = s.class_name
       }
@@ -123,8 +157,7 @@ Page({
     try {
       const body = {
         exam_name: examName.trim(),
-        subject: selectedSubject,
-        full_score: fullScoreNum,
+        full_scores: fullScoresNum,
         students,
       }
       if (hasClassColumn && !hasGradeColumn && gradePrefix.trim()) {
@@ -160,8 +193,8 @@ Page({
       fileName: '',
       previewData: null,
       examName: '',
-      selectedSubject: '',
-      fullScore: '100',
+      subjects: [],
+      fullScores: {},
     })
   },
 })

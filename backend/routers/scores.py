@@ -86,16 +86,22 @@ async def import_confirm(body: ScoreImportConfirm):
     auto_created_classes = 0
     class_cache = {}
 
+    full_scores = body.full_scores or {}
+    all_subjects = list(full_scores.keys())
+
     all_classes = class_model.list_classes()
     for c in all_classes:
         class_cache[c["name"]] = c["id"]
 
     for s in body.students:
         name = s.get("name")
-        score_val = s.get("score")
+        student_scores = s.get("scores", {})
         student_id = s.get("student_id")
 
         if student_id is None and not name:
+            continue
+
+        if not student_scores:
             continue
 
         class_name_raw = s.get("class_name")
@@ -129,13 +135,14 @@ async def import_confirm(body: ScoreImportConfirm):
                 student_id = new_student["id"]
                 auto_created_students += 1
 
-        scores_to_insert.append({
-            "student_id": student_id,
-            "exam_name": body.exam_name,
-            "subject": body.subject,
-            "score": score_val,
-            "full_score": body.full_score,
-        })
+        for subject, score_val in student_scores.items():
+            scores_to_insert.append({
+                "student_id": student_id,
+                "exam_name": body.exam_name,
+                "subject": subject,
+                "score": score_val,
+                "full_score": full_scores.get(subject, 100),
+            })
 
     if not scores_to_insert:
         raise HTTPException(status_code=400, detail="无有效数据")

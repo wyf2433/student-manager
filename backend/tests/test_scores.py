@@ -120,11 +120,11 @@ class TestScoreImport:
         students_data = preview.json()["data"]["students"]
         confirm_body = {
             "exam_name": "期中考试",
-            "subject": "物理",
             "class_id": cid,
+            "full_scores": {"物理": 100, "语文": 100},
             "students": [
-                {"student_id": sids["张三"], "score": students_data[0]["scores"]["物理"]},
-                {"student_id": sids["李四"], "score": students_data[1]["scores"]["物理"]},
+                {"student_id": sids["张三"], "scores": {"物理": students_data[0]["scores"]["物理"]}},
+                {"student_id": sids["李四"], "scores": {"物理": students_data[1]["scores"]["物理"]}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
@@ -134,6 +134,33 @@ class TestScoreImport:
 
         list_res = client.get(f"/api/scores?student_id={sids['张三']}&subject=物理", headers=headers)
         assert list_res.json()["data"]["items"][0]["score"] == 95
+
+    def test_confirm_multi_subject(self, client, headers):
+        """一次导入多个科目"""
+        cid, sids = setup_class_and_students(client, headers, ["张三", "李四"])
+        confirm_body = {
+            "exam_name": "期中考试",
+            "class_id": cid,
+            "full_scores": {"物理": 100, "语文": 150},
+            "students": [
+                {"student_id": sids["张三"], "scores": {"物理": 95, "语文": 130}},
+                {"student_id": sids["李四"], "scores": {"物理": 80, "语文": 120}},
+            ],
+        }
+        res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
+        assert res.status_code == 200
+        assert res.json()["data"]["imported_count"] == 4
+
+        # 验证物理
+        list_res = client.get(f"/api/scores?student_id={sids['张三']}&subject=物理", headers=headers)
+        item = list_res.json()["data"]["items"][0]
+        assert item["score"] == 95
+        assert item["full_score"] == 100
+        # 验证语文
+        list_res2 = client.get(f"/api/scores?student_id={sids['张三']}&subject=语文", headers=headers)
+        item2 = list_res2.json()["data"]["items"][0]
+        assert item2["score"] == 130
+        assert item2["full_score"] == 150
 
     def test_confirm_auto_create(self, client, headers):
         cid = client.post("/api/classes", json={"name": "初二1班"}, headers=headers).json()["data"]["id"]
@@ -146,11 +173,11 @@ class TestScoreImport:
         students_data = preview.json()["data"]["students"]
         confirm_body = {
             "exam_name": "期中考试",
-            "subject": "物理",
             "class_id": cid,
+            "full_scores": {"物理": 100},
             "students": [
-                {"name": "王五", "score": students_data[0]["scores"]["物理"]},
-                {"name": "赵六", "score": students_data[1]["scores"]["物理"]},
+                {"name": "王五", "scores": {"物理": students_data[0]["scores"]["物理"]}},
+                {"name": "赵六", "scores": {"物理": students_data[1]["scores"]["物理"]}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
@@ -177,11 +204,11 @@ class TestScoreImport:
 
         confirm_body = {
             "exam_name": "期中考试",
-            "subject": "物理",
             "grade_prefix": "初二",
+            "full_scores": {"物理": 100, "语文": 100},
             "students": [
-                {"name": "张三", "class_name": "2班", "score": data["students"][0]["scores"]["物理"]},
-                {"name": "李四", "class_name": "3班", "score": data["students"][1]["scores"]["物理"]},
+                {"name": "张三", "class_name": "2班", "scores": {"物理": data["students"][0]["scores"]["物理"]}},
+                {"name": "李四", "class_name": "3班", "scores": {"物理": data["students"][1]["scores"]["物理"]}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
@@ -208,11 +235,11 @@ class TestScoreImport:
         data = preview.json()["data"]
         confirm_body = {
             "exam_name": "期中考试",
-            "subject": "物理",
             "grade_prefix": "初二",
+            "full_scores": {"物理": 100},
             "students": [
-                {"name": "张三", "class_name": data["students"][0]["class_name"], "score": 95},
-                {"name": "李四", "class_name": data["students"][1]["class_name"], "score": 80},
+                {"name": "张三", "class_name": data["students"][0]["class_name"], "scores": {"物理": 95}},
+                {"name": "李四", "class_name": data["students"][1]["class_name"], "scores": {"物理": 80}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
@@ -240,10 +267,10 @@ class TestScoreImport:
 
         confirm_body = {
             "exam_name": "期中考试",
-            "subject": "物理",
+            "full_scores": {"物理": 100},
             "students": [
-                {"name": "张三", "class_name": data["students"][0]["class_name"], "grade": data["students"][0]["grade"], "score": 95},
-                {"name": "李四", "class_name": data["students"][1]["class_name"], "grade": data["students"][1]["grade"], "score": 80},
+                {"name": "张三", "class_name": data["students"][0]["class_name"], "grade": data["students"][0]["grade"], "scores": {"物理": 95}},
+                {"name": "李四", "class_name": data["students"][1]["class_name"], "grade": data["students"][1]["grade"], "scores": {"物理": 80}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
@@ -269,9 +296,9 @@ class TestScoreImport:
         data = preview.json()["data"]
         confirm_body = {
             "exam_name": "期中考试",
-            "subject": "物理",
+            "full_scores": {"物理": 100},
             "students": [
-                {"name": "张三", "class_name": data["students"][0]["class_name"], "grade": data["students"][0]["grade"], "score": 95},
+                {"name": "张三", "class_name": data["students"][0]["class_name"], "grade": data["students"][0]["grade"], "scores": {"物理": 95}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
@@ -283,12 +310,11 @@ class TestScoreImport:
         cid, sids = setup_class_and_students(client, headers, ["张三", "李四"])
         confirm_body = {
             "exam_name": "月考",
-            "subject": "物理",
             "class_id": cid,
-            "full_score": 80,
+            "full_scores": {"物理": 80},
             "students": [
-                {"student_id": sids["张三"], "score": 72},
-                {"student_id": sids["李四"], "score": 60},
+                {"student_id": sids["张三"], "scores": {"物理": 72}},
+                {"student_id": sids["李四"], "scores": {"物理": 60}},
             ],
         }
         res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)

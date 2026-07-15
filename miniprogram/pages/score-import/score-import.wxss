@@ -67,28 +67,71 @@
   line-height: 1.6;
 }
 
-.preview-header {
+/* 满分输入列表 */
+.full-score-list {
   display: flex;
-  padding: 16rpx 0;
-  border-bottom: 2rpx solid #E5E7EB;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.full-score-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: #F5F7FA;
+  border-radius: 12rpx;
+  padding: 12rpx 20rpx;
+}
+
+.full-score-subject {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.full-score-input {
+  width: 80rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #6366F1;
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 8rpx 0;
+}
+
+.full-score-unit {
+  font-size: 22rpx;
+  color: #9CA3AF;
+}
+
+/* 预览表格 */
+.preview-table {
+  min-width: 100%;
 }
 
 .preview-row {
   display: flex;
   padding: 16rpx 0;
   border-bottom: 1rpx solid #F3F4F6;
+  white-space: nowrap;
+}
+
+.preview-header-row {
+  border-bottom: 2rpx solid #E5E7EB;
 }
 
 .preview-cell {
-  flex: 1;
-  font-size: 28rpx;
+  min-width: 140rpx;
+  font-size: 26rpx;
   color: #1F2937;
+  padding: 0 12rpx;
 }
 
-.preview-header .preview-cell {
+.preview-header-row .preview-cell {
   font-weight: 700;
   color: #9CA3AF;
-  font-size: 26rpx;
+  font-size: 24rpx;
 }
 
 .save-btn {

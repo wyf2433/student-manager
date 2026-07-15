@@ -27,7 +27,7 @@
       </view>
       <view class="format-list">
         <view class="color-tag tag-blue">姓名(必填)</view>
-        <view class="color-tag tag-green">科目列(如:物理/语文/数学)</view>
+        <view class="color-tag tag-green">科目列(如:物理/语文/数学,自动全导入)</view>
         <view class="color-tag tag-purple">班级(可选,有则自动分班)</view>
         <view class="color-tag tag-cyan">年级(可选,8→初二, 9→初三)</view>
       </view>
@@ -35,7 +35,7 @@
         示例: 姓名 | 年级 | 班级 | 物理 | 语文 | 数学
       </view>
       <view class="tip-text" style="margin-top: 12rpx;">
-        💡 Excel 有"年级"+"班级"列时自动组合班级名(8年级+01→初二1班),匹配已有班级或自动创建。无年级列时导入页面手动输入年级前缀。
+        💡 所有科目列一次性全部导入,系统自动按年级填充满分默认值(可手动修改)。有"年级"+"班级"列时自动组合班级名(8年级+01→初二1班),匹配已有班级或自动创建。
       </view>
     </view>
   </view>
@@ -50,11 +50,6 @@
         <input class="form-input" placeholder="如:期中考试" value="{{examName}}" bindinput="onExamInput" />
       </view>
 
-      <view class="form-item">
-        <text class="form-label">💯 满分</text>
-        <input class="form-input" type="digit" placeholder="如:100" value="{{fullScore}}" bindinput="onFullScoreInput" />
-      </view>
-
       <view class="form-item" wx:if="{{hasClassColumn && !hasGradeColumn}}">
         <text class="form-label">🎓 年级前缀</text>
         <input class="form-input" placeholder="如:初二" value="{{gradePrefix}}" bindinput="onGradeInput" />
@@ -65,35 +60,43 @@
 
       <view class="form-item" wx:if="{{hasGradeColumn}}">
         <text class="form-label">🎓 年级</text>
-        <view class="form-picker">✅ 已从Excel自动识别年级</view>
+        <view class="form-picker">✅ 已从Excel自动识别</view>
       </view>
 
       <view class="form-item">
-        <text class="form-label">📖 导入科目</text>
-        <picker range="{{previewData.subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
-          <view class="form-picker">{{selectedSubject}} ›</view>
-        </picker>
+        <text class="form-label">💯 各科满分(可修改)</text>
+        <view class="full-score-list">
+          <view wx:for="{{subjects}}" wx:key="*this" class="full-score-item">
+            <text class="full-score-subject">{{item}}</text>
+            <input class="full-score-input" type="digit" value="{{fullScores[item]}}" data-subject="{{item}}" bindinput="onFullScoreInput" />
+            <text class="full-score-unit">分</text>
+          </view>
+        </view>
       </view>
     </view>
 
     <view class="card">
-      <view class="card-title">👁️ 预览 ({{previewData.total_students}}人)</view>
-      <view class="preview-header">
-        <text class="preview-cell">姓名</text>
-        <text class="preview-cell" wx:if="{{hasGradeColumn}}">年级</text>
-        <text class="preview-cell" wx:if="{{hasClassColumn}}">班级</text>
-        <text class="preview-cell">{{selectedSubject}}</text>
-      </view>
-      <view wx:for="{{previewData.students}}" wx:key="index" class="preview-row">
-        <text class="preview-cell">{{item.name}}</text>
-        <text class="preview-cell" wx:if="{{hasGradeColumn}}">{{item.grade || '-'}}</text>
-        <text class="preview-cell" wx:if="{{hasClassColumn}}">{{item.class_name || '-'}}</text>
-        <text class="preview-cell">{{item.scores[selectedSubject] !== null ? item.scores[selectedSubject] : '-'}}</text>
-      </view>
+      <view class="card-title">👁️ 预览 ({{previewData.total_students}}人 · {{subjects.length}}科)</view>
+      <scroll-view scroll-x>
+        <view class="preview-table">
+          <view class="preview-row preview-header-row">
+            <text class="preview-cell">姓名</text>
+            <text class="preview-cell" wx:if="{{hasGradeColumn}}">年级</text>
+            <text class="preview-cell" wx:if="{{hasClassColumn}}">班级</text>
+            <text class="preview-cell" wx:for="{{subjects}}" wx:key="*this">{{item}}</text>
+          </view>
+          <view wx:for="{{previewData.students}}" wx:key="index" class="preview-row">
+            <text class="preview-cell">{{item.name}}</text>
+            <text class="preview-cell" wx:if="{{hasGradeColumn}}">{{item.grade || '-'}}</text>
+            <text class="preview-cell" wx:if="{{hasClassColumn}}">{{item.class_name || '-'}}</text>
+            <text class="preview-cell" wx:for="{{subjects}}" wx:for-item="subj" wx:key="*this">{{item.scores[subj] !== null && item.scores[subj] !== undefined ? item.scores[subj] : '-'}}</text>
+          </view>
+        </view>
+      </scroll-view>
     </view>
 
     <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
-      {{importing ? '导入中...' : '📥 确认导入'}}
+      {{importing ? '导入中...' : '📥 确认导入全部科目'}}
     </view>
     <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
   </view>

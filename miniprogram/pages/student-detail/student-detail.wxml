@@ -77,7 +77,7 @@
     </view>
 
     <!-- 成绩趋势 -->
-    <view class="card" wx:if="{{trend && trend.exams.length > 0}}">
+    <view class="card" wx:if="{{trendExams.length > 0}}">
       <view class="card-title-row">
         <text class="card-title">📈 成绩趋势</text>
         <picker wx:if="{{trendSubjects.length > 1}}" range="{{trendSubjects}}" bindchange="onTrendSubjectChange">
@@ -85,47 +85,14 @@
         </picker>
       </view>
 
-      <!-- 折线图 -->
-      <view class="trend-chart-wrap">
-        <view class="trend-chart-area">
-          <view class="trend-grid-line top"></view>
-          <view class="trend-grid-line mid"></view>
-          <view class="trend-grid-line bot"></view>
-
-          <!-- 连线 -->
-          <view wx:for="{{trend.exams.lineSegments}}" wx:key="index" class="trend-line-seg"
-            style="left: {{item.left}}%; top: {{item.top}}%; width: {{item.length}}%; transform: rotate({{item.angle}}deg);">
-          </view>
-
-          <!-- 学生分数点 -->
-          <block wx:for="{{trend.exams}}" wx:key="exam_name">
-            <view class="trend-point student-point" style="left: {{item.xPercent}}%; bottom: {{item.yPercent}}%;">
-              <view class="trend-point-dot student-dot"></view>
-              <text class="trend-point-label">{{item.score}}</text>
-            </view>
-            <view wx:if="{{item.classYPercent !== null}}" class="trend-point class-point" style="left: {{item.xPercent}}%; bottom: {{item.classYPercent}}%;">
-              <view class="trend-point-dot class-dot"></view>
-            </view>
-          </block>
-        </view>
-        <!-- X轴标签 -->
-        <view class="trend-x-axis">
-          <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-x-label" style="left: {{item.xPercent}}%;">
-            <text class="trend-x-exam">{{item.exam_name}}</text>
-            <text class="trend-x-date">{{item.date}}</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 图例 -->
-      <view class="trend-legend">
-        <view class="legend-item"><view class="legend-dot student-dot"></view><text>本人成绩</text></view>
-        <view class="legend-item"><view class="legend-dot class-dot"></view><text>班级均分</text></view>
+      <!-- ECharts 折线图 -->
+      <view class="trend-chart-container">
+        <ec-canvas id="trendChart" canvas-id="trendChart" ec="{{ec}}"></ec-canvas>
       </view>
 
       <!-- 趋势详情列表 -->
       <view class="trend-detail-list">
-        <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-detail-item">
+        <view wx:for="{{trendExams}}" wx:key="exam_name" class="trend-detail-item">
           <view class="trend-detail-info">
             <text class="trend-detail-exam">{{item.exam_name}}</text>
             <text class="trend-detail-subject">{{item.subject}} · {{item.date}}</text>
@@ -133,8 +100,8 @@
           <view class="trend-detail-right">
             <text class="trend-detail-score">{{item.score}}分</text>
             <text class="trend-detail-avg" wx:if="{{item.class_avg}}">班均{{item.class_avg}}</text>
-            <view wx:if="{{item.change !== null}}" class="color-tag {{item.change > 0 ? 'tag-green' : item.change < 0 ? 'tag-red' : 'tag-gray'}}">
-              {{item.change > 0 ? '↑' + item.change : item.change < 0 ? '↓' + Math.abs(item.change) : '—'}}
+            <view wx:if="{{item.changeLabel}}" class="color-tag {{item.changeClass}}">
+              {{item.changeLabel}}
             </view>
           </view>
         </view>
