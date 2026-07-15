@@ -21,6 +21,21 @@ Page({
     saving: false,
   },
 
+  onLoad(options) {
+    if (options.type) {
+      const idx = TYPE_OPTIONS.findIndex(t => t.value === options.type)
+      if (idx >= 0) {
+        this.setData({
+          typeIndex: idx,
+          type: TYPE_OPTIONS[idx].value,
+          title: TYPE_OPTIONS[idx].label,
+        })
+        return
+      }
+    }
+    this.setData({ typeIndex: 6, type: 'other' })
+  },
+
   onTypeChange(e) {
     const index = e.detail.value
     this.setData({
@@ -89,10 +104,10 @@ Page({
       this.setData({
         images: [...this.data.images, url],
       })
-    } catch (err) {
-      wx.showToast({ title: '上传失败', icon: 'none' })
-    } finally {
       wx.hideLoading()
+    } catch (err) {
+      wx.hideLoading()
+      wx.showToast({ title: '上传失败', icon: 'none' })
     }
   },
 

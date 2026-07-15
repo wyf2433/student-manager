@@ -20,6 +20,12 @@ function request(options) {
   })
 }
 
+function getMimeType(fileName) {
+  const ext = (fileName || '').split('.').pop().toLowerCase()
+  const map = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif' }
+  return map[ext] || 'application/octet-stream'
+}
+
 function upload(path, filePath, formData) {
   return new Promise((resolve, reject) => {
     const fs = wx.getFileSystemManager()
@@ -28,6 +34,7 @@ function upload(path, filePath, formData) {
       encoding: 'base64',
       success(readRes) {
         const fileName = filePath.split('/').pop()
+        const fileType = getMimeType(fileName)
         wx.cloud.callFunction({
           name: 'api',
           data: {
@@ -36,6 +43,7 @@ function upload(path, filePath, formData) {
             isUpload: true,
             fileBase64: readRes.data,
             fileName,
+            fileType,
             formData,
           },
           success(res) {

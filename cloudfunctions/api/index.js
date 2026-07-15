@@ -63,7 +63,7 @@ function httpRequest({ method, path, query, body, headers, timeout }) {
   })
 }
 
-function buildMultipart(fields, fileBuffer, fileName) {
+function buildMultipart(fields, fileBuffer, fileName, fileType) {
   const boundary = '----FormBoundary' + Math.random().toString(16).slice(2)
   const parts = []
 
@@ -80,7 +80,7 @@ function buildMultipart(fields, fileBuffer, fileName) {
     const header =
       `--${boundary}\r\n` +
       `Content-Disposition: form-data; name="file"; filename="${fileName}"\r\n` +
-      `Content-Type: application/octet-stream\r\n\r\n`
+      `Content-Type: ${fileType || 'application/octet-stream'}\r\n\r\n`
     parts.push(Buffer.from(header, 'utf8'))
     parts.push(fileBuffer)
     parts.push(Buffer.from('\r\n', 'utf8'))
@@ -103,6 +103,7 @@ exports.main = async (event, context) => {
     isUpload = false,
     fileBase64 = null,
     fileName = 'file',
+    fileType = null,
     formData = {},
   } = event
 
@@ -119,7 +120,7 @@ exports.main = async (event, context) => {
   try {
     if (isUpload && fileBase64) {
       const fileBuffer = Buffer.from(fileBase64, 'base64')
-      const { buffer, contentType } = buildMultipart(formData, fileBuffer, fileName)
+      const { buffer, contentType } = buildMultipart(formData, fileBuffer, fileName, fileType)
       headers['Content-Type'] = contentType
 
       const result = await httpRequest({

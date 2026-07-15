@@ -74,7 +74,8 @@ Page({
   },
 
   goAdd() {
-    wx.navigateTo({ url: '/pages/trace-add/trace-add' })
+    const type = this.data.filterType || ''
+    wx.navigateTo({ url: '/pages/trace-add/trace-add' + (type ? '?type=' + type : '') })
   },
 
   async onDeleteSwipe(e) {
