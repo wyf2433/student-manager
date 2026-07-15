@@ -60,6 +60,7 @@ Page({
 
   onLoad(options) {
     this._chartReady = false
+    this._renderRetry = 0
     this.setData({ studentId: options.id })
     this.loadData()
   },
@@ -151,7 +152,10 @@ Page({
     if (!exams || exams.length === 0) return
 
     if (!this._chartReady || !chartInstance) {
-      setTimeout(() => this._renderChart(), 200)
+      if (this._renderRetry < 15) {
+        this._renderRetry++
+        setTimeout(() => this._renderChart(), 200)
+      }
       return
     }
 

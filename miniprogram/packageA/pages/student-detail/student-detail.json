@@ -4,6 +4,7 @@
   "usingComponents": {
     "t-button": "tdesign-miniprogram/button/button",
     "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-swipe-cell": "tdesign-miniprogram/swipe-cell/swipe-cell",
     "ec-canvas": "../../ec-canvas/ec-canvas"
   }
 }
