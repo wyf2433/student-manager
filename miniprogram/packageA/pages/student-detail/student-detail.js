@@ -23,15 +23,10 @@ function avatarIndex(name) {
 }
 
 let chartInstance = null
-let pendingOption = null
 
 function initChart(canvas, width, height, dpr) {
   chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
   canvas.setChart(chartInstance)
-  if (pendingOption) {
-    chartInstance.setOption(pendingOption)
-    pendingOption = null
-  }
   return chartInstance
 }
 
@@ -144,6 +139,11 @@ Page({
     const exams = this.data.trendExams
     if (!exams || exams.length === 0) return
 
+    if (!chartInstance) {
+      setTimeout(() => this._renderChart(), 200)
+      return
+    }
+
     const xData = exams.map(e => e.exam_name)
     const studentScores = exams.map(e => e.score)
     const classAvgs = exams.map(e => e.class_avg || null)
@@ -208,10 +208,6 @@ Page({
       })
     }
 
-    if (!chartInstance) {
-      pendingOption = option
-      return
-    }
     chartInstance.setOption(option)
   },
 

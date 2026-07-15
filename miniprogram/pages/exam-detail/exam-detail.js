@@ -78,10 +78,23 @@ Page({
       const ranking = rankingRes.data
 
       let maxPercent = 0
+      const RANGE_COLORS = ['#EF4444', '#F59E0B', '#3B82F6', '#10B981', '#8B5CF6']
+      const RANGE_CLASSES = ['tag-red', 'tag-orange', 'tag-blue', 'tag-green', 'tag-purple']
       if (analysis && analysis.score_ranges) {
+        let idx = 0
         for (const key in analysis.score_ranges) {
-          if (analysis.score_ranges[key].percent > maxPercent) {
-            maxPercent = analysis.score_ranges[key].percent
+          const r = analysis.score_ranges[key]
+          if (r.percent > maxPercent) maxPercent = r.percent
+          r.barColor = RANGE_COLORS[idx] || '#8B5CF6'
+          r.colorClass = RANGE_CLASSES[idx] || 'tag-purple'
+          idx++
+        }
+      }
+
+      if (ranking && ranking.rankings) {
+        for (const item of ranking.rankings) {
+          if (item.change !== null && item.change !== undefined) {
+            item.changeLabel = item.change > 0 ? '↑' + item.change : item.change < 0 ? '↓' + Math.abs(item.change) : '—'
           }
         }
       }
