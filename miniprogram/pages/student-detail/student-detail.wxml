@@ -10,6 +10,33 @@
         <text class="student-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
       </view>
     </view>
+    <view class="quick-action" bindtap="showActionSheet">
+      <text class="quick-action-text">+ 记考勤 / 请假 / 加扣分</text>
+    </view>
+  </view>
+
+  <!-- 个人备注 -->
+  <view class="card">
+    <view class="card-title">个人备注</view>
+    <view class="note-input-area">
+      <textarea
+        class="note-textarea"
+        placeholder="记录关于这个学生的情况..."
+        value="{{noteContent}}"
+        bindinput="onNoteInput"
+        maxlength="500"
+        auto-height
+      />
+      <view class="btn-primary save-note-btn" bindtap="saveNote">记录</view>
+    </view>
+    <view wx:if="{{notes.length === 0}}" class="empty">暂无备注</view>
+    <view wx:for="{{notes}}" wx:key="id" class="note-item">
+      <text class="note-content">{{item.content}}</text>
+      <view class="note-bottom">
+        <text class="note-time">{{item.created_at}}</text>
+        <text class="delete-btn" bindtap="deleteNote" data-id="{{item.id}}">删除</text>
+      </view>
+    </view>
   </view>
 
   <!-- 成绩记录 -->
@@ -24,7 +51,7 @@
     </view>
   </view>
 
-  <!-- 时间线 -->
+  <!-- 记录时间线 -->
   <view class="card">
     <view class="card-title">记录时间线</view>
     <view wx:if="{{records.length === 0}}" class="empty">暂无记录</view>
@@ -40,6 +67,29 @@
           {{item.value > 0 ? '+' : ''}}{{item.value}}分
         </text>
       </view>
+      <text class="delete-btn" bindtap="deleteRecord" data-id="{{item.id}}">删除</text>
+    </view>
+  </view>
+</view>
+
+<!-- 底部弹窗: 快速记录 -->
+<view class="action-mask" wx:if="{{showAction}}" bindtap="closeAction"></view>
+<view class="action-sheet" wx:if="{{showAction}}">
+  <view class="action-title">
+    {{actionType === 'attendance' ? '记考勤' : actionType === 'leave' ? '记请假' : '加扣分'}}
+    <text class="action-close" bindtap="closeAction">✕</text>
+  </view>
+  <view class="action-body">
+    <view class="form-item" wx:if="{{actionType === 'score'}}">
+      <text class="form-label">分数</text>
+      <input class="form-input" type="digit" placeholder="正数加分,负数扣分" value="{{actionValue}}" bindinput="onActionValueInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">{{actionType === 'leave' ? '事由' : '描述'}}</text>
+      <textarea class="form-textarea" placeholder="输入描述..." value="{{actionContent}}" bindinput="onActionContentInput" maxlength="500" auto-height />
+    </view>
+    <view class="btn-primary action-save {{saving ? 'disabled' : ''}}" bindtap="saveAction">
+      {{saving ? '保存中...' : '保存'}}
     </view>
   </view>
 </view>

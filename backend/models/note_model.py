@@ -19,7 +19,7 @@ def get_note_by_id(note_id: int) -> dict | None:
         return dict(row) if row else None
 
 
-def list_notes(page: int = 1, page_size: int = 50, keyword: str = None, date: str = None) -> dict:
+def list_notes(page: int = 1, page_size: int = 50, keyword: str = None, date: str = None, student_id: int = None) -> dict:
     offset = (page - 1) * page_size
     sql = "SELECT * FROM quick_notes WHERE 1=1"
     params = []
@@ -29,6 +29,9 @@ def list_notes(page: int = 1, page_size: int = 50, keyword: str = None, date: st
     if date:
         sql += " AND date(created_at) = ?"
         params.append(date)
+    if student_id:
+        sql += " AND student_id = ?"
+        params.append(student_id)
     count_sql = sql.replace("SELECT *", "SELECT COUNT(*) as cnt", 1)
     with get_db() as conn:
         total = conn.execute(count_sql, params).fetchone()["cnt"]

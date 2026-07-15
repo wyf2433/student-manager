@@ -15,8 +15,9 @@ async def list_notes(
     page_size: int = Query(50, ge=1, le=200),
     keyword: str = Query(None),
     date: str = Query(None),
+    student_id: int = Query(None),
 ):
-    result = note_model.list_notes(page, page_size, keyword, date)
+    result = note_model.list_notes(page, page_size, keyword, date, student_id)
     return success(result)
 
 
