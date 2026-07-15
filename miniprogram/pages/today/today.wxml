@@ -53,10 +53,6 @@
     </view>
   </view>
 
-  <!-- 快速速记 -->
-  <view class="card">
-    <view class="card-title">一句话速记</view>
-
   <!-- 工作留痕入口 -->
   <view class="card" bindtap="goTraces">
     <view class="card-title-row">
