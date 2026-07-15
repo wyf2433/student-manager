@@ -100,7 +100,7 @@ Page({
   },
 
   onTabChange(e) {
-    this.setData({ activeTab: e.detail.value })
+    this.setData({ activeTab: Number(e.detail.value) })
   },
 
   goStudentDetail(e) {
