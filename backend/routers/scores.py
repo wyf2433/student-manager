@@ -29,7 +29,9 @@ async def list_exams():
 
 @router.post("", status_code=201)
 async def create_score(body: ScoreCreate):
-    item = score_model.create_score(body.student_id, body.exam_name, body.subject, body.score)
+    item = score_model.create_score(
+        body.student_id, body.exam_name, body.subject, body.score, body.full_score
+    )
     return success(item)
 
 
@@ -95,6 +97,7 @@ async def import_confirm(body: ScoreImportConfirm):
             "exam_name": body.exam_name,
             "subject": body.subject,
             "score": score_val,
+            "full_score": body.full_score,
         })
 
     if not scores_to_insert:
@@ -105,6 +108,62 @@ async def import_confirm(body: ScoreImportConfirm):
         "auto_created_students": auto_created_students,
         "auto_created_classes": auto_created_classes,
     })
+
+
+@router.get("/analysis/exam")
+async def exam_analysis(
+    exam_name: str = Query(...),
+    subject: str = Query(...),
+):
+    """单次考试分析:均分/中位数/标准差/分数段/难度/班级对比"""
+    result = score_model.get_exam_analysis(exam_name, subject)
+    if not result:
+        raise HTTPException(status_code=404, detail="未找到该考试/科目的成绩数据")
+    return success(result)
+
+
+@router.get("/analysis/trend")
+async def student_trend(
+    student_id: int = Query(...),
+    subject: str = Query(None),
+):
+    """学生个人多次成绩趋势(含班级均分对比 + 进退步)"""
+    result = score_model.get_student_trend(student_id, subject)
+    if not result:
+        raise HTTPException(status_code=404, detail="未找到该学生的成绩数据")
+    return success(result)
+
+
+@router.get("/analysis/class-trend")
+async def class_trend(
+    class_id: int = Query(...),
+    subject: str = Query(None),
+):
+    """班级多次考试成绩趋势"""
+    result = score_model.get_class_trend(class_id, subject)
+    if not result:
+        raise HTTPException(status_code=404, detail="未找到该班级或无成绩数据")
+    return success(result)
+
+
+@router.get("/analysis/ranking")
+async def ranking(
+    exam_name: str = Query(...),
+    subject: str = Query(...),
+    class_id: int = Query(None),
+):
+    """单次考试排行榜 + 进步/退步榜"""
+    result = score_model.get_ranking(exam_name, subject, class_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="未找到该考试/科目的成绩数据")
+    return success(result)
+
+
+@router.get("/exams/{exam_name}/subjects")
+async def list_exam_subjects(exam_name: str):
+    """获取某场考试的科目列表"""
+    items = score_model.get_exam_subjects(exam_name)
+    return success({"items": items})
 
 
 @router.delete("/{score_id}")

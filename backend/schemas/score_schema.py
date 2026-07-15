@@ -10,6 +10,7 @@ class ScoreCreate(BaseModel):
     exam_name: str
     subject: str
     score: Optional[float] = None
+    full_score: Optional[float] = 100
 
 
 class ScoreImportConfirm(BaseModel):
@@ -17,4 +18,5 @@ class ScoreImportConfirm(BaseModel):
     subject: str
     class_id: Optional[int] = None
     grade_prefix: Optional[str] = None
+    full_score: Optional[float] = 100
     students: list  # [{name, class_name(可选), score}]

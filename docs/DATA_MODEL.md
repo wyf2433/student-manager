@@ -49,6 +49,7 @@
 | exam_name | TEXT NOT NULL | 考试名称(如"期中考试") |
 | subject | TEXT NOT NULL | 科目(物理/语文/数学...) |
 | score | REAL | 分数 |
+| full_score | REAL DEFAULT 100 | 满分(默认100,导入时用户指定) |
 | created_at | TEXT | 创建时间 |
 
 ### 5. traces(工作留痕)

@@ -138,6 +138,15 @@ def init_db():
             CREATE INDEX IF NOT EXISTS idx_notes_created_at ON quick_notes(created_at);
             """
         )
+
+        _migrate_scores_full_score(conn)
         conn.commit()
     finally:
         conn.close()
+
+
+def _migrate_scores_full_score(conn):
+    """幂等迁移:为 scores 表添加 full_score 列(默认 100)"""
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(scores)").fetchall()]
+    if "full_score" not in cols:
+        conn.execute("ALTER TABLE scores ADD COLUMN full_score REAL DEFAULT 100")
