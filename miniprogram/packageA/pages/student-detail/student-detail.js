@@ -55,6 +55,7 @@ Page({
     actionValue: '',
     noteContent: '',
     saving: false,
+    showChart: false,
     ec: { onInit: initChart },
   },
 
@@ -106,7 +107,13 @@ Page({
         currentSubject: currentSubject,
         loading: false,
       }, () => {
-        this._renderChart()
+        if (trendExams.length > 0) {
+          setTimeout(() => {
+            this.setData({ showChart: true }, () => {
+              this._renderChart()
+            })
+          }, 300)
+        }
       })
     } catch (err) {
       console.error('加载失败', err)
@@ -243,7 +250,9 @@ Page({
       const trend = res.data
       const trendExams = this._processExams(trend)
       this.setData({ trend: trend, trendExams: trendExams }, () => {
-        this._renderChart()
+        if (trendExams.length > 0) {
+          this._renderChart()
+        }
       })
     } catch (err) {
       console.error('加载趋势失败', err)

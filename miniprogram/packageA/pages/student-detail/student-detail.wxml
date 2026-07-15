@@ -89,7 +89,7 @@
 
       <!-- ECharts 折线图 -->
       <view class="trend-chart-container">
-        <ec-canvas id="trendChart" canvas-id="trendChart" ec="{{ec}}"></ec-canvas>
+        <ec-canvas wx:if="{{showChart}}" id="trendChart" canvas-id="trendChart" ec="{{ec}}"></ec-canvas>
       </view>
 
       <!-- 趋势详情列表 -->
