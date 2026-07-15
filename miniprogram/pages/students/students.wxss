@@ -88,3 +88,20 @@
   gap: 16rpx;
   z-index: 100;
 }
+
+.fab-inline {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  color: #fff;
+  font-size: 52rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+}
+
+.fab-inline:active {
+  opacity: 0.85;
+}

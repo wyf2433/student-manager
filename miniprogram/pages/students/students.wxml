@@ -62,5 +62,5 @@
 <view class="bottom-bar">
   <view class="btn-outline success" bindtap="goScoreImport">📊 导入成绩</view>
   <view class="btn-outline info" bindtap="goImport">📥 导入学生</view>
-  <view class="fab" bindtap="goAdd">+</view>
+  <view class="fab-inline" bindtap="goAdd">+</view>
 </view>
