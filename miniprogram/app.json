@@ -4,7 +4,6 @@
     "pages/students/students",
     "pages/records/records",
     "pages/notes/notes",
-    "pages/student-detail/student-detail",
     "pages/add-record/add-record",
     "pages/schedule/schedule",
     "pages/schedule-edit/schedule-edit",
@@ -18,6 +17,14 @@
     "pages/exam-detail/exam-detail",
     "pages/traces/traces",
     "pages/trace-add/trace-add"
+  ],
+  "subPackages": [
+    {
+      "root": "packageA",
+      "pages": [
+        "pages/student-detail/student-detail"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -105,7 +105,7 @@ Page({
 
   goStudentDetail(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/student-detail/student-detail?id=${id}` })
+    wx.navigateTo({ url: `/packageA/pages/student-detail/student-detail?id=${id}` })
   },
 
   onPullDownRefresh() {

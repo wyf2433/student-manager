@@ -1,4 +1,4 @@
-const api = require('../../utils/api.js')
+const api = require('../../../utils/api.js')
 const echarts = require('../../ec-canvas/echarts.js')
 
 const TYPE_LABELS = {
