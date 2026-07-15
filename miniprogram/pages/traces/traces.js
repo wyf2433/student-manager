@@ -1,5 +1,4 @@
 const api = require('../../utils/api.js')
-const IMG_BASE = 'http://47.239.25.178'
 
 const TYPE_OPTIONS = [
   { value: '', label: '📦 全部' },
@@ -56,7 +55,6 @@ Page({
       const traces = (data.items || []).map(t => ({
         ...t,
         emoji: TYPE_EMOJI[t.type] || '📎',
-        fullImageUrls: (t.image_urls || []).map(u => IMG_BASE + u),
       }))
       this.setData({
         traces: traces,
