@@ -85,6 +85,10 @@ Page({
     wx.navigateTo({ url: '/pages/homework/homework' })
   },
 
+  goTraces() {
+    wx.navigateTo({ url: '/pages/traces/traces' })
+  },
+
   onPullDownRefresh() {
     this.loadData().then(() => wx.stopPullDownRefresh())
   },

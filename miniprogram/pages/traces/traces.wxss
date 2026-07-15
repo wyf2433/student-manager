@@ -1,0 +1,108 @@
+.filter-tabs {
+  display: flex;
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+
+.filter-tab {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 16rpx;
+}
+
+.filter-tab.active {
+  background: #3282F0;
+  color: #fff;
+}
+
+.trace-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.trace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.trace-type {
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  color: #fff;
+  background: #722ED1;
+}
+
+.trace-time {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.trace-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.trace-note {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+  line-height: 1.6;
+  margin-bottom: 12rpx;
+}
+
+.trace-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.trace-thumb {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+}
+
+.trace-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-btn {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  padding: 8rpx 20rpx;
+}
+
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #3282F0;
+  color: #fff;
+  font-size: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(50, 130, 240, 0.4);
+}
+
+.fab:active {
+  background: #2870D0;
+}

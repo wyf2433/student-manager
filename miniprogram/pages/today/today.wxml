@@ -56,6 +56,19 @@
   <!-- 快速速记 -->
   <view class="card">
     <view class="card-title">一句话速记</view>
+
+  <!-- 工作留痕入口 -->
+  <view class="card" bindtap="goTraces">
+    <view class="card-title-row">
+      <text class="card-title">工作留痕</text>
+      <text class="card-more">查看全部 ›</text>
+    </view>
+    <view class="trace-entry-desc">课堂纪律 / 实验记录 / 学生谈话 / 家长沟通</view>
+  </view>
+
+  <!-- 快速速记 -->
+  <view class="card">
+    <view class="card-title">一句话速记</view>
     <view class="quick-note">
       <textarea
         class="note-input"

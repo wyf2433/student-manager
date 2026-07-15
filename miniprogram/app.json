@@ -13,7 +13,9 @@
     "pages/homework-add/homework-add",
     "pages/student-add/student-add",
     "pages/student-import/student-import",
-    "pages/score-import/score-import"
+    "pages/score-import/score-import",
+    "pages/traces/traces",
+    "pages/trace-add/trace-add"
   ],
   "window": {
     "backgroundTextStyle": "light",

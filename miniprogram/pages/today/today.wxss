@@ -133,6 +133,12 @@
   color: #52C41A;
 }
 
+.trace-entry-desc {
+  font-size: 26rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
 .overview-item {
   display: flex;
   flex-direction: column;
