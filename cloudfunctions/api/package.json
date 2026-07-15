@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "description": "API 转发层 - 小程序到 ECS 后端",
   "main": "index.js",
-  "dependencies": {
-    "axios": "^1.7.0",
-    "form-data": "^4.0.0"
-  }
+  "dependencies": {}
 }
