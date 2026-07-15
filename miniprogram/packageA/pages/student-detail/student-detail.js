@@ -26,9 +26,13 @@ function avatarIndex(name) {
 let chartInstance = null
 
 function initChart(canvas, width, height, dpr) {
-  chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
-  canvas.setChart(chartInstance)
-  return chartInstance
+  const chart = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
+  canvas.setChart(chart)
+  chartInstance = chart
+  const pages = getCurrentPages()
+  const cur = pages[pages.length - 1]
+  if (cur) cur._chartReady = true
+  return chart
 }
 
 Page({
@@ -55,8 +59,13 @@ Page({
   },
 
   onLoad(options) {
+    this._chartReady = false
     this.setData({ studentId: options.id })
     this.loadData()
+  },
+
+  onUnload() {
+    chartInstance = null
   },
 
   async loadData() {
@@ -141,7 +150,7 @@ Page({
     const exams = this.data.trendExams
     if (!exams || exams.length === 0) return
 
-    if (!chartInstance) {
+    if (!this._chartReady || !chartInstance) {
       setTimeout(() => this._renderChart(), 200)
       return
     }
