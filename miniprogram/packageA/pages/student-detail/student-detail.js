@@ -24,12 +24,10 @@ function avatarIndex(name) {
 }
 
 let chartInstance = null
-let chartReady = false
 
 function initChart(canvas, width, height, dpr) {
   chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
   canvas.setChart(chartInstance)
-  chartReady = true
   return chartInstance
 }
 
@@ -57,8 +55,6 @@ Page({
   },
 
   onLoad(options) {
-    chartInstance = null
-    chartReady = false
     this.setData({ studentId: options.id })
     this.loadData()
   },
@@ -121,7 +117,8 @@ Page({
     return order.map(name => map[name])
   },
 
-  _processExams(trend) {    if (!trend || !trend.exams || trend.exams.length === 0) return []
+  _processExams(trend) {
+    if (!trend || !trend.exams || trend.exams.length === 0) return []
     return trend.exams.map(e => {
       let changeLabel = ''
       let changeClass = 'tag-gray'
@@ -144,12 +141,10 @@ Page({
     const exams = this.data.trendExams
     if (!exams || exams.length === 0) return
 
-    if (!chartReady || !chartInstance) {
+    if (!chartInstance) {
       setTimeout(() => this._renderChart(), 200)
       return
     }
-
-    chartInstance.clear()
 
     const xData = exams.map(e => e.exam_name)
     const studentScores = exams.map(e => e.score)
@@ -216,6 +211,7 @@ Page({
       })
     }
 
+    chartInstance.clear()
     chartInstance.setOption(option)
   },
 
