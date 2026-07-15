@@ -26,6 +26,13 @@ function avatarIndex(name) {
 let chartInstance = null
 let chartReady = false
 
+function initChart(canvas, width, height, dpr) {
+  chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
+  canvas.setChart(chartInstance)
+  chartReady = true
+  return chartInstance
+}
+
 Page({
   data: {
     student: null,
@@ -46,7 +53,7 @@ Page({
     actionValue: '',
     noteContent: '',
     saving: false,
-    ec: { lazyLoad: true },
+    ec: { onInit: initChart },
   },
 
   onLoad(options) {
@@ -137,6 +144,13 @@ Page({
     const exams = this.data.trendExams
     if (!exams || exams.length === 0) return
 
+    if (!chartReady || !chartInstance) {
+      setTimeout(() => this._renderChart(), 200)
+      return
+    }
+
+    chartInstance.clear()
+
     const xData = exams.map(e => e.exam_name)
     const studentScores = exams.map(e => e.score)
     const classAvgs = exams.map(e => e.class_avg || null)
@@ -202,18 +216,7 @@ Page({
       })
     }
 
-    if (!chartInstance) {
-      this.selectComponent('#trendChart').init((canvas, width, height, dpr) => {
-        chartInstance = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
-        canvas.setChart(chartInstance)
-        chartReady = true
-        chartInstance.setOption(option)
-        return chartInstance
-      })
-    } else {
-      chartInstance.clear()
-      chartInstance.setOption(option)
-    }
+    chartInstance.setOption(option)
   },
 
   onTrendSubjectChange(e) {
