@@ -191,7 +191,10 @@ def get_student_trend(student_id: int, subject: str = None) -> dict:
         subjects = sorted(set(r["subject"] for r in all_rows))
 
         if not subject:
-            subject = subjects[0]
+            if "物理" in subjects:
+                subject = "物理"
+            else:
+                subject = subjects[0]
 
         rows = [r for r in all_rows if r["subject"] == subject]
 
