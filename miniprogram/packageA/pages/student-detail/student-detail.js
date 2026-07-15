@@ -1,5 +1,4 @@
 const api = require('../../../utils/api.js')
-const echarts = require('../../ec-canvas/echarts.js')
 const app = getApp()
 
 const TYPE_LABELS = {
@@ -23,24 +22,6 @@ function avatarIndex(name) {
   return hash % 8
 }
 
-let chartInstance = null
-
-function initChart(canvas, width, height, dpr) {
-  const chart = echarts.init(canvas, null, { width, height, devicePixelRatio: dpr })
-  canvas.setChart(chart)
-  chartInstance = chart
-  const pages = getCurrentPages()
-  const cur = pages[pages.length - 1]
-  if (cur) {
-    cur._chartReady = true
-    setTimeout(() => {
-      cur.setData({ chartReady: true })
-      cur._renderChart()
-    }, 400)
-  }
-  return chart
-}
-
 Page({
   data: {
     student: null,
@@ -61,21 +42,15 @@ Page({
     actionValue: '',
     noteContent: '',
     saving: false,
-    showChart: false,
-    chartReady: false,
-    ec: { onInit: initChart },
+    chartData: null,
   },
 
   onLoad(options) {
-    this._chartReady = false
-    this._renderRetry = 0
     this.setData({ studentId: options.id })
     this.loadData()
   },
 
-  onUnload() {
-    chartInstance = null
-  },
+  onUnload() {},
 
   async loadData() {
     this.setData({ loading: true })
@@ -100,6 +75,7 @@ Page({
       const currentSubject = (trend && trend.current_subject) || ''
 
       const trendExams = this._processExams(trend)
+      const chartData = this._buildChart(trendExams)
 
       this.setData({
         student: student,
@@ -112,13 +88,8 @@ Page({
         trendExams: trendExams,
         trendSubjects: trendSubjects,
         currentSubject: currentSubject,
+        chartData: chartData,
         loading: false,
-        showChart: false,
-        chartReady: false,
-      }, () => {
-        if (trendExams.length > 0) {
-          this.setData({ showChart: true })
-        }
       })
     } catch (err) {
       console.error('加载失败', err)
@@ -159,85 +130,64 @@ Page({
     })
   },
 
-  _renderChart() {
-    const exams = this.data.trendExams
-    if (!exams || exams.length === 0) return
+  _buildChart(exams) {
+    if (!exams || exams.length === 0) return null
 
-    if (!this._chartReady || !chartInstance) {
-      if (this._renderRetry < 15) {
-        this._renderRetry++
-        setTimeout(() => this._renderChart(), 200)
-      }
-      return
-    }
-
-    const xData = exams.map(e => e.exam_name)
-    const studentScores = exams.map(e => e.score)
-    const classAvgs = exams.map(e => e.class_avg || null)
     const fullScore = exams[0].full_score || 100
+    const n = exams.length
+    const hasClassAvg = exams.some(e => e.class_avg !== null && e.class_avg !== undefined)
 
-    const hasClassAvg = classAvgs.some(v => v !== null)
+    const points = exams.map((e, i) => {
+      const xPercent = n === 1 ? 50 : (i / (n - 1)) * 100
+      const yPercent = (e.score / fullScore) * 100
+      return {
+        ...e,
+        xPercent,
+        yPercent,
+        classYPercent: (e.class_avg !== null && e.class_avg !== undefined) ? (e.class_avg / fullScore) * 100 : null,
+      }
+    })
 
-    const option = {
-      tooltip: { trigger: 'axis' },
-      legend: {
-        data: hasClassAvg ? ['本人成绩', '班级均分'] : ['本人成绩'],
-        bottom: 0,
-        textStyle: { fontSize: 12 },
-      },
-      grid: { left: 40, right: 20, top: 20, bottom: 40 },
-      xAxis: {
-        type: 'category',
-        data: xData,
-        axisLabel: { fontSize: 11, rotate: xData.length > 3 ? 15 : 0 },
-      },
-      yAxis: {
-        type: 'value',
-        min: 0,
-        max: fullScore,
-        axisLabel: { fontSize: 11 },
-      },
-      animation: false,
-      series: [
-        {
-          name: '本人成绩',
-          type: 'line',
-          data: studentScores,
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 8,
-          itemStyle: { color: '#6366F1' },
-          lineStyle: { color: '#6366F1', width: 3 },
-          label: { show: true, position: 'top', fontSize: 11, fontWeight: 'bold' },
-          areaStyle: {
-            color: {
-              type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-              colorStops: [
-                { offset: 0, color: 'rgba(99,102,241,0.25)' },
-                { offset: 1, color: 'rgba(99,102,241,0.02)' },
-              ],
-            },
-          },
-        },
-      ],
-    }
-
-    if (hasClassAvg) {
-      option.series.push({
-        name: '班级均分',
-        type: 'line',
-        data: classAvgs,
-        smooth: true,
-        symbol: 'diamond',
-        symbolSize: 6,
-        itemStyle: { color: '#9CA3AF' },
-        lineStyle: { color: '#9CA3AF', width: 2, type: 'dashed' },
-        label: { show: false },
+    const lines = []
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i]
+      const p2 = points[i + 1]
+      const dx = p2.xPercent - p1.xPercent
+      const dy = p1.yPercent - p2.yPercent
+      const length = Math.sqrt(dx * dx + dy * dy)
+      const angle = Math.atan2(-dy, dx) * 180 / Math.PI
+      lines.push({
+        left: p1.xPercent,
+        top: 100 - p1.yPercent,
+        length: length,
+        angle: angle,
       })
+
+      if (hasClassAvg && p1.classYPercent !== null && p2.classYPercent !== null) {
+        const cDy = p1.classYPercent - p2.classYPercent
+        const cLength = Math.sqrt(dx * dx + cDy * cDy)
+        const cAngle = Math.atan2(-cDy, dx) * 180 / Math.PI
+        lines.push({
+          left: p1.xPercent,
+          top: 100 - p1.classYPercent,
+          length: cLength,
+          angle: cAngle,
+          isClass: true,
+        })
+      }
     }
 
-    chartInstance.clear()
-    chartInstance.setOption(option)
+    return {
+      points,
+      lines,
+      fullScore,
+      hasClassAvg,
+      xLabels: points.map(p => ({
+        exam_name: p.exam_name,
+        date: p.date,
+        xPercent: p.xPercent,
+      })),
+    }
   },
 
   onTrendSubjectChange(e) {
@@ -254,11 +204,8 @@ Page({
       })
       const trend = res.data
       const trendExams = this._processExams(trend)
-      this.setData({ trend: trend, trendExams: trendExams }, () => {
-        if (trendExams.length > 0) {
-          this._renderChart()
-        }
-      })
+      const chartData = this._buildChart(trendExams)
+      this.setData({ trend: trend, trendExams: trendExams, chartData: chartData })
     } catch (err) {
       console.error('加载趋势失败', err)
     }

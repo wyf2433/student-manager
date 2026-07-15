@@ -87,9 +87,46 @@
         </picker>
       </view>
 
-      <!-- ECharts 折线图 -->
-      <view class="trend-chart-container" style="visibility: {{chartReady ? 'visible' : 'hidden'}};">
-        <ec-canvas wx:if="{{showChart}}" id="trendChart" canvas-id="trendChart" ec="{{ec}}"></ec-canvas>
+      <!-- 纯CSS折线图 -->
+      <view class="css-chart" wx:if="{{chartData}}">
+        <view class="css-chart-area">
+          <view class="css-grid css-grid-top"></view>
+          <view class="css-grid css-grid-mid"></view>
+          <view class="css-grid css-grid-bot"></view>
+
+          <view class="css-full-label">满分{{chartData.fullScore}}</view>
+
+          <!-- 连线 -->
+          <view wx:for="{{chartData.lines}}" wx:key="index"
+            class="css-line {{item.isClass ? 'css-line-class' : ''}}"
+            style="left: {{item.left}}%; top: {{item.top}}%; width: {{item.length}}%; transform: rotate({{item.angle}}deg);">
+          </view>
+
+          <!-- 数据点 -->
+          <block wx:for="{{chartData.points}}" wx:key="exam_name">
+            <view class="css-point" style="left: {{item.xPercent}}%; bottom: {{item.yPercent}}%;">
+              <view class="css-dot css-dot-student"></view>
+              <text class="css-label">{{item.score}}</text>
+            </view>
+            <view wx:if="{{item.classYPercent !== null}}" class="css-point css-point-class" style="left: {{item.xPercent}}%; bottom: {{item.classYPercent}}%;">
+              <view class="css-dot css-dot-class"></view>
+            </view>
+          </block>
+        </view>
+
+        <!-- X轴标签 -->
+        <view class="css-x-axis">
+          <view wx:for="{{chartData.xLabels}}" wx:key="exam_name" class="css-x-label" style="left: {{item.xPercent}}%;">
+            <text class="css-x-exam">{{item.exam_name}}</text>
+            <text class="css-x-date">{{item.date}}</text>
+          </view>
+        </view>
+
+        <!-- 图例 -->
+        <view class="css-legend">
+          <view class="css-legend-item"><view class="css-legend-dot css-dot-student"></view><text>本人成绩</text></view>
+          <view class="css-legend-item" wx:if="{{chartData.hasClassAvg}}"><view class="css-legend-dot css-dot-class"></view><text>班级均分</text></view>
+        </view>
       </view>
 
       <!-- 趋势详情列表 -->
