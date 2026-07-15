@@ -1,0 +1,51 @@
+{
+  "pages": [
+    "pages/today/today",
+    "pages/students/students",
+    "pages/records/records",
+    "pages/notes/notes",
+    "pages/student-detail/student-detail",
+    "pages/add-record/add-record"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#3282F0",
+    "navigationBarTitleText": "学生管理",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F6FA"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#3282F0",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/today/today",
+        "text": "今日",
+        "iconPath": "icons/today.png",
+        "selectedIconPath": "icons/today_active.png"
+      },
+      {
+        "pagePath": "pages/students/students",
+        "text": "学生",
+        "iconPath": "icons/students.png",
+        "selectedIconPath": "icons/students_active.png"
+      },
+      {
+        "pagePath": "pages/records/records",
+        "text": "记录",
+        "iconPath": "icons/records.png",
+        "selectedIconPath": "icons/records_active.png"
+      },
+      {
+        "pagePath": "pages/notes/notes",
+        "text": "速记",
+        "iconPath": "icons/notes.png",
+        "selectedIconPath": "icons/notes_active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

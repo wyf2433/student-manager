@@ -1,0 +1,109 @@
+.student-header {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 40rpx;
+  font-weight: 600;
+  margin-right: 24rpx;
+}
+
+.avatar-male {
+  background: #3282F0;
+}
+
+.avatar-female {
+  background: #FF7A9C;
+}
+
+.student-basic {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.student-meta {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.timeline-item {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
+}
+
+.timeline-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  margin: 8rpx 20rpx 0 0;
+  flex-shrink: 0;
+  background: #3282F0;
+}
+
+.timeline-dot.type-attendance {
+  background: #52C41A;
+}
+
+.timeline-dot.type-leave {
+  background: #FAAD14;
+}
+
+.timeline-dot.type-score {
+  background: #FF4D4F;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.timeline-type {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.timeline-time {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.timeline-desc {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+}
+
+.timeline-value {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FF4D4F;
+  display: block;
+  margin-top: 4rpx;
+}

@@ -1,0 +1,97 @@
+.overview-grid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.overview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.overview-num {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #3282F0;
+}
+
+.overview-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.quick-note {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.note-input {
+  width: 100%;
+  min-height: 80rpx;
+  padding: 16rpx;
+  background: #F5F6FA;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.save-btn {
+  width: 200rpx;
+  align-self: flex-end;
+}
+
+.recent-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.recent-item:last-child {
+  border-bottom: none;
+}
+
+.recent-type {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  color: #fff;
+  background: #3282F0;
+}
+
+.recent-type.attendance {
+  background: #52C41A;
+}
+
+.recent-type.leave {
+  background: #FAAD14;
+}
+
+.recent-type.score {
+  background: #FF4D4F;
+}
+
+.recent-type.note {
+  background: #3282F0;
+}
+
+.recent-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.recent-time {
+  font-size: 22rpx;
+  color: #BBB;
+  margin-top: 6rpx;
+}

@@ -1,0 +1,31 @@
+<view class="container">
+  <!-- 速记输入区 -->
+  <view class="input-area" wx:if="{{showInput}}">
+    <textarea
+      class="note-input"
+      placeholder="想到什么就记一笔..."
+      value="{{noteContent}}"
+      bindinput="onNoteInput"
+      maxlength="500"
+      auto-height
+      focus
+    />
+    <view class="input-actions">
+      <view class="btn-cancel" bindtap="toggleInput">取消</view>
+      <view class="btn-primary save-btn" bindtap="saveNote">保存</view>
+    </view>
+  </view>
+
+  <!-- 速记列表 -->
+  <view wx:if="{{notes.length === 0 && !loading}}" class="empty">暂无速记</view>
+  <view wx:for="{{notes}}" wx:key="id" class="note-card">
+    <view class="note-content">{{item.content}}</view>
+    <view class="note-footer">
+      <text class="note-time">{{item.created_at}}</text>
+      <text class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</text>
+    </view>
+  </view>
+</view>
+
+<!-- 新增按钮 -->
+<view class="fab" bindtap="toggleInput" wx:if="{{!showInput}}">+</view>

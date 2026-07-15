@@ -1,0 +1,33 @@
+<view class="container" wx:if="{{student}}">
+  <!-- 学生信息卡 -->
+  <view class="card">
+    <view class="student-header">
+      <view class="avatar {{student.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
+        {{student.name[0]}}
+      </view>
+      <view class="student-basic">
+        <text class="student-name">{{student.name}}</text>
+        <text class="student-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 时间线 -->
+  <view class="card">
+    <view class="card-title">记录时间线</view>
+    <view wx:if="{{records.length === 0}}" class="empty">暂无记录</view>
+    <view wx:for="{{records}}" wx:key="id" class="timeline-item">
+      <view class="timeline-dot type-{{item.type}}"></view>
+      <view class="timeline-content">
+        <view class="timeline-header">
+          <text class="timeline-type">{{typeLabels[item.type] || item.type}}</text>
+          <text class="timeline-time">{{item.created_at}}</text>
+        </view>
+        <text class="timeline-desc">{{item.content || ''}}</text>
+        <text class="timeline-value" wx:if="{{item.value !== null && item.value !== undefined}}">
+          {{item.value > 0 ? '+' : ''}}{{item.value}}分
+        </text>
+      </view>
+    </view>
+  </view>
+</view>

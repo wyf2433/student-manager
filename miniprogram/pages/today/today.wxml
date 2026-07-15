@@ -1,0 +1,53 @@
+<view class="container">
+  <!-- 今日概览 -->
+  <view class="card" wx:if="{{overview}}">
+    <view class="card-title">今日概览</view>
+    <view class="overview-grid">
+      <view class="overview-item">
+        <text class="overview-num">{{overview.attendance_count || 0}}</text>
+        <text class="overview-label">考勤</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-num">{{overview.leave_count || 0}}</text>
+        <text class="overview-label">请假</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-num">{{overview.score_count || 0}}</text>
+        <text class="overview-label">加扣分</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-num">{{overview.note_count || 0}}</text>
+        <text class="overview-label">速记</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快速速记 -->
+  <view class="card">
+    <view class="card-title">一句话速记</view>
+    <view class="quick-note">
+      <textarea
+        class="note-input"
+        placeholder="想到什么就记一笔..."
+        value="{{quickNote}}"
+        bindinput="onNoteInput"
+        maxlength="200"
+        auto-height
+      />
+      <view class="btn-primary save-btn" bindtap="saveNote">记一笔</view>
+    </view>
+  </view>
+
+  <!-- 最近动态 -->
+  <view class="card">
+    <view class="card-title">最近动态</view>
+    <view wx:if="{{recent.length === 0}}" class="empty">暂无记录</view>
+    <view wx:for="{{recent}}" wx:key="id" class="recent-item">
+      <view class="recent-type {{item.type}}">{{item.type_label}}</view>
+      <view class="recent-content">
+        <text class="recent-text">{{item.summary}}</text>
+        <text class="recent-time">{{item.time_label}}</text>
+      </view>
+    </view>
+  </view>
+</view>

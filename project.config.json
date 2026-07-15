@@ -1,0 +1,17 @@
+{
+  "description": "学生管理类App(初中物理老师端)",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "appid": "wxe7bfa91a1970e2dc",
+  "projectname": "student-manager",
+  "libVersion": "3.5.0",
+  "condition": {}
+}

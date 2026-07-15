@@ -1,0 +1,36 @@
+<view class="container">
+  <!-- 类型筛选 -->
+  <scroll-view class="filter-tabs" scroll-x>
+    <view
+      wx:for="{{typeFilters}}"
+      wx:key="value"
+      class="filter-tab {{filterType === item.value ? 'active' : ''}}"
+      bindtap="onFilterTap"
+      data-type="{{item.value}}"
+    >
+      {{item.label}}
+    </view>
+  </scroll-view>
+
+  <!-- 记录列表 -->
+  <view wx:if="{{records.length === 0 && !loading}}" class="empty">暂无记录</view>
+  <view wx:for="{{records}}" wx:key="id" class="record-card">
+    <view class="record-header">
+      <view class="record-type type-{{item.type}}">
+        {{typeLabels[item.type] || item.type}}
+      </view>
+      <text class="record-time">{{item.created_at}}</text>
+    </view>
+    <view class="record-body">
+      <text class="record-student">学生ID: {{item.student_id}}</text>
+      <text class="record-desc">{{item.content || ''}}</text>
+      <text class="record-value" wx:if="{{item.value !== null && item.value !== undefined}}">{{item.value > 0 ? '+' : ''}}{{item.value}}分</text>
+    </view>
+    <view class="record-actions">
+      <text class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</text>
+    </view>
+  </view>
+</view>
+
+<!-- 新增按钮 -->
+<view class="fab" bindtap="goAdd">+</view>

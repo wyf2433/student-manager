@@ -1,0 +1,39 @@
+<view class="container">
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <picker
+      class="class-picker"
+      value="{{classIndex}}"
+      range="{{classes}}"
+      range-key="name"
+      bindchange="onClassChange"
+    >
+      <view class="picker-text">{{classes.length > 0 ? classes[classIndex].name : '选择班级'}}</view>
+    </picker>
+    <input
+      class="search-input"
+      placeholder="搜索姓名/学号"
+      value="{{keyword}}"
+      bindinput="onSearch"
+    />
+  </view>
+
+  <!-- 学生列表 -->
+  <view wx:if="{{students.length === 0 && !loading}}" class="empty">暂无学生</view>
+  <view
+    wx:for="{{students}}"
+    wx:key="id"
+    class="student-card"
+    bindtap="goDetail"
+    data-id="{{item.id}}"
+  >
+    <view class="avatar {{item.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
+      {{item.name[0]}}
+    </view>
+    <view class="student-info">
+      <text class="student-name">{{item.name}}</text>
+      <text class="student-meta">{{item.student_no || '无学号'}} · {{item.gender || ''}}</text>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+</view>
