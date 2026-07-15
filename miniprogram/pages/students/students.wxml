@@ -1,46 +1,55 @@
 <view class="container">
-  <!-- 筛选栏 -->
-  <view class="filter-bar">
-    <picker
-      class="class-picker"
-      value="{{classIndex}}"
-      range="{{classes}}"
-      range-key="name"
-      bindchange="onClassChange"
-    >
-      <view class="picker-text">{{classes.length > 0 ? classes[classIndex].name : '选择班级'}}</view>
-    </picker>
-    <input
-      class="search-input"
-      placeholder="搜索姓名/学号"
-      value="{{keyword}}"
-      bindinput="onSearch"
-    />
-  </view>
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
 
-  <!-- 学生列表 -->
-  <view wx:if="{{students.length === 0 && !loading}}" class="empty">暂无学生</view>
-  <view
-    wx:for="{{students}}"
-    wx:key="id"
-    class="student-card"
-    bindtap="goDetail"
-    data-id="{{item.id}}"
-  >
-    <view class="avatar {{item.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
-      {{item.name[0]}}
+  <block wx:if="{{!loading}}">
+    <!-- 筛选栏 -->
+    <view class="filter-bar">
+      <picker
+        class="class-picker"
+        value="{{classIndex}}"
+        range="{{classes}}"
+        range-key="name"
+        bindchange="onClassChange"
+      >
+        <view class="picker-text">
+          <text>{{classes.length > 0 ? classes[classIndex].name : '选择班级'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+      <view class="search-wrap">
+        <t-search
+          placeholder="搜索姓名/学号"
+          value="{{keyword}}"
+          bind:change="onSearch"
+          t-class="search-comp"
+        />
+      </view>
     </view>
-    <view class="student-info">
-      <text class="student-name">{{item.name}}</text>
-      <text class="student-meta">{{item.student_no || '无学号'}} · {{item.gender || ''}}</text>
+
+    <!-- 学生列表 -->
+    <t-empty wx:if="{{students.length === 0}}" description="暂无学生" />
+    <view
+      wx:for="{{students}}"
+      wx:key="id"
+      class="student-card"
+      bindtap="goDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="avatar {{item.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
+        {{item.name[0]}}
+      </view>
+      <view class="student-info">
+        <text class="student-name">{{item.name}}</text>
+        <text class="student-meta">{{item.student_no || '无学号'}} · {{item.gender || ''}}</text>
+      </view>
+      <t-icon name="chevron-right" size="40rpx" color="#C8C8C8" />
     </view>
-    <text class="arrow">›</text>
-  </view>
+  </block>
 </view>
 
 <!-- 底部操作按钮 -->
 <view class="bottom-bar">
-  <view class="btn-score" bindtap="goScoreImport">导入成绩</view>
-  <view class="btn-import" bindtap="goImport">导入学生</view>
-  <view class="fab" bindtap="goAdd">+</view>
+  <view class="btn-outline warn" bindtap="goScoreImport">导入成绩</view>
+  <view class="btn-outline success" bindtap="goImport">导入学生</view>
+  <t-fab icon="add" bind:click="goAdd" />
 </view>

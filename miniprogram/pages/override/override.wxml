@@ -40,30 +40,41 @@
     </view>
 
     <view class="form-actions">
-      <view class="btn-cancel" bindtap="toggleForm">取消</view>
-      <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">{{saving ? '保存中...' : '保存'}}</view>
+      <t-button theme="default" variant="text" size="medium" bindtap="toggleForm">取消</t-button>
+      <t-button theme="primary" size="medium" bindtap="onSave" loading="{{saving}}">保存</t-button>
     </view>
   </view>
 
   <!-- 调课列表 -->
   <view class="card">
     <view class="card-title">调课记录</view>
-    <view wx:if="{{overrides.length === 0 && !loading}}" class="empty">暂无调课</view>
-    <view wx:for="{{overrides}}" wx:key="id" class="override-item">
-      <view class="override-main">
-        <view class="override-header">
-          <text class="override-date">{{item.date}}</text>
-          <text class="override-action action-{{item.action}}">
-            {{item.action === 'cancel' ? '停课' : item.action === 'change' ? '改科目' : item.action === 'add' ? '加课' : '代课'}}
-          </text>
+    <t-empty wx:if="{{overrides.length === 0 && !loading}}" description="暂无调课" />
+    <t-swipe-cell
+      wx:for="{{overrides}}"
+      wx:key="id"
+      right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
+      bind:click="onDeleteSwipe"
+      data-id="{{item.id}}"
+    >
+      <view class="override-item">
+        <view class="override-main">
+          <view class="override-header">
+            <text class="override-date">{{item.date}}</text>
+            <t-tag
+              theme="{{item.action === 'cancel' ? 'danger' : item.action === 'change' ? 'warning' : item.action === 'add' ? 'success' : 'default'}}"
+              variant="light"
+              size="small"
+            >
+              {{item.action === 'cancel' ? '停课' : item.action === 'change' ? '改科目' : item.action === 'add' ? '加课' : '代课'}}
+            </t-tag>
+          </view>
+          <text class="override-period">第{{item.period}}节</text>
+          <text class="override-detail" wx:if="{{item.new_subject}}">→ {{item.new_subject}}</text>
+          <text class="override-note" wx:if="{{item.note}}">{{item.note}}</text>
         </view>
-        <text class="override-period">第{{item.period}}节</text>
-        <text class="override-detail" wx:if="{{item.new_subject}}">→ {{item.new_subject}}</text>
-        <text class="override-note" wx:if="{{item.note}}">{{item.note}}</text>
       </view>
-      <text class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</text>
-    </view>
+    </t-swipe-cell>
   </view>
 </view>
 
-<view class="fab" bindtap="toggleForm" wx:if="{{!showForm}}">+</view>
+<t-fab wx:if="{{!showForm}}" icon="add" bind:click="toggleForm" />

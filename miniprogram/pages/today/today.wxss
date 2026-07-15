@@ -1,24 +1,31 @@
 .overview-grid {
   display: flex;
   justify-content: space-around;
+  margin-top: 12rpx;
 }
 
-.card-title-row {
+.overview-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 16rpx;
 }
 
-.card-more {
+.overview-num {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: #0052D9;
+}
+
+.overview-label {
   font-size: 24rpx;
-  color: #3282F0;
+  color: #999;
+  margin-top: 8rpx;
 }
 
 .schedule-item {
   display: flex;
   align-items: center;
-  padding: 16rpx 0;
+  padding: 20rpx 0;
   border-bottom: 1rpx solid #F0F0F0;
 }
 
@@ -29,8 +36,8 @@
 .schedule-item.overridden {
   background: #FFF7E6;
   margin: 0 -12rpx;
-  padding: 16rpx 12rpx;
-  border-radius: 8rpx;
+  padding: 20rpx 12rpx;
+  border-radius: 12rpx;
 }
 
 .schedule-period {
@@ -49,7 +56,7 @@
 .schedule-subject {
   font-size: 30rpx;
   font-weight: 600;
-  color: #333;
+  color: #181818;
 }
 
 .schedule-class {
@@ -58,79 +65,29 @@
   margin-top: 4rpx;
 }
 
-.schedule-tag {
-  font-size: 20rpx;
-  color: #fff;
-  background: #FAAD14;
-  padding: 2rpx 12rpx;
-  border-radius: 8rpx;
-}
-
 .homework-item {
   display: flex;
   align-items: center;
   padding: 16rpx 0;
   border-bottom: 1rpx solid #F0F0F0;
+  gap: 12rpx;
 }
 
 .homework-item:last-child {
   border-bottom: none;
 }
 
-.homework-type {
-  font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  color: #fff;
-  margin-right: 16rpx;
-  flex-shrink: 0;
-}
-
-.homework-type.type-daily {
-  background: #3282F0;
-}
-
-.homework-type.type-experiment_report {
-  background: #52C41A;
-}
-
-.homework-type.type-review {
-  background: #722ED1;
-}
-
-.homework-type.type-exam {
-  background: #FF4D4F;
-}
-
 .homework-content {
   flex: 1;
   font-size: 28rpx;
-  color: #333;
+  color: #181818;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.homework-status {
-  font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  flex-shrink: 0;
-}
-
-.homework-status.status-active {
-  background: #E6F7FF;
-  color: #3282F0;
-}
-
-.homework-status.status-collected {
-  background: #FFF7E6;
-  color: #FAAD14;
-}
-
-.homework-status.status-graded {
-  background: #F6FFED;
-  color: #52C41A;
+.trace-entry {
+  position: relative;
 }
 
 .trace-entry-desc {
@@ -139,43 +96,21 @@
   line-height: 1.6;
 }
 
-.overview-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.overview-num {
-  font-size: 48rpx;
-  font-weight: 700;
-  color: #3282F0;
-}
-
-.overview-label {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 8rpx;
-}
-
 .quick-note {
   display: flex;
   flex-direction: column;
   gap: 16rpx;
+  align-items: flex-end;
 }
 
 .note-input {
   width: 100%;
   min-height: 80rpx;
-  padding: 16rpx;
-  background: #F5F6FA;
+  padding: 20rpx;
+  background: #F5F7FA;
   border-radius: 12rpx;
   font-size: 28rpx;
   box-sizing: border-box;
-}
-
-.save-btn {
-  width: 200rpx;
-  align-self: flex-end;
 }
 
 .recent-item {
@@ -183,36 +118,11 @@
   align-items: flex-start;
   padding: 20rpx 0;
   border-bottom: 1rpx solid #F0F0F0;
+  gap: 12rpx;
 }
 
 .recent-item:last-child {
   border-bottom: none;
-}
-
-.recent-type {
-  font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  margin-right: 16rpx;
-  flex-shrink: 0;
-  color: #fff;
-  background: #3282F0;
-}
-
-.recent-type.attendance {
-  background: #52C41A;
-}
-
-.recent-type.leave {
-  background: #FAAD14;
-}
-
-.recent-type.score {
-  background: #FF4D4F;
-}
-
-.recent-type.note {
-  background: #3282F0;
 }
 
 .recent-content {
@@ -223,7 +133,7 @@
 
 .recent-text {
   font-size: 28rpx;
-  color: #333;
+  color: #181818;
 }
 
 .recent-time {

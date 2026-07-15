@@ -116,17 +116,17 @@ Page({
     }
   },
 
-  async onDelete(e) {
+  async onDeleteSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
       try {
         await api.delete('/schedule/overrides/' + id)
         wx.showToast({ title: '已删除', icon: 'success' })
-        this.loadOverrides()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
       }
     }
+    this.loadOverrides()
   },
 })

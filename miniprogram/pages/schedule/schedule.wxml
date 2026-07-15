@@ -1,33 +1,38 @@
 <view class="container">
   <!-- 星期选择 -->
-  <scroll-view class="weekday-tabs" scroll-x>
-    <view
+  <t-tabs value="{{currentWeekday}}" bindchange="onWeekdayChange">
+    <t-tab-panel
       wx:for="{{weekdays}}"
       wx:key="value"
-      class="weekday-tab {{currentWeekday === item.value ? 'active' : ''}}"
-      bindtap="onWeekdayTap"
-      data-weekday="{{item.value}}"
-    >
-      {{item.label}}
-    </view>
-  </scroll-view>
+      label="{{item.label}}"
+      value="{{item.value}}"
+    />
+  </t-tabs>
 
   <!-- 课表列表 -->
-  <view wx:if="{{schedules.length === 0 && !loading}}" class="empty">暂无课程,点击右下角添加</view>
-  <view wx:for="{{schedules}}" wx:key="id" class="schedule-card">
-    <view class="schedule-card-main" bindtap="goEdit" data-id="{{item.id}}">
-      <view class="schedule-period-tag">第{{item.period}}节</view>
-      <view class="schedule-detail">
-        <text class="schedule-subject">{{item.subject}}</text>
-        <text class="schedule-class" wx:if="{{item.class_name}}">{{item.class_name}}</text>
+  <t-loading wx:if="{{loading}}" theme="circular" text="加载中..." inherit />
+  <t-empty wx:elif="{{schedules.length === 0}}" description="暂无课程,点击右下角添加" />
+  <block wx:else>
+    <t-swipe-cell
+      wx:for="{{schedules}}"
+      wx:key="id"
+      right="{{[{ text: '删除', className: 'swipe-del' }]}}"
+      bind:click="onDeleteSwipe"
+      data-id="{{item.id}}"
+    >
+      <view class="schedule-item" bindtap="goEdit" data-id="{{item.id}}">
+        <t-tag theme="primary" variant="light" size="small">第{{item.period}}节</t-tag>
+        <view class="schedule-info">
+          <text class="schedule-subject">{{item.subject}}</text>
+          <text class="schedule-class" wx:if="{{item.class_name}}">{{item.class_name}}</text>
+        </view>
       </view>
-    </view>
-    <text class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</text>
-  </view>
+    </t-swipe-cell>
+  </block>
 </view>
 
 <!-- 底部按钮 -->
 <view class="bottom-bar">
-  <view class="btn-override" bindtap="goOverride">临时调课</view>
-  <view class="fab" bindtap="goAdd">+</view>
+  <view class="btn-outline warn" bindtap="goOverride">临时调课</view>
+  <t-fab icon="add" bind:click="goAdd" />
 </view>

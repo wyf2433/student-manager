@@ -1,75 +1,97 @@
 <view class="container" wx:if="{{student}}">
-  <!-- 学生信息卡 -->
-  <view class="card">
-    <view class="student-header">
-      <view class="avatar {{student.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
-        {{student.name[0]}}
-      </view>
-      <view class="student-basic">
-        <text class="student-name">{{student.name}}</text>
-        <text class="student-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
-      </view>
-    </view>
-    <view class="quick-action" bindtap="showActionSheet">
-      <text class="quick-action-text">+ 记考勤 / 请假 / 加扣分</text>
-    </view>
-  </view>
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
 
-  <!-- 个人备注 -->
-  <view class="card">
-    <view class="card-title">个人备注</view>
-    <view class="note-input-area">
-      <textarea
-        class="note-textarea"
-        placeholder="记录关于这个学生的情况..."
-        value="{{noteContent}}"
-        bindinput="onNoteInput"
-        maxlength="500"
-        auto-height
-      />
-      <view class="btn-primary save-note-btn" bindtap="saveNote">记录</view>
-    </view>
-    <view wx:if="{{notes.length === 0}}" class="empty">暂无备注</view>
-    <view wx:for="{{notes}}" wx:key="id" class="note-item">
-      <text class="note-content">{{item.content}}</text>
-      <view class="note-bottom">
-        <text class="note-time">{{item.created_at}}</text>
-        <text class="delete-btn" bindtap="deleteNote" data-id="{{item.id}}">删除</text>
-      </view>
-    </view>
-  </view>
-
-  <!-- 成绩记录 -->
-  <view class="card" wx:if="{{scores.length > 0}}">
-    <view class="card-title">成绩记录</view>
-    <view wx:for="{{scores}}" wx:key="id" class="score-item">
-      <view class="score-info">
-        <text class="score-exam">{{item.exam_name}}</text>
-        <text class="score-subject">{{item.subject}}</text>
-      </view>
-      <text class="score-value">{{item.score}}</text>
-    </view>
-  </view>
-
-  <!-- 记录时间线 -->
-  <view class="card">
-    <view class="card-title">记录时间线</view>
-    <view wx:if="{{records.length === 0}}" class="empty">暂无记录</view>
-    <view wx:for="{{records}}" wx:key="id" class="timeline-item">
-      <view class="timeline-dot type-{{item.type}}"></view>
-      <view class="timeline-content">
-        <view class="timeline-header">
-          <text class="timeline-type">{{typeLabels[item.type] || item.type}}</text>
-          <text class="timeline-time">{{item.created_at}}</text>
+  <block wx:if="{{!loading}}">
+    <!-- 学生信息卡 -->
+    <view class="card">
+      <view class="student-header">
+        <view class="avatar {{student.gender === '女' ? 'avatar-female' : 'avatar-male'}}">
+          {{student.name[0]}}
         </view>
-        <text class="timeline-desc">{{item.content || ''}}</text>
-        <text class="timeline-value" wx:if="{{item.value !== null && item.value !== undefined}}">
-          {{item.value > 0 ? '+' : ''}}{{item.value}}分
-        </text>
+        <view class="student-basic">
+          <text class="student-name">{{student.name}}</text>
+          <text class="student-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
+        </view>
       </view>
-      <text class="delete-btn" bindtap="deleteRecord" data-id="{{item.id}}">删除</text>
+      <t-button theme="primary" variant="outline" size="medium" bindtap="showActionSheet" t-class="quick-action-btn">
+        + 记考勤 / 请假 / 加扣分
+      </t-button>
     </view>
-  </view>
+
+    <!-- 个人备注 -->
+    <view class="card">
+      <view class="card-title">个人备注</view>
+      <view class="note-input-area">
+        <textarea
+          class="note-textarea"
+          placeholder="记录关于这个学生的情况..."
+          value="{{noteContent}}"
+          bindinput="onNoteInput"
+          maxlength="500"
+          auto-height
+        />
+        <t-button theme="primary" size="small" bindtap="saveNote">记录</t-button>
+      </view>
+      <t-empty wx:if="{{notes.length === 0}}" description="暂无备注" />
+      <t-swipe-cell
+        wx:for="{{notes}}"
+        wx:key="id"
+        right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
+        bind:click="deleteNoteSwipe"
+        data-id="{{item.id}}"
+      >
+        <view class="note-item">
+          <text class="note-content">{{item.content}}</text>
+          <text class="note-time">{{item.created_at}}</text>
+        </view>
+      </t-swipe-cell>
+    </view>
+
+    <!-- 成绩记录 -->
+    <view class="card" wx:if="{{scores.length > 0}}">
+      <view class="card-title">成绩记录</view>
+      <view wx:for="{{scores}}" wx:key="id" class="score-item">
+        <view class="score-info">
+          <text class="score-exam">{{item.exam_name}}</text>
+          <text class="score-subject">{{item.subject}}</text>
+        </view>
+        <text class="score-value">{{item.score}}</text>
+      </view>
+    </view>
+
+    <!-- 记录时间线 -->
+    <view class="card">
+      <view class="card-title">记录时间线</view>
+      <t-empty wx:if="{{records.length === 0}}" description="暂无记录" />
+      <t-swipe-cell
+        wx:for="{{records}}"
+        wx:key="id"
+        right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
+        bind:click="deleteRecordSwipe"
+        data-id="{{item.id}}"
+      >
+        <view class="timeline-item">
+          <view class="timeline-dot type-{{item.type}}"></view>
+          <view class="timeline-content">
+            <view class="timeline-header">
+              <t-tag
+                theme="{{item.type === 'attendance' ? 'success' : item.type === 'leave' ? 'warning' : 'danger'}}"
+                variant="light"
+                size="small"
+              >
+                {{typeLabels[item.type] || item.type}}
+              </t-tag>
+              <text class="timeline-time">{{item.created_at}}</text>
+            </view>
+            <text class="timeline-desc">{{item.content || ''}}</text>
+            <text class="timeline-value" wx:if="{{item.value !== null && item.value !== undefined}}">
+              {{item.value > 0 ? '+' : ''}}{{item.value}}分
+            </text>
+          </view>
+        </view>
+      </t-swipe-cell>
+    </view>
+  </block>
 </view>
 
 <!-- 底部弹窗: 快速记录 -->
@@ -88,8 +110,8 @@
       <text class="form-label">{{actionType === 'leave' ? '事由' : '描述'}}</text>
       <textarea class="form-textarea" placeholder="输入描述..." value="{{actionContent}}" bindinput="onActionContentInput" maxlength="500" auto-height />
     </view>
-    <view class="btn-primary action-save {{saving ? 'disabled' : ''}}" bindtap="saveAction">
-      {{saving ? '保存中...' : '保存'}}
-    </view>
+    <t-button theme="primary" size="large" bindtap="saveAction" loading="{{saving}}" t-class="action-save-btn">
+      保存
+    </t-button>
   </view>
 </view>

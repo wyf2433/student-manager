@@ -68,7 +68,5 @@
     </view>
   </view>
 
-  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
-    {{saving ? '保存中...' : '保存'}}
-  </view>
+  <t-button theme="primary" size="large" bindtap="onSave" loading="{{saving}}" t-class="save-btn">保存</t-button>
 </view>

@@ -51,8 +51,8 @@ Page({
     }
   },
 
-  onFilterTap(e) {
-    const type = e.currentTarget.dataset.type
+  onFilterChange(e) {
+    const type = e.detail.value
     this.setData({ filterType: type }, () => {
       this.loadTraces()
     })
@@ -62,7 +62,7 @@ Page({
     wx.navigateTo({ url: '/pages/trace-add/trace-add' })
   },
 
-  async onDelete(e) {
+  async onDeleteSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
@@ -72,13 +72,20 @@ Page({
         this.loadTraces()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
+        this.loadTraces()
       }
+    } else {
+      this.loadTraces()
     }
   },
 
   previewImage(e) {
     const { urls, current } = e.currentTarget.dataset
-    wx.previewImage({ urls, current })
+    const fullUrls = urls.map(u => 'http://47.239.25.178' + u)
+    wx.previewImage({
+      current: 'http://47.239.25.178' + current,
+      urls: fullUrls,
+    })
   },
 
   onPullDownRefresh() {

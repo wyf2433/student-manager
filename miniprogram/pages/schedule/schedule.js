@@ -41,8 +41,8 @@ Page({
     }
   },
 
-  onWeekdayTap(e) {
-    const weekday = e.currentTarget.dataset.weekday
+  onWeekdayChange(e) {
+    const weekday = e.detail.value
     this.setData({ currentWeekday: weekday }, () => {
       this.loadSchedule()
     })
@@ -61,7 +61,9 @@ Page({
     })
   },
 
-  async onDelete(e) {
+  async onDeleteSwipe(e) {
+    const detail = e.detail || {}
+    if (detail.source && detail.source !== 'right') return
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {

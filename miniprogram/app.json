@@ -19,14 +19,14 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#3282F0",
+    "navigationBarBackgroundColor": "#0052D9",
     "navigationBarTitleText": "学生管理",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F6FA"
+    "backgroundColor": "#F5F7FA"
   },
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#3282F0",
+    "selectedColor": "#0052D9",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
@@ -57,5 +57,6 @@
     ]
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
 }

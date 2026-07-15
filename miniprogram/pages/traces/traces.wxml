@@ -1,46 +1,45 @@
 <view class="container">
-  <!-- 分类筛选 -->
-  <scroll-view class="filter-tabs" scroll-x>
-    <view
-      wx:for="{{typeOptions}}"
-      wx:key="value"
-      class="filter-tab {{filterType === item.value ? 'active' : ''}}"
-      bindtap="onFilterTap"
-      data-type="{{item.value}}"
+  <t-tabs value="{{filterType}}" bindchange="onFilterChange" t-class="filter-tabs">
+    <t-tab-panel wx:for="{{typeOptions}}" wx:key="value" label="{{item.label}}" value="{{item.value}}" />
+  </t-tabs>
+
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
+
+  <block wx:if="{{!loading}}">
+    <t-empty wx:if="{{traces.length === 0}}" description="暂无留痕" />
+    <t-swipe-cell
+      wx:for="{{traces}}"
+      wx:key="id"
+      right="{{[{text: '删除', className: 'swipe-delete-btn'}]}}"
+      bind:click="onDeleteSwipe"
+      data-id="{{item.id}}"
     >
-      {{item.label}}
-    </view>
-  </scroll-view>
+      <view class="trace-card">
+        <view class="trace-header">
+          <t-tag theme="default" variant="light" size="small">
+            {{typeLabels[item.type] || item.type}}
+          </t-tag>
+          <text class="trace-time">{{item.created_at}}</text>
+        </view>
+        <text class="trace-title">{{item.title}}</text>
+        <text class="trace-note" wx:if="{{item.note}}">{{item.note}}</text>
 
-  <!-- 留痕列表 -->
-  <view wx:if="{{traces.length === 0 && !loading}}" class="empty">暂无留痕</view>
-  <view wx:for="{{traces}}" wx:key="id" class="trace-card">
-    <view class="trace-header">
-      <view class="trace-type">{{typeLabels[item.type] || item.type}}</view>
-      <text class="trace-time">{{item.created_at}}</text>
-    </view>
-    <text class="trace-title">{{item.title}}</text>
-    <text class="trace-note" wx:if="{{item.note}}">{{item.note}}</text>
-
-    <!-- 图片 -->
-    <view class="trace-images" wx:if="{{item.image_urls.length > 0}}">
-      <image
-        wx:for="{{item.image_urls}}"
-        wx:for-item="url"
-        wx:key="*this"
-        class="trace-thumb"
-        src="http://47.239.25.178{{url}}"
-        mode="aspectFill"
-        bindtap="previewImage"
-        data-urls="{{item.image_urls}}"
-        data-current="{{url}}"
-      />
-    </view>
-
-    <view class="trace-footer">
-      <text class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</text>
-    </view>
-  </view>
+        <view class="trace-images" wx:if="{{item.image_urls.length > 0}}">
+          <image
+            wx:for="{{item.image_urls}}"
+            wx:for-item="url"
+            wx:key="*this"
+            class="trace-thumb"
+            src="http://47.239.25.178{{url}}"
+            mode="aspectFill"
+            bindtap="previewImage"
+            data-urls="{{item.image_urls}}"
+            data-current="{{url}}"
+          />
+        </view>
+      </view>
+    </t-swipe-cell>
+  </block>
 </view>
 
-<view class="fab" bindtap="goAdd">+</view>
+<t-fab icon="add" bind:click="goAdd" />

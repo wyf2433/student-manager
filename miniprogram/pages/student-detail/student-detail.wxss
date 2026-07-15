@@ -1,6 +1,7 @@
 .student-header {
   display: flex;
   align-items: center;
+  margin-bottom: 24rpx;
 }
 
 .avatar {
@@ -16,7 +17,7 @@
   margin-right: 24rpx;
 }
 
-.avatar-male { background: #3282F0; }
+.avatar-male { background: #0052D9; }
 .avatar-female { background: #FF7A9C; }
 
 .student-basic {
@@ -28,7 +29,7 @@
 .student-name {
   font-size: 36rpx;
   font-weight: 700;
-  color: #333;
+  color: #181818;
 }
 
 .student-meta {
@@ -37,18 +38,8 @@
   margin-top: 4rpx;
 }
 
-.quick-action {
-  margin-top: 20rpx;
-  padding: 20rpx;
-  background: #EBF3FF;
-  border-radius: 12rpx;
-  text-align: center;
-}
-
-.quick-action-text {
-  font-size: 28rpx;
-  color: #3282F0;
-  font-weight: 600;
+.quick-action-btn {
+  width: 100% !important;
 }
 
 .note-input-area {
@@ -56,22 +47,17 @@
   flex-direction: column;
   gap: 12rpx;
   margin-bottom: 16rpx;
+  align-items: flex-end;
 }
 
 .note-textarea {
   width: 100%;
   min-height: 80rpx;
-  padding: 16rpx;
-  background: #F5F6FA;
+  padding: 20rpx;
+  background: #F5F7FA;
   border-radius: 12rpx;
   font-size: 28rpx;
   box-sizing: border-box;
-}
-
-.save-note-btn {
-  width: 160rpx;
-  align-self: flex-end;
-  padding: 12rpx 0;
 }
 
 .note-item {
@@ -85,16 +71,10 @@
 
 .note-content {
   font-size: 28rpx;
-  color: #333;
+  color: #181818;
   line-height: 1.6;
   display: block;
-}
-
-.note-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8rpx;
+  margin-bottom: 4rpx;
 }
 
 .note-time {
@@ -117,7 +97,7 @@
 .score-exam {
   font-size: 28rpx;
   font-weight: 600;
-  color: #333;
+  color: #181818;
 }
 
 .score-subject {
@@ -129,7 +109,7 @@
 .score-value {
   font-size: 36rpx;
   font-weight: 700;
-  color: #3282F0;
+  color: #0052D9;
 }
 
 .timeline-item {
@@ -147,12 +127,12 @@
   border-radius: 50%;
   margin: 8rpx 20rpx 0 0;
   flex-shrink: 0;
-  background: #3282F0;
+  background: #0052D9;
 }
 
-.timeline-dot.type-attendance { background: #52C41A; }
-.timeline-dot.type-leave { background: #FAAD14; }
-.timeline-dot.type-score { background: #FF4D4F; }
+.timeline-dot.type-attendance { background: #2BA471; }
+.timeline-dot.type-leave { background: #ED7B2F; }
+.timeline-dot.type-score { background: #D54941; }
 
 .timeline-content { flex: 1; }
 
@@ -161,12 +141,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8rpx;
-}
-
-.timeline-type {
-  font-size: 26rpx;
-  font-weight: 600;
-  color: #333;
 }
 
 .timeline-time {
@@ -183,16 +157,13 @@
 .timeline-value {
   font-size: 28rpx;
   font-weight: 700;
-  color: #FF4D4F;
+  color: #D54941;
   display: block;
   margin-top: 4rpx;
 }
 
-.delete-btn {
-  font-size: 24rpx;
-  color: #FF4D4F;
-  padding: 8rpx 12rpx;
-  flex-shrink: 0;
+.swipe-delete-btn {
+  background: #D54941 !important;
 }
 
 /* 底部弹窗 */
@@ -221,7 +192,7 @@
 .action-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: #333;
+  color: #181818;
   margin-bottom: 24rpx;
   display: flex;
   justify-content: space-between;
@@ -242,29 +213,26 @@
 
 .form-label {
   font-size: 26rpx;
-  color: #999;
+  color: #888;
   margin-bottom: 12rpx;
 }
 
 .form-input {
   padding: 20rpx;
-  background: #F5F6FA;
+  background: #F5F7FA;
   border-radius: 12rpx;
   font-size: 30rpx;
 }
 
 .form-textarea {
   padding: 20rpx;
-  background: #F5F6FA;
+  background: #F5F7FA;
   border-radius: 12rpx;
   font-size: 30rpx;
   min-height: 100rpx;
 }
 
-.action-save {
+.action-save-btn {
+  width: 100% !important;
   margin-top: 16rpx;
-}
-
-.action-save.disabled {
-  opacity: 0.6;
 }

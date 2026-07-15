@@ -33,7 +33,8 @@ Page({
   },
 
   onSearch(e) {
-    this.setData({ keyword: e.detail.value }, () => {
+    const value = e.detail.value || e.detail.keyword || ''
+    this.setData({ keyword: value }, () => {
       this.loadNotes()
     })
   },
@@ -74,7 +75,7 @@ Page({
     }
   },
 
-  async onDelete(e) {
+  async onDeleteSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
@@ -84,7 +85,10 @@ Page({
         this.loadNotes()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
+        this.loadNotes()
       }
+    } else {
+      this.loadNotes()
     }
   },
 

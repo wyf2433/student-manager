@@ -58,8 +58,8 @@ Page({
     }
   },
 
-  onStatusTap(e) {
-    const status = e.currentTarget.dataset.status
+  onStatusTabChange(e) {
+    const status = e.detail.value
     this.setData({ filterStatus: status }, () => this.loadHomework())
   },
 
@@ -81,18 +81,18 @@ Page({
     wx.navigateTo({ url: '/pages/homework-add/homework-add' })
   },
 
-  async onDelete(e) {
+  async onDeleteSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
       try {
         await api.delete('/homework/' + id)
         wx.showToast({ title: '已删除', icon: 'success' })
-        this.loadHomework()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
       }
     }
+    this.loadHomework()
   },
 
   onPullDownRefresh() {

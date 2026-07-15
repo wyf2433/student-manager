@@ -1,93 +1,115 @@
 <view class="container">
-  <!-- 今日概览 -->
-  <view class="card" wx:if="{{overview}}">
-    <view class="card-title">今日概览</view>
-    <view class="overview-grid">
-      <view class="overview-item">
-        <text class="overview-num">{{overview.attendance_count || 0}}</text>
-        <text class="overview-label">考勤</text>
-      </view>
-      <view class="overview-item">
-        <text class="overview-num">{{overview.leave_count || 0}}</text>
-        <text class="overview-label">请假</text>
-      </view>
-      <view class="overview-item">
-        <text class="overview-num">{{overview.score_count || 0}}</text>
-        <text class="overview-label">加扣分</text>
-      </view>
-      <view class="overview-item">
-        <text class="overview-num">{{overview.note_count || 0}}</text>
-        <text class="overview-label">速记</text>
-      </view>
-    </view>
-  </view>
+  <t-loading wx:if="{{loading}}" theme="circular" size="40rpx" text="加载中..." inherit />
 
-  <!-- 今日课程 -->
-  <view class="card" bindtap="goSchedule">
-    <view class="card-title-row">
-      <text class="card-title">今日课程</text>
-      <text class="card-more">课表 ›</text>
-    </view>
-    <view wx:if="{{todaySchedule.length === 0}}" class="empty">今日无课</view>
-    <view wx:for="{{todaySchedule}}" wx:key="period" class="schedule-item {{item.is_overridden ? 'overridden' : ''}}">
-      <text class="schedule-period">第{{item.period}}节</text>
-      <view class="schedule-info">
-        <text class="schedule-subject">{{item.subject}}</text>
-        <text class="schedule-class" wx:if="{{item.class_name}}">{{item.class_name}}</text>
-      </view>
-      <text class="schedule-tag" wx:if="{{item.is_overridden}}">调</text>
-    </view>
-  </view>
-
-  <!-- 今日作业 -->
-  <view class="card" bindtap="goHomework">
-    <view class="card-title-row">
-      <text class="card-title">今日作业</text>
-      <text class="card-more">全部 ›</text>
-    </view>
-    <view wx:if="{{todayHomework.length === 0}}" class="empty">今日未布置作业</view>
-    <view wx:for="{{todayHomework}}" wx:key="id" class="homework-item">
-      <text class="homework-type type-{{item.type}}">{{item.type === 'daily' ? '日常' : item.type === 'experiment_report' ? '实验' : item.type === 'review' ? '复习' : '试卷'}}</text>
-      <text class="homework-content">{{item.content}}</text>
-      <text class="homework-status status-{{item.status}}">{{item.status === 'active' ? '进行中' : item.status === 'collected' ? '已收' : '已改'}}</text>
-    </view>
-  </view>
-
-  <!-- 工作留痕入口 -->
-  <view class="card" bindtap="goTraces">
-    <view class="card-title-row">
-      <text class="card-title">工作留痕</text>
-      <text class="card-more">查看全部 ›</text>
-    </view>
-    <view class="trace-entry-desc">课堂纪律 / 实验记录 / 学生谈话 / 家长沟通</view>
-  </view>
-
-  <!-- 快速速记 -->
-  <view class="card">
-    <view class="card-title">一句话速记</view>
-    <view class="quick-note">
-      <textarea
-        class="note-input"
-        placeholder="想到什么就记一笔..."
-        value="{{quickNote}}"
-        bindinput="onNoteInput"
-        maxlength="200"
-        auto-height
-      />
-      <view class="btn-primary save-btn" bindtap="saveNote">记一笔</view>
-    </view>
-  </view>
-
-  <!-- 最近动态 -->
-  <view class="card">
-    <view class="card-title">最近动态</view>
-    <view wx:if="{{recent.length === 0}}" class="empty">暂无记录</view>
-    <view wx:for="{{recent}}" wx:key="id" class="recent-item">
-      <view class="recent-type {{item.type}}">{{item.type_label}}</view>
-      <view class="recent-content">
-        <text class="recent-text">{{item.summary}}</text>
-        <text class="recent-time">{{item.time_label}}</text>
+  <block wx:if="{{!loading}}">
+    <!-- 今日概览 -->
+    <view class="card" wx:if="{{overview}}">
+      <view class="card-title">今日概览</view>
+      <view class="overview-grid">
+        <view class="overview-item">
+          <text class="overview-num">{{overview.attendance_count || 0}}</text>
+          <text class="overview-label">考勤</text>
+        </view>
+        <view class="overview-item">
+          <text class="overview-num">{{overview.leave_count || 0}}</text>
+          <text class="overview-label">请假</text>
+        </view>
+        <view class="overview-item">
+          <text class="overview-num">{{overview.score_count || 0}}</text>
+          <text class="overview-label">加扣分</text>
+        </view>
+        <view class="overview-item">
+          <text class="overview-num">{{overview.note_count || 0}}</text>
+          <text class="overview-label">速记</text>
+        </view>
       </view>
     </view>
-  </view>
+
+    <!-- 今日课程 -->
+    <view class="card" bindtap="goSchedule">
+      <view class="card-title-row">
+        <text class="card-title">今日课程</text>
+        <text class="card-more">课表 ›</text>
+      </view>
+      <t-empty wx:if="{{todaySchedule.length === 0}}" description="今日无课" />
+      <view wx:for="{{todaySchedule}}" wx:key="period" class="schedule-item {{item.is_overridden ? 'overridden' : ''}}">
+        <text class="schedule-period">第{{item.period}}节</text>
+        <view class="schedule-info">
+          <text class="schedule-subject">{{item.subject}}</text>
+          <text class="schedule-class" wx:if="{{item.class_name}}">{{item.class_name}}</text>
+        </view>
+        <t-tag wx:if="{{item.is_overridden}}" theme="warning" variant="light" size="small">调</t-tag>
+      </view>
+    </view>
+
+    <!-- 今日作业 -->
+    <view class="card" bindtap="goHomework">
+      <view class="card-title-row">
+        <text class="card-title">今日作业</text>
+        <text class="card-more">全部 ›</text>
+      </view>
+      <t-empty wx:if="{{todayHomework.length === 0}}" description="今日未布置作业" />
+      <view wx:for="{{todayHomework}}" wx:key="id" class="homework-item">
+        <t-tag
+          theme="{{item.type === 'daily' ? 'primary' : item.type === 'experiment_report' ? 'success' : item.type === 'review' ? 'default' : 'danger'}}"
+          variant="light"
+          size="small"
+        >
+          {{item.type === 'daily' ? '日常' : item.type === 'experiment_report' ? '实验' : item.type === 'review' ? '复习' : '试卷'}}
+        </t-tag>
+        <text class="homework-content">{{item.content}}</text>
+        <t-tag
+          theme="{{item.status === 'active' ? 'primary' : item.status === 'collected' ? 'warning' : 'success'}}"
+          variant="light"
+          size="small"
+        >
+          {{item.status === 'active' ? '进行中' : item.status === 'collected' ? '已收' : '已改'}}
+        </t-tag>
+      </view>
+    </view>
+
+    <!-- 工作留痕入口 -->
+    <view class="card trace-entry" bindtap="goTraces">
+      <view class="card-title-row">
+        <text class="card-title">工作留痕</text>
+        <text class="card-more">查看全部 ›</text>
+      </view>
+      <view class="trace-entry-desc">课堂纪律 / 实验记录 / 学生谈话 / 家长沟通</view>
+    </view>
+
+    <!-- 快速速记 -->
+    <view class="card">
+      <view class="card-title">一句话速记</view>
+      <view class="quick-note">
+        <textarea
+          class="note-input"
+          placeholder="想到什么就记一笔..."
+          value="{{quickNote}}"
+          bindinput="onNoteInput"
+          maxlength="200"
+          auto-height
+        />
+        <t-button theme="primary" size="small" bindtap="saveNote">记一笔</t-button>
+      </view>
+    </view>
+
+    <!-- 最近动态 -->
+    <view class="card">
+      <view class="card-title">最近动态</view>
+      <t-empty wx:if="{{recent.length === 0}}" description="暂无记录" />
+      <view wx:for="{{recent}}" wx:key="id" class="recent-item">
+        <t-tag
+          theme="{{item.type === 'attendance' ? 'success' : item.type === 'leave' ? 'warning' : item.type === 'score' ? 'danger' : 'primary'}}"
+          variant="light"
+          size="small"
+        >
+          {{item.type_label}}
+        </t-tag>
+        <view class="recent-content">
+          <text class="recent-text">{{item.summary}}</text>
+          <text class="recent-time">{{item.time_label}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
 </view>

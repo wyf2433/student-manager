@@ -122,7 +122,7 @@ Page({
     }
   },
 
-  async deleteRecord(e) {
+  async deleteRecordSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
@@ -132,11 +132,14 @@ Page({
         this.loadData()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
+        this.loadData()
       }
+    } else {
+      this.loadData()
     }
   },
 
-  async deleteNote(e) {
+  async deleteNoteSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?' })
     if (res.confirm) {
@@ -146,7 +149,10 @@ Page({
         this.loadData()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
+        this.loadData()
       }
+    } else {
+      this.loadData()
     }
   },
 

@@ -2,6 +2,7 @@
   display: flex;
   gap: 16rpx;
   margin-bottom: 20rpx;
+  align-items: center;
 }
 
 .class-picker {
@@ -13,15 +14,24 @@
   padding: 16rpx 24rpx;
   border-radius: 12rpx;
   font-size: 28rpx;
-  color: #333;
+  color: #181818;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
 }
 
-.search-input {
+.picker-arrow {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.search-wrap {
   flex: 1;
-  background: #fff;
-  padding: 16rpx 24rpx;
-  border-radius: 12rpx;
-  font-size: 28rpx;
+}
+
+.search-comp {
+  background: #fff !important;
+  border-radius: 12rpx !important;
 }
 
 .student-card {
@@ -29,9 +39,13 @@
   align-items: center;
   background: #fff;
   border-radius: 16rpx;
-  padding: 24rpx;
+  padding: 24rpx 28rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.student-card:active {
+  background: #F5F7FA;
 }
 
 .avatar {
@@ -48,13 +62,8 @@
   flex-shrink: 0;
 }
 
-.avatar-male {
-  background: #3282F0;
-}
-
-.avatar-female {
-  background: #FF7A9C;
-}
+.avatar-male { background: #0052D9; }
+.avatar-female { background: #FF7A9C; }
 
 .student-info {
   flex: 1;
@@ -65,7 +74,7 @@
 .student-name {
   font-size: 30rpx;
   font-weight: 600;
-  color: #333;
+  color: #181818;
 }
 
 .student-meta {
@@ -74,52 +83,13 @@
   margin-top: 4rpx;
 }
 
-.arrow {
-  font-size: 40rpx;
-  color: #CCC;
-}
-
 .bottom-bar {
   position: fixed;
-  right: 40rpx;
-  bottom: 120rpx;
+  right: 32rpx;
+  bottom: 140rpx;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 20rpx;
-}
-
-.btn-import {
-  background: #FFF7E6;
-  color: #FAAD14;
-  border: 2rpx solid #FAAD14;
-  padding: 16rpx 32rpx;
-  border-radius: 40rpx;
-  font-size: 26rpx;
-}
-
-.btn-score {
-  background: #F6FFED;
-  color: #52C41A;
-  border: 2rpx solid #52C41A;
-  padding: 16rpx 32rpx;
-  border-radius: 40rpx;
-  font-size: 26rpx;
-}
-
-.fab {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background: #3282F0;
-  color: #fff;
-  font-size: 56rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(50, 130, 240, 0.4);
-}
-
-.fab:active {
-  background: #2870D0;
+  z-index: 100;
 }

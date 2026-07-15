@@ -41,7 +41,7 @@
     </view>
   </view>
 
-  <view class="btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSave">
+  <t-button theme="primary" size="large" bindtap="onSave" loading="{{saving}}" t-class="save-btn">
     {{saving ? '保存中...' : '保存'}}
-  </view>
+  </t-button>
 </view>

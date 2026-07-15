@@ -1,16 +1,17 @@
 .filter-bar {
   display: flex;
-  gap: 16rpx;
+  gap: 12rpx;
   margin-bottom: 20rpx;
   align-items: center;
 }
 
-.search-input {
+.search-wrap {
   flex: 1;
-  background: #fff;
-  padding: 16rpx 24rpx;
-  border-radius: 12rpx;
-  font-size: 28rpx;
+}
+
+.search-comp {
+  background: #fff !important;
+  border-radius: 12rpx !important;
 }
 
 .date-picker {
@@ -23,29 +24,29 @@
 }
 
 .date-picker.active {
-  background: #EBF3FF;
-  color: #3282F0;
+  background: #ECF2FE;
+  color: #0052D9;
 }
 
 .clear-date {
   font-size: 28rpx;
-  color: #FF4D4F;
+  color: #D54941;
   padding: 8rpx;
 }
 
 .input-area {
   background: #fff;
   border-radius: 16rpx;
-  padding: 24rpx;
+  padding: 28rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.05);
 }
 
 .note-input {
   width: 100%;
   min-height: 120rpx;
-  padding: 16rpx;
-  background: #F5F6FA;
+  padding: 20rpx;
+  background: #F5F7FA;
   border-radius: 12rpx;
   font-size: 28rpx;
   box-sizing: border-box;
@@ -58,34 +59,24 @@
   margin-top: 16rpx;
 }
 
-.btn-cancel {
-  padding: 16rpx 32rpx;
-  color: #999;
-  font-size: 28rpx;
-}
-
-.save-btn {
-  padding: 16rpx 48rpx;
-}
-
 .note-card {
   background: #fff;
   border-radius: 16rpx;
-  padding: 24rpx;
+  padding: 28rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.05);
 }
 
 .note-content {
   font-size: 30rpx;
-  color: #333;
+  color: #181818;
   line-height: 1.6;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
 }
 
 .note-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -94,28 +85,6 @@
   color: #BBB;
 }
 
-.delete-btn {
-  font-size: 24rpx;
-  color: #FF4D4F;
-  padding: 8rpx 20rpx;
-}
-
-.fab {
-  position: fixed;
-  right: 40rpx;
-  bottom: 120rpx;
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background: #3282F0;
-  color: #fff;
-  font-size: 56rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(50, 130, 240, 0.4);
-}
-
-.fab:active {
-  background: #2870D0;
+.swipe-delete-btn {
+  background: #D54941 !important;
 }

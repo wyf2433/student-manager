@@ -34,9 +34,9 @@
         Excel 第一行需包含以下列名(顺序不限):
       </view>
       <view class="format-list">
-        <text class="format-item">姓名(必填)</text>
-        <text class="format-item">学号(可选)</text>
-        <text class="format-item">性别(可选,男/女)</text>
+        <t-tag theme="primary" variant="light" size="small">姓名(必填)</t-tag>
+        <t-tag theme="primary" variant="light" size="small">学号(可选)</t-tag>
+        <t-tag theme="primary" variant="light" size="small">性别(可选,男/女)</t-tag>
       </view>
     </view>
   </view>
@@ -57,9 +57,9 @@
       </view>
     </view>
 
-    <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
+    <t-button theme="primary" size="large" bindtap="confirmImport" loading="{{importing}}" t-class="save-btn">
       {{importing ? '导入中...' : '确认导入'}}
-    </view>
+    </t-button>
     <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
   </view>
 </view>

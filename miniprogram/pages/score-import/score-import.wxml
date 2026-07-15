@@ -26,9 +26,9 @@
         Excel 第一行需包含:
       </view>
       <view class="format-list">
-        <text class="format-item">姓名(必填)</text>
-        <text class="format-item">科目列(如:物理/语文/数学)</text>
-        <text class="format-item">考试名称(可选列)</text>
+        <t-tag theme="primary" variant="light" size="small">姓名(必填)</t-tag>
+        <t-tag theme="primary" variant="light" size="small">科目列(如:物理/语文/数学)</t-tag>
+        <t-tag theme="primary" variant="light" size="small">考试名称(可选列)</t-tag>
       </view>
       <view class="format-desc" style="margin-top: 16rpx;">
         示例: 姓名 | 物理 | 语文 | 数学
@@ -80,9 +80,9 @@
       </view>
     </view>
 
-    <view class="btn-primary save-btn {{importing ? 'disabled' : ''}}" bindtap="confirmImport">
+    <t-button theme="primary" size="large" bindtap="confirmImport" loading="{{importing}}" t-class="save-btn">
       {{importing ? '导入中...' : '确认导入'}}
-    </view>
+    </t-button>
     <view class="btn-cancel-text" bindtap="reset">重新选择文件</view>
   </view>
 </view>

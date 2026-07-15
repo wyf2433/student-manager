@@ -60,7 +60,8 @@ Page({
   },
 
   onSearch(e) {
-    this.setData({ keyword: e.detail.value }, () => {
+    const value = e.detail.value || e.detail.keyword || ''
+    this.setData({ keyword: value }, () => {
       this.loadStudents()
     })
   },

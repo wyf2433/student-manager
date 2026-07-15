@@ -43,8 +43,8 @@ Page({
     }
   },
 
-  onFilterTap(e) {
-    const type = e.currentTarget.dataset.type
+  onFilterChange(e) {
+    const type = e.detail.value
     this.setData({ filterType: type }, () => {
       this.loadRecords()
     })
@@ -55,7 +55,7 @@ Page({
     wx.navigateTo({ url: '/pages/add-record/add-record' + (type ? '?type=' + type : '') })
   },
 
-  async onDelete(e) {
+  async onDeleteSwipe(e) {
     const id = e.currentTarget.dataset.id
     const res = await wx.showModal({ title: '确认删除?', content: '删除后不可恢复' })
     if (res.confirm) {
@@ -65,7 +65,10 @@ Page({
         this.loadRecords()
       } catch (err) {
         wx.showToast({ title: '删除失败', icon: 'none' })
+        this.loadRecords()
       }
+    } else {
+      this.loadRecords()
     }
   },
 

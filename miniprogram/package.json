@@ -1,0 +1,8 @@
+{
+  "name": "student-manager-miniprogram",
+  "version": "1.0.0",
+  "description": "学生管理小程序",
+  "dependencies": {
+    "tdesign-miniprogram": "^1.7.0"
+  }
+}
