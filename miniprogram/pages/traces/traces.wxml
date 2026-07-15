@@ -33,7 +33,7 @@
             wx:for-item="url"
             wx:key="*this"
             class="trace-thumb"
-            src="http://47.239.25.178{{url}}"
+            src="{{url}}"
             mode="aspectFill"
             bindtap="previewImage"
             data-urls="{{item.image_urls}}"

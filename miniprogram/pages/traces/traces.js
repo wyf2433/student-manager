@@ -97,10 +97,9 @@ Page({
 
   previewImage(e) {
     const { urls, current } = e.currentTarget.dataset
-    const fullUrls = urls.map(u => 'http://47.239.25.178' + u)
     wx.previewImage({
-      current: 'http://47.239.25.178' + current,
-      urls: fullUrls,
+      current,
+      urls,
     })
   },
 

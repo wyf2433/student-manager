@@ -99,12 +99,12 @@ Page({
   async uploadImage(filePath) {
     wx.showLoading({ title: '上传中...' })
     try {
-      const res = await api.upload('/traces/upload/image', filePath)
-      console.log('upload response:', JSON.stringify(res))
-      const url = res.data.url
-      if (!url) {
-        throw new Error('返回数据无url字段: ' + JSON.stringify(res))
-      }
+      const cloudPath = 'traces/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + (filePath.split('.').pop() || 'png')
+      const uploadRes = await wx.cloud.uploadFile({
+        cloudPath,
+        filePath,
+      })
+      const url = uploadRes.fileID
       this.setData({
         images: [...this.data.images, url],
       })
@@ -125,10 +125,9 @@ Page({
 
   previewImage(e) {
     const current = e.currentTarget.dataset.url
-    const urls = this.data.images.map(url => 'http://47.239.25.178' + url)
     wx.previewImage({
-      current: 'http://47.239.25.178' + current,
-      urls,
+      current,
+      urls: this.data.images,
     })
   },
 
