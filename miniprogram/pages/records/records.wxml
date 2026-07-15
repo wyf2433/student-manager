@@ -25,7 +25,7 @@
           <text class="record-time">🕐 {{item.created_at}}</text>
         </view>
         <view class="record-body">
-          <text class="record-student">学生ID: {{item.student_id}}</text>
+          <text class="record-student">{{item.class_name ? item.class_name + ' · ' : ''}}{{item.student_name || '未知学生'}}</text>
           <text class="record-desc" wx:if="{{item.content}}">{{item.content}}</text>
           <text class="record-value" wx:if="{{item.value !== null && item.value !== undefined}}">{{item.value > 0 ? '+' : ''}}{{item.value}}分</text>
         </view>

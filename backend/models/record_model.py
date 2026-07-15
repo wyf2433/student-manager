@@ -21,18 +21,28 @@ def get_record_by_id(record_id: int) -> dict | None:
 
 def list_records(student_id: int = None, type: str = None, page: int = 1, page_size: int = 50) -> dict:
     offset = (page - 1) * page_size
-    sql = "SELECT * FROM records WHERE 1=1"
+    where = " WHERE 1=1"
     params = []
     if student_id:
-        sql += " AND student_id = ?"
+        where += " AND r.student_id = ?"
         params.append(student_id)
     if type:
-        sql += " AND type = ?"
+        where += " AND r.type = ?"
         params.append(type)
-    count_sql = sql.replace("SELECT *", "SELECT COUNT(*) as cnt", 1)
+
     with get_db() as conn:
-        total = conn.execute(count_sql, params).fetchone()["cnt"]
-        sql += " ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?"
+        total = conn.execute(
+            "SELECT COUNT(*) as cnt FROM records r" + where, params
+        ).fetchone()["cnt"]
+
+        sql = (
+            "SELECT r.*, st.name AS student_name, c.name AS class_name"
+            " FROM records r"
+            " LEFT JOIN students st ON r.student_id = st.id"
+            " LEFT JOIN classes c ON st.class_id = c.id"
+            + where
+            + " ORDER BY r.created_at DESC, r.id DESC LIMIT ? OFFSET ?"
+        )
         params.extend([page_size, offset])
         rows = conn.execute(sql, params).fetchall()
         return {"items": [dict(r) for r in rows], "total": total, "page": page, "page_size": page_size}
