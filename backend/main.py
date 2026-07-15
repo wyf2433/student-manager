@@ -12,7 +12,7 @@ from config import BACKEND_HOST, BACKEND_PORT
 from database import init_db
 from middleware.auth import APIKeyMiddleware
 from middleware.rate_limit import limiter
-from routers import classes, students
+from routers import classes, students, records, notes
 from schemas.common import success
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -61,6 +61,8 @@ async def health():
 
 app.include_router(classes.router)
 app.include_router(students.router)
+app.include_router(records.router)
+app.include_router(notes.router)
 
 
 if __name__ == "__main__":
