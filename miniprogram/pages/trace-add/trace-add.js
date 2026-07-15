@@ -100,13 +100,18 @@ Page({
     wx.showLoading({ title: '上传中...' })
     try {
       const res = await api.upload('/traces/upload/image', filePath)
+      console.log('upload response:', JSON.stringify(res))
       const url = res.data.url
+      if (!url) {
+        throw new Error('返回数据无url字段: ' + JSON.stringify(res))
+      }
       this.setData({
         images: [...this.data.images, url],
       })
       wx.hideLoading()
     } catch (err) {
       wx.hideLoading()
+      console.error('上传失败详情:', JSON.stringify(err))
       wx.showToast({ title: '上传失败', icon: 'none' })
     }
   },
