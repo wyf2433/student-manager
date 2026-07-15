@@ -3,7 +3,7 @@ const axios = require('axios')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const BASE_URL = 'http://47.239.15.178'
+const BASE_URL = 'http://47.239.25.178'
 const API_KEY = process.env.API_KEY || 'REDACTED'
 
 exports.main = async (event, context) => {

@@ -9,7 +9,7 @@
 |------|------|
 | 目标用户 | 初中物理老师(个人使用) |
 | 技术栈 | 微信小程序 + 云函数(Node转发) + FastAPI(Python) + SQLite |
-| 部署 | ECS 香港(47.239.15.178),纯公网IP,HTTP + API Key |
+| 部署 | ECS 香港(47.239.25.178),纯公网IP,HTTP + API Key |
 | AppID | wxe7bfa91a1970e2dc |
 | 开发机 | 后端在 Linux 服务器;前端代码服务器写好,Win/Mac 开发者工具打开 |
 | 节奏 | MVP 优先 |
