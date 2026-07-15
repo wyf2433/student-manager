@@ -1,4 +1,5 @@
 const api = require('../../utils/api.js')
+const IMG_BASE = 'http://47.239.25.178'
 
 const TYPE_OPTIONS = [
   { value: 'classroom_discipline', label: '课堂纪律' },
@@ -99,12 +100,11 @@ Page({
   async uploadImage(filePath) {
     wx.showLoading({ title: '上传中...' })
     try {
-      const cloudPath = 'traces/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + (filePath.split('.').pop() || 'png')
-      const uploadRes = await wx.cloud.uploadFile({
-        cloudPath,
-        filePath,
-      })
-      const url = uploadRes.fileID
+      const res = await api.upload('/traces/upload/image', filePath)
+      const url = res.data.url
+      if (!url) {
+        throw new Error('返回数据无url字段: ' + JSON.stringify(res))
+      }
       this.setData({
         images: [...this.data.images, url],
       })
@@ -125,9 +125,10 @@ Page({
 
   previewImage(e) {
     const current = e.currentTarget.dataset.url
+    const urls = this.data.images.map(url => IMG_BASE + url)
     wx.previewImage({
-      current,
-      urls: this.data.images,
+      current: IMG_BASE + current,
+      urls,
     })
   },
 
