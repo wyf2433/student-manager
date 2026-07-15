@@ -13,6 +13,7 @@ Page({
     gradePrefix: '',
     fullScore: '100',
     hasClassColumn: false,
+    hasGradeColumn: false,
     importing: false,
   },
 
@@ -55,6 +56,7 @@ Page({
         selectedSubject: (data.subjects || [])[0] || '',
         subjectIndex: 0,
         hasClassColumn: data.has_class_column || false,
+        hasGradeColumn: data.has_grade_column || false,
         step: 2,
         uploading: false,
       })
@@ -86,12 +88,12 @@ Page({
   },
 
   async confirmImport() {
-    const { examName, selectedSubject, previewData, gradePrefix, hasClassColumn, fullScore } = this.data
+    const { examName, selectedSubject, previewData, gradePrefix, hasClassColumn, hasGradeColumn, fullScore } = this.data
     if (!examName.trim()) {
       wx.showToast({ title: '请输入考试名称', icon: 'none' })
       return
     }
-    if (hasClassColumn && !gradePrefix.trim()) {
+    if (hasClassColumn && !hasGradeColumn && !gradePrefix.trim()) {
       wx.showToast({ title: '请输入年级前缀', icon: 'none' })
       return
     }
@@ -105,6 +107,9 @@ Page({
       const item = { name: s.name, score: s.scores[selectedSubject] }
       if (hasClassColumn && s.class_name) {
         item.class_name = s.class_name
+      }
+      if (hasGradeColumn && s.grade) {
+        item.grade = s.grade
       }
       return item
     })
@@ -122,7 +127,7 @@ Page({
         full_score: fullScoreNum,
         students,
       }
-      if (hasClassColumn && gradePrefix.trim()) {
+      if (hasClassColumn && !hasGradeColumn && gradePrefix.trim()) {
         body.grade_prefix = gradePrefix.trim()
       }
 

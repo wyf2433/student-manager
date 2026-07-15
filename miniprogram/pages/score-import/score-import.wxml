@@ -29,12 +29,13 @@
         <view class="color-tag tag-blue">姓名(必填)</view>
         <view class="color-tag tag-green">科目列(如:物理/语文/数学)</view>
         <view class="color-tag tag-purple">班级(可选,有则自动分班)</view>
+        <view class="color-tag tag-cyan">年级(可选,8→初二, 9→初三)</view>
       </view>
       <view class="format-desc" style="margin-top: 16rpx;">
-        示例: 姓名 | 班级 | 物理 | 语文 | 数学
+        示例: 姓名 | 年级 | 班级 | 物理 | 语文 | 数学
       </view>
       <view class="tip-text" style="margin-top: 12rpx;">
-        💡 如果 Excel 有"班级"列,导入时输入年级前缀(如"初二"),系统自动组合班级名(初二+2班=初二2班),匹配已有班级或自动创建。一张表多个班一次搞定!
+        💡 Excel 有"年级"+"班级"列时自动组合班级名(8年级+01→初二1班),匹配已有班级或自动创建。无年级列时导入页面手动输入年级前缀。
       </view>
     </view>
   </view>
@@ -54,12 +55,17 @@
         <input class="form-input" type="digit" placeholder="如:100" value="{{fullScore}}" bindinput="onFullScoreInput" />
       </view>
 
-      <view class="form-item" wx:if="{{hasClassColumn}}">
+      <view class="form-item" wx:if="{{hasClassColumn && !hasGradeColumn}}">
         <text class="form-label">🎓 年级前缀</text>
         <input class="form-input" placeholder="如:初二" value="{{gradePrefix}}" bindinput="onGradeInput" />
         <view class="tip-text" style="margin-top: 8rpx;">
-          检测到"班级"列,输入年级前缀后自动匹配/创建班级
+          检测到"班级"列但无"年级"列,输入年级前缀后自动匹配/创建班级
         </view>
+      </view>
+
+      <view class="form-item" wx:if="{{hasGradeColumn}}">
+        <text class="form-label">🎓 年级</text>
+        <view class="form-picker">✅ 已从Excel自动识别年级</view>
       </view>
 
       <view class="form-item">
@@ -74,11 +80,13 @@
       <view class="card-title">👁️ 预览 ({{previewData.total_students}}人)</view>
       <view class="preview-header">
         <text class="preview-cell">姓名</text>
+        <text class="preview-cell" wx:if="{{hasGradeColumn}}">年级</text>
         <text class="preview-cell" wx:if="{{hasClassColumn}}">班级</text>
         <text class="preview-cell">{{selectedSubject}}</text>
       </view>
       <view wx:for="{{previewData.students}}" wx:key="index" class="preview-row">
         <text class="preview-cell">{{item.name}}</text>
+        <text class="preview-cell" wx:if="{{hasGradeColumn}}">{{item.grade || '-'}}</text>
         <text class="preview-cell" wx:if="{{hasClassColumn}}">{{item.class_name || '-'}}</text>
         <text class="preview-cell">{{item.scores[selectedSubject] !== null ? item.scores[selectedSubject] : '-'}}</text>
       </view>

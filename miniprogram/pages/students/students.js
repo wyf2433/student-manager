@@ -17,6 +17,11 @@ Page({
     classIndex: 0,
     keyword: '',
     loading: true,
+    showClassModal: false,
+    gradeOptions: ['初一', '初二', '初三'],
+    classNoOptions: ['1', '2', '3', '4', '5', '6'],
+    newGradeIndex: 1,
+    newClassNoIndex: 0,
   },
 
   onShow() {
@@ -86,15 +91,33 @@ Page({
   },
 
   async addClass() {
-    const res = await wx.showModal({
-      title: '新建班级',
-      editable: true,
-      placeholderText: '如:初二三班',
-    })
-    if (!res.confirm || !res.content || !res.content.trim()) return
+    const today = new Date()
+    const grade = today.getFullYear() - 2024 + 7
+    const gradeIdx = grade === 7 ? 0 : grade === 8 ? 1 : 2
+    this.setData({ showClassModal: true, newGradeIndex: gradeIdx, newClassNoIndex: 0 })
+  },
+
+  closeClassModal() {
+    this.setData({ showClassModal: false })
+  },
+
+  onGradePick(e) {
+    this.setData({ newGradeIndex: e.detail.value })
+  },
+
+  onClassNoPick(e) {
+    this.setData({ newClassNoIndex: e.detail.value })
+  },
+
+  async confirmAddClass() {
+    const { gradeOptions, classNoOptions, newGradeIndex, newClassNoIndex } = this.data
+    const grade = gradeOptions[newGradeIndex]
+    const classNo = classNoOptions[newClassNoIndex]
+    const name = grade + classNo + '班'
     try {
-      await api.post('/classes', { name: res.content.trim() })
+      await api.post('/classes', { name, grade })
       wx.showToast({ title: '已创建', icon: 'success' })
+      this.setData({ showClassModal: false })
       await this.loadClasses()
       const newIdx = this.data.classes.length - 1
       this.setData({ classIndex: newIdx, currentClassId: this.data.classes[newIdx].id }, () => {

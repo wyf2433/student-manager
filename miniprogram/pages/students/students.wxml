@@ -65,3 +65,32 @@
   <view class="btn-outline info" bindtap="goImport">📥 导入学生</view>
   <view class="fab-inline" bindtap="goAdd">+</view>
 </view>
+
+<!-- 新建班级弹窗 -->
+<view class="action-mask" wx:if="{{showClassModal}}" bindtap="closeClassModal"></view>
+<view class="class-modal" wx:if="{{showClassModal}}">
+  <view class="class-modal-title">
+    新建班级
+    <text class="action-close" bindtap="closeClassModal">✕</text>
+  </view>
+  <view class="class-modal-body">
+    <view class="form-item">
+      <text class="form-label">🎓 年级</text>
+      <picker range="{{gradeOptions}}" value="{{newGradeIndex}}" bindchange="onGradePick">
+        <view class="form-picker">{{gradeOptions[newGradeIndex]}} ›</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="form-label">📚 班号</text>
+      <picker range="{{classNoOptions}}" value="{{newClassNoIndex}}" bindchange="onClassNoPick">
+        <view class="form-picker">{{classNoOptions[newClassNoIndex]}}班 ›</view>
+      </picker>
+    </view>
+    <view class="class-preview">
+      班级名称: <text class="class-preview-name">{{gradeOptions[newGradeIndex]}}{{classNoOptions[newClassNoIndex]}}班</text>
+    </view>
+    <t-button theme="primary" size="large" bindtap="confirmAddClass" t-class="action-save-btn">
+      创建
+    </t-button>
+  </view>
+</view>

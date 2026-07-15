@@ -122,3 +122,67 @@
 .fab-inline:active {
   opacity: 0.85;
 }
+
+/* 新建班级弹窗 */
+.action-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.class-modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  border-radius: 28rpx 28rpx 0 0;
+  padding: 32rpx;
+  z-index: 1001;
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+}
+
+.class-modal-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-close {
+  font-size: 32rpx;
+  color: #9CA3AF;
+  font-weight: 400;
+}
+
+.class-modal-body {
+  margin-top: 8rpx;
+}
+
+.class-preview {
+  text-align: center;
+  font-size: 28rpx;
+  color: #6B7280;
+  padding: 20rpx;
+  background: #F5F7FA;
+  border-radius: 14rpx;
+  margin: 24rpx 0;
+}
+
+.class-preview-name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #6366F1;
+}
+
+.action-save-btn {
+  width: 100% !important;
+  margin-top: 16rpx;
+}

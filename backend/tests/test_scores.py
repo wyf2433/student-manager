@@ -49,6 +49,17 @@ def make_score_excel_with_class(rows):
     return buf.getvalue()
 
 
+def make_score_excel_with_grade(rows):
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["姓名", "年级", "班级", "物理", "语文"])
+    for r in rows:
+        ws.append(r)
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()
+
+
 class TestScoreCRUD:
     def test_create(self, client, headers):
         cid, sids = setup_class_and_students(client, headers, ["张三"])
@@ -211,6 +222,62 @@ class TestScoreImport:
         assert "初二1班" in class_names
         assert "初二2班" in class_names
         assert "初二01" not in class_names
+
+    def test_confirm_with_grade_column(self, client, headers):
+        excel = make_score_excel_with_grade([
+            ["张三", "8", "01", 95, 88],
+            ["李四", "9", "02", 80, 75],
+        ])
+        preview = client.post(
+            "/api/scores/import/preview",
+            files={"file": ("test.xlsx", excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+            headers=headers,
+        )
+        data = preview.json()["data"]
+        assert data["has_grade_column"] is True
+        assert data["has_class_column"] is True
+        assert data["students"][0]["grade"] == "8"
+
+        confirm_body = {
+            "exam_name": "期中考试",
+            "subject": "物理",
+            "students": [
+                {"name": "张三", "class_name": data["students"][0]["class_name"], "grade": data["students"][0]["grade"], "score": 95},
+                {"name": "李四", "class_name": data["students"][1]["class_name"], "grade": data["students"][1]["grade"], "score": 80},
+            ],
+        }
+        res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
+        assert res.status_code == 200
+        assert res.json()["data"]["auto_created_classes"] == 2
+
+        classes = client.get("/api/classes", headers=headers).json()["data"]["items"]
+        class_names = [c["name"] for c in classes]
+        assert "初二1班" in class_names
+        assert "初三2班" in class_names
+
+    def test_confirm_grade_column_matches_existing_class(self, client, headers):
+        """年级列+班级列应匹配已有班级而非重复创建"""
+        client.post("/api/classes", json={"name": "初二1班", "grade": "初二"}, headers=headers)
+        excel = make_score_excel_with_grade([
+            ["张三", "8", "1", 95, 88],
+        ])
+        preview = client.post(
+            "/api/scores/import/preview",
+            files={"file": ("test.xlsx", excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+            headers=headers,
+        )
+        data = preview.json()["data"]
+        confirm_body = {
+            "exam_name": "期中考试",
+            "subject": "物理",
+            "students": [
+                {"name": "张三", "class_name": data["students"][0]["class_name"], "grade": data["students"][0]["grade"], "score": 95},
+            ],
+        }
+        res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
+        assert res.status_code == 200
+        assert res.json()["data"]["auto_created_classes"] == 0
+        assert res.json()["data"]["auto_created_students"] == 1
 
     def test_confirm_with_full_score(self, client, headers):
         cid, sids = setup_class_and_students(client, headers, ["张三", "李四"])

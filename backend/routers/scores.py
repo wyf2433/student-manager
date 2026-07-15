@@ -23,6 +23,27 @@ def _normalize_class_name(raw: str) -> str:
     return s
 
 
+GRADE_MAP = {
+    "7": "初一", "8": "初二", "9": "初三",
+    "七": "初一", "八": "初二", "九": "初三",
+    "初一": "初一", "初二": "初二", "初三": "初三",
+    "七年级": "初一", "八年级": "初二", "九年级": "初三",
+}
+
+
+def _normalize_grade(raw: str) -> str | None:
+    """规范化年级字段: '8'/'八'/'八年级'→'初二'"""
+    if not raw:
+        return None
+    s = raw.strip()
+    if s in GRADE_MAP:
+        return GRADE_MAP[s]
+    for k, v in GRADE_MAP.items():
+        if k in s:
+            return v
+    return None
+
+
 @router.get("")
 async def list_scores(
     student_id: int = Query(None),
@@ -78,15 +99,18 @@ async def import_confirm(body: ScoreImportConfirm):
             continue
 
         class_name_raw = s.get("class_name")
+        grade_raw = s.get("grade")
         target_class_id = body.class_id
 
-        if class_name_raw and body.grade_prefix:
+        grade_prefix = _normalize_grade(grade_raw) or body.grade_prefix
+
+        if class_name_raw and grade_prefix:
             normalized = _normalize_class_name(class_name_raw)
-            full_class_name = body.grade_prefix + normalized
+            full_class_name = grade_prefix + normalized
             if full_class_name in class_cache:
                 target_class_id = class_cache[full_class_name]
             else:
-                new_class = class_model.create_class(full_class_name)
+                new_class = class_model.create_class(full_class_name, grade_prefix)
                 class_cache[full_class_name] = new_class["id"]
                 target_class_id = new_class["id"]
                 auto_created_classes += 1
