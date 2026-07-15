@@ -10,32 +10,16 @@ Page({
     examName: '',
     selectedSubject: '',
     subjectIndex: 0,
-    classes: [],
-    classIndex: 0,
-    students: [],
+    gradePrefix: '',
+    hasClassColumn: false,
     importing: false,
   },
 
   onLoad() {
-    this.loadClasses()
-  },
-
-  async loadClasses() {
-    try {
-      const res = await api.get('/classes')
-      const data = res.data || {}
-      const classes = data.items || []
-      this.setData({ classes })
-      if (classes.length === 0) {
-        wx.showToast({ title: '请先创建班级', icon: 'none' })
-      }
-    } catch (err) {
-      console.error('加载班级失败', err)
-    }
-  },
-
-  onClassChange(e) {
-    this.setData({ classIndex: e.detail.value })
+    const today = new Date()
+    const grade = today.getFullYear() - 2024 + 7
+    const gradeMap = { 7: '初一', 8: '初二', 9: '初三' }
+    this.setData({ gradePrefix: gradeMap[grade] || '初二' })
   },
 
   chooseFile() {
@@ -69,6 +53,7 @@ Page({
         examName: data.exam_name || '',
         selectedSubject: (data.subjects || [])[0] || '',
         subjectIndex: 0,
+        hasClassColumn: data.has_class_column || false,
         step: 2,
         uploading: false,
       })
@@ -83,6 +68,10 @@ Page({
     this.setData({ examName: e.detail.value })
   },
 
+  onGradeInput(e) {
+    this.setData({ gradePrefix: e.detail.value })
+  },
+
   onSubjectChange(e) {
     const index = e.detail.value
     this.setData({
@@ -92,20 +81,23 @@ Page({
   },
 
   async confirmImport() {
-    const { examName, selectedSubject, previewData, classes, classIndex } = this.data
+    const { examName, selectedSubject, previewData, gradePrefix, hasClassColumn } = this.data
     if (!examName.trim()) {
       wx.showToast({ title: '请输入考试名称', icon: 'none' })
       return
     }
-    if (classes.length === 0) {
-      wx.showToast({ title: '请先创建班级', icon: 'none' })
+    if (hasClassColumn && !gradePrefix.trim()) {
+      wx.showToast({ title: '请输入年级前缀', icon: 'none' })
       return
     }
 
-    const students = (previewData.students || []).map(s => ({
-      name: s.name,
-      score: s.scores[selectedSubject],
-    }))
+    const students = (previewData.students || []).map(s => {
+      const item = { name: s.name, score: s.scores[selectedSubject] }
+      if (hasClassColumn && s.class_name) {
+        item.class_name = s.class_name
+      }
+      return item
+    })
 
     if (students.length === 0) {
       wx.showToast({ title: '无有效数据', icon: 'none' })
@@ -114,24 +106,33 @@ Page({
 
     this.setData({ importing: true })
     try {
-      const res = await api.post('/scores/import/confirm', {
+      const body = {
         exam_name: examName.trim(),
         subject: selectedSubject,
-        class_id: classes[classIndex].id,
         students,
-      })
+      }
+      if (hasClassColumn && gradePrefix.trim()) {
+        body.grade_prefix = gradePrefix.trim()
+      }
+
+      const res = await api.post('/scores/import/confirm', body)
 
       const imported = res.data.imported_count
-      const autoCreated = res.data.auto_created_students || 0
-      let msg = `已导入${imported}条成绩`
-      if (autoCreated > 0) {
-        msg += `\n自动创建${autoCreated}名学生(学号待补)`
+      const autoStudents = res.data.auto_created_students || 0
+      const autoClasses = res.data.auto_created_classes || 0
+      let msg = `已导入 ${imported} 条成绩`
+      if (autoClasses > 0) {
+        msg += `\n自动创建 ${autoClasses} 个班级`
+      }
+      if (autoStudents > 0) {
+        msg += `\n自动创建 ${autoStudents} 名学生`
       }
       wx.showModal({ title: '导入完成', content: msg, showCancel: false })
       this.setData({ importing: false })
       setTimeout(() => wx.navigateBack(), 1500)
     } catch (err) {
-      wx.showToast({ title: '导入失败', icon: 'none' })
+      const msg = (err && err.detail) || '导入失败'
+      wx.showToast({ title: msg, icon: 'none' })
       this.setData({ importing: false })
     }
   },

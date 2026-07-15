@@ -15,5 +15,6 @@ class ScoreCreate(BaseModel):
 class ScoreImportConfirm(BaseModel):
     exam_name: str
     subject: str
-    class_id: int
-    students: list  # [{student_id(可选), name(可选), score}]
+    class_id: Optional[int] = None
+    grade_prefix: Optional[str] = None
+    students: list  # [{name, class_name(可选), score}]

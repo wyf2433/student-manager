@@ -38,6 +38,17 @@ def make_score_excel(rows):
     return buf.getvalue()
 
 
+def make_score_excel_with_class(rows):
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["姓名", "班级", "物理", "语文"])
+    for r in rows:
+        ws.append(r)
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()
+
+
 class TestScoreCRUD:
     def test_create(self, client, headers):
         cid, sids = setup_class_and_students(client, headers, ["张三"])
@@ -138,3 +149,37 @@ class TestScoreImport:
 
         list_res = client.get(f"/api/students?class_id={cid}", headers=headers)
         assert list_res.json()["data"]["total"] == 2
+
+    def test_confirm_with_class_column(self, client, headers):
+        excel = make_score_excel_with_class([
+            ["张三", "2班", 95, 88],
+            ["李四", "3班", 80, 75],
+        ])
+        preview = client.post(
+            "/api/scores/import/preview",
+            files={"file": ("test.xlsx", excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+            headers=headers,
+        )
+        data = preview.json()["data"]
+        assert data["has_class_column"] is True
+        assert data["students"][0]["class_name"] == "2班"
+
+        confirm_body = {
+            "exam_name": "期中考试",
+            "subject": "物理",
+            "grade_prefix": "初二",
+            "students": [
+                {"name": "张三", "class_name": "2班", "score": data["students"][0]["scores"]["物理"]},
+                {"name": "李四", "class_name": "3班", "score": data["students"][1]["scores"]["物理"]},
+            ],
+        }
+        res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
+        assert res.status_code == 200
+        assert res.json()["data"]["imported_count"] == 2
+        assert res.json()["data"]["auto_created_classes"] == 2
+        assert res.json()["data"]["auto_created_students"] == 2
+
+        classes = client.get("/api/classes", headers=headers).json()["data"]["items"]
+        class_names = [c["name"] for c in classes]
+        assert "初二2班" in class_names
+        assert "初二3班" in class_names

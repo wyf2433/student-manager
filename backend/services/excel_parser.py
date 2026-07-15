@@ -75,11 +75,13 @@ def parse_score_excel(file_bytes: bytes) -> dict:
     if exam_name_idx is not None and rows[1][exam_name_idx]:
         exam_name = str(rows[1][exam_name_idx]).strip()
 
+    class_idx = _find_column(header, ["班级", "班"])
+
     score_cols = {}
     for i, h in enumerate(header):
-        if i == name_idx or i == exam_name_idx:
+        if i == name_idx or i == exam_name_idx or i == class_idx:
             continue
-        if h and h not in ("学号", "考号", "性别", "班级", "年级", "排名", "总分", "名次", "班次", "校次", "班排", "校排", "级排"):
+        if h and h not in ("学号", "考号", "性别", "年级", "排名", "总分", "名次", "班次", "校次", "班排", "校排", "级排"):
             score_cols[h] = i
 
     subjects = list(score_cols.keys())
@@ -94,6 +96,9 @@ def parse_score_excel(file_bytes: bytes) -> dict:
         name = str(row[name_idx]).strip()
         if not name:
             continue
+        class_name = None
+        if class_idx is not None and class_idx < len(row) and row[class_idx]:
+            class_name = str(row[class_idx]).strip()
         scores = {}
         for subject, col_idx in score_cols.items():
             val = row[col_idx] if col_idx < len(row) and row[col_idx] is not None else None
@@ -104,17 +109,20 @@ def parse_score_excel(file_bytes: bytes) -> dict:
                     scores[subject] = None
             else:
                 scores[subject] = None
-        students.append({"name": name, "scores": scores})
+        students.append({"name": name, "class_name": class_name, "scores": scores})
 
     wb.close()
     if not students:
         raise ValueError("未解析到有效成绩数据")
+
+    has_class_column = class_idx is not None
 
     return {
         "exam_name": exam_name,
         "subjects": subjects,
         "students": students,
         "total_students": len(students),
+        "has_class_column": has_class_column,
     }
 
 
