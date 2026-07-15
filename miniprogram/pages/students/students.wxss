@@ -26,6 +26,23 @@
   color: #9CA3AF;
 }
 
+.add-class-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 14rpx;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  color: #fff;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.add-class-btn:active {
+  opacity: 0.85;
+}
+
 .search-comp {
   background: #fff !important;
   border-radius: 14rpx !important;

@@ -85,7 +85,31 @@ Page({
     wx.navigateTo({ url: `/pages/student-detail/student-detail?id=${id}` })
   },
 
+  async addClass() {
+    const res = await wx.showModal({
+      title: '新建班级',
+      editable: true,
+      placeholderText: '如:初二三班',
+    })
+    if (!res.confirm || !res.content || !res.content.trim()) return
+    try {
+      await api.post('/classes', { name: res.content.trim() })
+      wx.showToast({ title: '已创建', icon: 'success' })
+      await this.loadClasses()
+      const newIdx = this.data.classes.length - 1
+      this.setData({ classIndex: newIdx, currentClassId: this.data.classes[newIdx].id }, () => {
+        this.loadStudents()
+      })
+    } catch (err) {
+      wx.showToast({ title: '创建失败', icon: 'none' })
+    }
+  },
+
   goAdd() {
+    if (this.data.classes.length === 0) {
+      wx.showToast({ title: '请先创建班级', icon: 'none' })
+      return
+    }
     wx.navigateTo({ url: '/pages/student-add/student-add' })
   },
 
