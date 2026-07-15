@@ -28,6 +28,8 @@ Page({
     scores: [],
     notes: [],
     trend: null,
+    trendSubjects: [],
+    currentSubject: '',
     studentId: null,
     loading: true,
     avatarIdx: 0,
@@ -54,7 +56,7 @@ Page({
         api.get('/records', { student_id: this.data.studentId }),
         api.get('/scores', { student_id: this.data.studentId }),
         api.get('/notes', { student_id: this.data.studentId }),
-        api.get('/scores/analysis/trend', { student_id: this.data.studentId }).catch(() => ({ data: null })),
+        api.get('/scores/analysis/trend', { student_id: this.data.studentId, subject: this.data.currentSubject || undefined }).catch(() => ({ data: null })),
       ])
       const student = studentRes.data
       const records = ((recordsRes.data || {}).items || []).map(r => ({
@@ -65,12 +67,11 @@ Page({
       }))
 
       const trend = trendRes.data
-      let maxTrendScore = 0
-      if (trend && trend.exams) {
-        for (const e of trend.exams) {
-          if (e.score > maxTrendScore) maxTrendScore = e.score
-          if (e.class_avg && e.class_avg > maxTrendScore) maxTrendScore = e.class_avg
-        }
+      const trendSubjects = (trend && trend.subjects) || []
+      const currentSubject = (trend && trend.current_subject) || ''
+
+      if (trend && trend.exams && trend.exams.length > 0) {
+        trend.exams = this._buildChartPoints(trend.exams)
       }
 
       this.setData({
@@ -80,12 +81,64 @@ Page({
         scores: ((scoresRes.data || {}).items || []),
         notes: ((notesRes.data || {}).items || []),
         trend: trend,
-        maxTrendScore: maxTrendScore,
+        trendSubjects: trendSubjects,
+        currentSubject: currentSubject,
         loading: false,
       })
     } catch (err) {
       console.error('加载失败', err)
       this.setData({ loading: false })
+    }
+  },
+
+  _buildChartPoints(exams) {
+    const n = exams.length
+    if (n === 0) return exams
+    const fullScore = exams[0].full_score || 100
+    const pts = []
+    for (let i = 0; i < n; i++) {
+      pts.push({
+        ...exams[i],
+        xPercent: n === 1 ? 50 : i / (n - 1) * 100,
+        yPercent: exams[i].score / fullScore * 100,
+        classYPercent: exams[i].class_avg ? exams[i].class_avg / fullScore * 100 : null,
+      })
+    }
+    const segments = []
+    for (let i = 0; i < n - 1; i++) {
+      const x1 = pts[i].xPercent
+      const y1 = 100 - pts[i].yPercent
+      const x2 = pts[i + 1].xPercent
+      const y2 = 100 - pts[i + 1].yPercent
+      const dx = x2 - x1
+      const dy = y2 - y1
+      const len = Math.sqrt(dx * dx + dy * dy)
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI
+      segments.push({ left: x1, top: y1, length: len, angle })
+    }
+    pts.lineSegments = segments
+    return pts
+  },
+
+  onTrendSubjectChange(e) {
+    this.setData({ currentSubject: this.data.trendSubjects[e.detail.value] }, () => {
+      this.loadTrend()
+    })
+  },
+
+  async loadTrend() {
+    try {
+      const res = await api.get('/scores/analysis/trend', {
+        student_id: this.data.studentId,
+        subject: this.data.currentSubject || undefined,
+      })
+      const trend = res.data
+      if (trend && trend.exams && trend.exams.length > 0) {
+        trend.exams = this._buildChartPoints(trend.exams)
+      }
+      this.setData({ trend: trend })
+    } catch (err) {
+      console.error('加载趋势失败', err)
     }
   },
 

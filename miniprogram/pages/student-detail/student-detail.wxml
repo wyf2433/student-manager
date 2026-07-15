@@ -78,32 +78,57 @@
 
     <!-- 成绩趋势 -->
     <view class="card" wx:if="{{trend && trend.exams.length > 0}}">
-      <view class="card-title">📈 成绩趋势</view>
-      <!-- 趋势图 -->
-      <view class="trend-chart">
-        <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-bar-group">
-          <view class="trend-bar-pair">
-            <view class="trend-bar-col">
-              <view class="trend-bar trend-bar-student" style="height: {{maxTrendScore > 0 ? item.score / maxTrendScore * 200 : 0}}rpx;"></view>
-            </view>
-            <view class="trend-bar-col" wx:if="{{item.class_avg}}">
-              <view class="trend-bar trend-bar-class" style="height: {{maxTrendScore > 0 ? item.class_avg / maxTrendScore * 200 : 0}}rpx;"></view>
-            </view>
+      <view class="card-title-row">
+        <text class="card-title">📈 成绩趋势</text>
+        <picker wx:if="{{trendSubjects.length > 1}}" range="{{trendSubjects}}" bindchange="onTrendSubjectChange">
+          <view class="trend-subject-pick">📖 {{currentSubject}} ›</view>
+        </picker>
+      </view>
+
+      <!-- 折线图 -->
+      <view class="trend-chart-wrap">
+        <view class="trend-chart-area">
+          <view class="trend-grid-line top"></view>
+          <view class="trend-grid-line mid"></view>
+          <view class="trend-grid-line bot"></view>
+
+          <!-- 连线 -->
+          <view wx:for="{{trend.exams.lineSegments}}" wx:key="index" class="trend-line-seg"
+            style="left: {{item.left}}%; top: {{item.top}}%; width: {{item.length}}%; transform: rotate({{item.angle}}deg);">
           </view>
-          <text class="trend-score">{{item.score}}</text>
-          <text class="trend-exam-label">{{item.exam_name}}</text>
+
+          <!-- 学生分数点 -->
+          <block wx:for="{{trend.exams}}" wx:key="exam_name">
+            <view class="trend-point student-point" style="left: {{item.xPercent}}%; bottom: {{item.yPercent}}%;">
+              <view class="trend-point-dot student-dot"></view>
+              <text class="trend-point-label">{{item.score}}</text>
+            </view>
+            <view wx:if="{{item.classYPercent !== null}}" class="trend-point class-point" style="left: {{item.xPercent}}%; bottom: {{item.classYPercent}}%;">
+              <view class="trend-point-dot class-dot"></view>
+            </view>
+          </block>
+        </view>
+        <!-- X轴标签 -->
+        <view class="trend-x-axis">
+          <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-x-label" style="left: {{item.xPercent}}%;">
+            <text class="trend-x-exam">{{item.exam_name}}</text>
+            <text class="trend-x-date">{{item.date}}</text>
+          </view>
         </view>
       </view>
+
+      <!-- 图例 -->
       <view class="trend-legend">
-        <view class="legend-item"><view class="legend-dot student-dot"></view><text>本人</text></view>
+        <view class="legend-item"><view class="legend-dot student-dot"></view><text>本人成绩</text></view>
         <view class="legend-item"><view class="legend-dot class-dot"></view><text>班级均分</text></view>
       </view>
-      <!-- 每次考试详情 -->
+
+      <!-- 趋势详情列表 -->
       <view class="trend-detail-list">
         <view wx:for="{{trend.exams}}" wx:key="exam_name" class="trend-detail-item">
           <view class="trend-detail-info">
             <text class="trend-detail-exam">{{item.exam_name}}</text>
-            <text class="trend-detail-subject">{{item.subject}} · 满分{{item.full_score}}</text>
+            <text class="trend-detail-subject">{{item.subject}} · {{item.date}}</text>
           </view>
           <view class="trend-detail-right">
             <text class="trend-detail-score">{{item.score}}分</text>

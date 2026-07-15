@@ -354,12 +354,27 @@ class TestScoreAnalysis:
         assert res.status_code == 200
         data = res.json()["data"]
         assert data["student_name"] == "张三"
+        assert "物理" in data["subjects"]
+        assert data["current_subject"] == "物理"
         assert len(data["exams"]) == 2
         assert data["exams"][0]["exam_name"] == "月考1"
         assert data["exams"][0]["change"] is None
+        assert "date" in data["exams"][0]
         assert data["exams"][1]["exam_name"] == "期中"
         assert data["exams"][1]["change"] == 15.0
         assert data["exams"][1]["class_avg"] is not None
+
+    def test_student_trend_default_subject(self, client, headers):
+        """不传 subject 时自动取第一个科目"""
+        cid, sids = self._setup_exam_data(client, headers)
+        res = client.get(
+            f"/api/scores/analysis/trend?student_id={sids['张三']}",
+            headers=headers,
+        )
+        assert res.status_code == 200
+        data = res.json()["data"]
+        assert data["current_subject"] in data["subjects"]
+        assert len(data["exams"]) == 2
 
     def test_student_trend_not_found(self, client, headers):
         res = client.get(

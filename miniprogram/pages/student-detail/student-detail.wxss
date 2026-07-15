@@ -138,74 +138,122 @@
   margin-top: 16rpx;
 }
 
-/* 成绩趋势图 */
-.trend-chart {
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  height: 280rpx;
-  padding: 20rpx 0 0;
-  margin-bottom: 12rpx;
-  border-bottom: 2rpx solid #F3F4F6;
-}
-
-.trend-bar-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-}
-
-.trend-bar-pair {
-  display: flex;
-  align-items: flex-end;
-  gap: 8rpx;
-  height: 220rpx;
-}
-
-.trend-bar-col {
-  display: flex;
-  align-items: flex-end;
-  height: 100%;
-}
-
-.trend-bar {
-  width: 32rpx;
-  border-radius: 8rpx 8rpx 0 0;
-  transition: height 0.3s ease;
-  min-height: 4rpx;
-}
-
-.trend-bar-student {
-  background: linear-gradient(180deg, #667EEA, #764BA2);
-}
-
-.trend-bar-class {
-  background: #D1D5DB;
-}
-
-.trend-score {
+/* 成绩趋势折线图 */
+.trend-subject-pick {
   font-size: 24rpx;
+  color: #6366F1;
+  font-weight: 600;
+  background: #EEF2FF;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.trend-chart-wrap {
+  margin: 20rpx 0 8rpx;
+}
+
+.trend-chart-area {
+  position: relative;
+  height: 240rpx;
+  margin-left: 8rpx;
+  margin-right: 8rpx;
+}
+
+.trend-grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1rpx;
+  background: #F3F4F6;
+}
+
+.trend-grid-line.top { top: 0; }
+.trend-grid-line.mid { top: 50%; background: #E5E7EB; }
+.trend-grid-line.bot { bottom: 0; }
+
+.trend-line-seg {
+  position: absolute;
+  height: 4rpx;
+  background: #6366F1;
+  transform-origin: left center;
+  border-radius: 2rpx;
+  z-index: 1;
+}
+
+.trend-point {
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.trend-point-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  border: 3rpx solid #fff;
+  box-shadow: 0 0 0 2rpx currentColor;
+}
+
+.trend-point-dot.student-dot {
+  background: #6366F1;
+  color: #6366F1;
+}
+
+.trend-point-dot.class-dot {
+  background: #D1D5DB;
+  color: #D1D5DB;
+}
+
+.trend-point-label {
+  position: absolute;
+  bottom: 28rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22rpx;
   font-weight: 700;
   color: #6366F1;
+  white-space: nowrap;
+}
+
+.trend-point.class-point {
+  transform: translateX(-50%) translateY(50%);
+}
+
+.trend-x-axis {
+  position: relative;
+  height: 56rpx;
   margin-top: 8rpx;
 }
 
-.trend-exam-label {
-  font-size: 20rpx;
-  color: #9CA3AF;
-  margin-top: 4rpx;
-  max-width: 140rpx;
+.trend-x-label {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+  max-width: 160rpx;
+}
+
+.trend-x-exam {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #4B5563;
+  display: block;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+.trend-x-date {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  display: block;
+  margin-top: 2rpx;
 }
 
 .trend-legend {
   display: flex;
   justify-content: center;
   gap: 32rpx;
-  margin-bottom: 20rpx;
+  margin: 16rpx 0 20rpx;
 }
 
 .legend-item {
@@ -219,11 +267,11 @@
 .legend-dot {
   width: 20rpx;
   height: 20rpx;
-  border-radius: 4rpx;
+  border-radius: 50%;
 }
 
-.student-dot { background: linear-gradient(180deg, #667EEA, #764BA2); }
-.class-dot { background: #D1D5DB; }
+.legend-dot.student-dot { background: #6366F1; }
+.legend-dot.class-dot { background: #D1D5DB; }
 
 /* 趋势详情列表 */
 .trend-detail-list {

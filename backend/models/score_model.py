@@ -170,32 +170,30 @@ def get_exam_analysis(exam_name: str, subject: str) -> dict:
 
 
 def get_student_trend(student_id: int, subject: str = None) -> dict:
-    """学生个人多次成绩趋势(含班级均分对比 + 进退步)"""
+    """学生个人多次成绩趋势(含班级均分对比 + 进退步)
+    返回 {student_name, subjects[], current_subject, exams[]} — exams 仅含同一科目
+    """
     with get_db() as conn:
-        if subject:
-            rows = conn.execute(
-                "SELECT s.id, s.exam_name, s.subject, s.score, s.full_score, s.created_at, "
-                "st.name AS student_name, st.class_id "
-                "FROM scores s JOIN students st ON s.student_id = st.id "
-                "WHERE s.student_id = ? AND s.subject = ? AND s.score IS NOT NULL "
-                "ORDER BY s.created_at ASC, s.id ASC",
-                (student_id, subject),
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                "SELECT s.id, s.exam_name, s.subject, s.score, s.full_score, s.created_at, "
-                "st.name AS student_name, st.class_id "
-                "FROM scores s JOIN students st ON s.student_id = st.id "
-                "WHERE s.student_id = ? AND s.score IS NOT NULL "
-                "ORDER BY s.created_at ASC, s.id ASC",
-                (student_id,),
-            ).fetchall()
+        all_rows = conn.execute(
+            "SELECT s.id, s.exam_name, s.subject, s.score, s.full_score, s.created_at, "
+            "st.name AS student_name, st.class_id "
+            "FROM scores s JOIN students st ON s.student_id = st.id "
+            "WHERE s.student_id = ? AND s.score IS NOT NULL "
+            "ORDER BY s.created_at ASC, s.id ASC",
+            (student_id,),
+        ).fetchall()
 
-        if not rows:
+        if not all_rows:
             return None
 
-        student_name = rows[0]["student_name"]
-        class_id = rows[0]["class_id"]
+        student_name = all_rows[0]["student_name"]
+        class_id = all_rows[0]["class_id"]
+        subjects = sorted(set(r["subject"] for r in all_rows))
+
+        if not subject:
+            subject = subjects[0]
+
+        rows = [r for r in all_rows if r["subject"] == subject]
 
         exams = []
         prev_score = None
@@ -217,6 +215,7 @@ def get_student_trend(student_id: int, subject: str = None) -> dict:
                 if avg_row and avg_row["avg_score"] is not None:
                     class_avg = round(avg_row["avg_score"], 1)
 
+            date_str = (r["created_at"] or "")[:10]
             exams.append({
                 "exam_name": r["exam_name"],
                 "subject": r["subject"],
@@ -224,11 +223,13 @@ def get_student_trend(student_id: int, subject: str = None) -> dict:
                 "full_score": r["full_score"] or 100,
                 "class_avg": class_avg,
                 "change": change,
+                "date": date_str,
             })
 
         return {
             "student_name": student_name,
-            "subject": subject,
+            "subjects": subjects,
+            "current_subject": subject,
             "exams": exams,
         }
 
