@@ -88,7 +88,7 @@
       </view>
 
       <!-- ECharts 折线图 -->
-      <view class="trend-chart-container">
+      <view class="trend-chart-container" style="visibility: {{chartReady ? 'visible' : 'hidden'}};">
         <ec-canvas wx:if="{{showChart}}" id="trendChart" canvas-id="trendChart" ec="{{ec}}"></ec-canvas>
       </view>
 

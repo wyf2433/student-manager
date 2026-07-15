@@ -31,7 +31,13 @@ function initChart(canvas, width, height, dpr) {
   chartInstance = chart
   const pages = getCurrentPages()
   const cur = pages[pages.length - 1]
-  if (cur) cur._chartReady = true
+  if (cur) {
+    cur._chartReady = true
+    setTimeout(() => {
+      cur.setData({ chartReady: true })
+      cur._renderChart()
+    }, 400)
+  }
   return chart
 }
 
@@ -56,6 +62,7 @@ Page({
     noteContent: '',
     saving: false,
     showChart: false,
+    chartReady: false,
     ec: { onInit: initChart },
   },
 
@@ -106,13 +113,11 @@ Page({
         trendSubjects: trendSubjects,
         currentSubject: currentSubject,
         loading: false,
+        showChart: false,
+        chartReady: false,
       }, () => {
         if (trendExams.length > 0) {
-          setTimeout(() => {
-            this.setData({ showChart: true }, () => {
-              this._renderChart()
-            })
-          }, 300)
+          this.setData({ showChart: true })
         }
       })
     } catch (err) {
