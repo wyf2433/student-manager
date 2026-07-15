@@ -184,6 +184,34 @@ class TestScoreImport:
         assert "初二2班" in class_names
         assert "初二3班" in class_names
 
+    def test_confirm_with_class_column_leading_zero(self, client, headers):
+        excel = make_score_excel_with_class([
+            ["张三", "01", 95, 88],
+            ["李四", "02", 80, 75],
+        ])
+        preview = client.post(
+            "/api/scores/import/preview",
+            files={"file": ("test.xlsx", excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")},
+            headers=headers,
+        )
+        data = preview.json()["data"]
+        confirm_body = {
+            "exam_name": "期中考试",
+            "subject": "物理",
+            "grade_prefix": "初二",
+            "students": [
+                {"name": "张三", "class_name": data["students"][0]["class_name"], "score": 95},
+                {"name": "李四", "class_name": data["students"][1]["class_name"], "score": 80},
+            ],
+        }
+        res = client.post("/api/scores/import/confirm", json=confirm_body, headers=headers)
+        assert res.status_code == 200
+        classes = client.get("/api/classes", headers=headers).json()["data"]["items"]
+        class_names = [c["name"] for c in classes]
+        assert "初二1班" in class_names
+        assert "初二2班" in class_names
+        assert "初二01" not in class_names
+
     def test_confirm_with_full_score(self, client, headers):
         cid, sids = setup_class_and_students(client, headers, ["张三", "李四"])
         confirm_body = {

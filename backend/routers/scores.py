@@ -11,6 +11,18 @@ from schemas.common import success, paged
 router = APIRouter(prefix="/api/scores", tags=["成绩"])
 
 
+def _normalize_class_name(raw: str) -> str:
+    """规范化班级字段: '01'→'1班', '02'→'2班', '1'→'1班', '2班'→'2班'"""
+    s = raw.strip()
+    if "班" in s:
+        return s
+    import re
+    m = re.match(r"^0*(\d+)$", s)
+    if m:
+        return m.group(1) + "班"
+    return s
+
+
 @router.get("")
 async def list_scores(
     student_id: int = Query(None),
@@ -69,7 +81,8 @@ async def import_confirm(body: ScoreImportConfirm):
         target_class_id = body.class_id
 
         if class_name_raw and body.grade_prefix:
-            full_class_name = body.grade_prefix + class_name_raw
+            normalized = _normalize_class_name(class_name_raw)
+            full_class_name = body.grade_prefix + normalized
             if full_class_name in class_cache:
                 target_class_id = class_cache[full_class_name]
             else:
