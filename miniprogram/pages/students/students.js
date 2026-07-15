@@ -56,7 +56,6 @@ Page({
       const students = (data.items || []).map(s => ({
         ...s,
         avatarIdx: avatarIndex(s.name),
-        genderEmoji: s.gender === '女' ? '👧' : '👦',
       }))
       this.setData({
         students,

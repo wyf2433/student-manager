@@ -50,7 +50,6 @@
       <view class="student-info">
         <view class="student-name-row">
           <text class="student-name">{{item.name}}</text>
-          <text class="student-gender">{{item.genderEmoji}}</text>
         </view>
         <text class="student-meta">{{item.student_no || '无学号'}}</text>
       </view>

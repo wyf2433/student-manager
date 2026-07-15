@@ -10,7 +10,7 @@
         </view>
         <view class="detail-info">
           <text class="detail-name">{{student.name}}</text>
-          <text class="detail-meta">{{student.student_no || '无学号'}} · {{student.gender || ''}}</text>
+          <text class="detail-meta">{{student.student_no || '无学号'}}</text>
         </view>
       </view>
       <!-- 快速操作 -->
