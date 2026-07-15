@@ -1,8 +1,5 @@
-const cloud = require('wx-server-sdk')
 const axios = require('axios')
 const FormData = require('form-data')
-
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const BASE_URL = 'http://47.239.25.178'
 
