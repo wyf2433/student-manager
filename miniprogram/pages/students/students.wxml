@@ -17,6 +17,7 @@
         </view>
       </picker>
       <view class="add-class-btn" bindtap="addClass">➕</view>
+      <view class="del-class-btn" bindtap="deleteClass">🗑</view>
       <view class="search-wrap">
         <t-search
           placeholder="🔍 搜索姓名/学号"

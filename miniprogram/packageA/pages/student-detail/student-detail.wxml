@@ -135,6 +135,9 @@
         </view>
       </view>
     </view>
+
+    <!-- 删除学生 -->
+    <view class="delete-student-btn" bindtap="deleteStudent">🗑 删除该学生</view>
   </block>
 </view>
 

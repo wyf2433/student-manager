@@ -153,6 +153,40 @@ Page({
     wx.navigateTo({ url: '/pages/student-add/student-add' })
   },
 
+  async deleteClass() {
+    if (this.data.classes.length === 0) {
+      wx.showToast({ title: '没有班级可删除', icon: 'none' })
+      return
+    }
+    const classNames = this.data.classes.map(c => c.name)
+    const res = await wx.showActionSheet({ itemList: classNames })
+    const target = this.data.classes[res.tapIndex]
+    const confirm = await wx.showModal({
+      title: '删除班级',
+      content: '将同时删除该班级下所有学生、成绩、记录和作业，且不可恢复。确认删除「' + target.name + '」？',
+      confirmColor: '#EF4444',
+    })
+    if (!confirm.confirm) return
+    try {
+      await api.delete('/classes/' + target.id)
+      wx.showToast({ title: '已删除', icon: 'success' })
+      app.globalData.dirty.students = true
+      app.globalData.dirty.today = true
+      const remaining = this.data.classes.filter(c => c.id !== target.id)
+      if (remaining.length > 0) {
+        this.setData({
+          classes: remaining,
+          classIndex: 0,
+          currentClassId: remaining[0].id,
+        }, () => this.loadStudents())
+      } else {
+        this.setData({ classes: [], classIndex: 0, currentClassId: '', students: [] })
+      }
+    } catch (err) {
+      wx.showToast({ title: '删除失败', icon: 'none' })
+    }
+  },
+
   goImport() {
     wx.navigateTo({ url: '/pages/student-import/student-import' })
   },

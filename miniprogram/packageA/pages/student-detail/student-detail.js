@@ -393,4 +393,22 @@ Page({
   onPullDownRefresh() {
     this.loadData().then(() => wx.stopPullDownRefresh())
   },
+
+  async deleteStudent() {
+    const res = await wx.showModal({
+      title: '删除学生',
+      content: '将同时删除该学生的所有记录、成绩和备注，且不可恢复。确认删除？',
+      confirmColor: '#EF4444',
+    })
+    if (!res.confirm) return
+    try {
+      await api.delete('/students/' + this.data.studentId)
+      wx.showToast({ title: '已删除', icon: 'success' })
+      app.globalData.dirty.students = true
+      app.globalData.dirty.today = true
+      setTimeout(() => wx.navigateBack(), 800)
+    } catch (err) {
+      wx.showToast({ title: '删除失败', icon: 'none' })
+    }
+  },
 })

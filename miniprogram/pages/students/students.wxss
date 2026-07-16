@@ -43,6 +43,23 @@
   opacity: 0.85;
 }
 
+.del-class-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 14rpx;
+  background: #FEF2F2;
+  color: #EF4444;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.del-class-btn:active {
+  opacity: 0.85;
+}
+
 .search-comp {
   background: #fff !important;
   border-radius: 14rpx !important;
