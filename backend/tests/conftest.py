@@ -4,8 +4,9 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app
 from database import init_db
+from config import API_KEYS
 
-API_KEY = "REDACTED"
+API_KEY = API_KEYS[0]
 
 
 @pytest.fixture
